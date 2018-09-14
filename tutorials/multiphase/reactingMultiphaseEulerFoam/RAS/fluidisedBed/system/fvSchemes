@@ -1,0 +1,84 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default     Euler;
+}
+
+gradSchemes
+{
+    default         cellLimited leastSquares 0.2;
+    grad(p_rgh)     leastSquares;
+}
+
+divSchemes
+{
+    default                         none;
+
+    "div\(phi,alpha.*\)"            Gauss vanLeer;
+    "div\(phir,alpha.*\)"           Gauss vanLeer;
+
+    "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 0.2;
+    "div\(phi.*,U.*\)"              Gauss limitedLinearV 0.2;
+    "div\(U.*\)"                    Gauss linear;
+
+    "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 0.2;
+    "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 0.2;
+    "div\(alphaPhi.*,p\)"           Gauss limitedLinear 0.2;
+
+    "div\(phiCorr,alpha.*\)"        Gauss limitedLinear 0.2;
+    "div\(alphaRhoPhi.particles.*,Theta.particles.*\)" Gauss limitedLinear 0.2;
+    "div\(alphaRhoPhi.*,(k|epsilon).*\)"  Gauss limitedLinear 0.2;
+
+    div((((alpha.air*thermo:rho.air)*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
+
+    div((((thermo:rho.particles*nut.particles)*dev2(T(grad(U.particles))))+(((thermo:rho.particles*lambda.particles)*div(phi.particles))*I)))  Gauss linear;
+
+    div((((thermo:rho.particles1*nut.particles1)*dev2(T(grad(U.particles1))))+(((thermo:rho.particles1*lambda.particles1)*div(phi.particles1))*I)))  Gauss linear;
+
+    div((((thermo:rho.particles2*nut.particles2)*dev2(T(grad(U.particles2))))+(((thermo:rho.particles2*lambda.particles2)*div(phi.particles2))*I)))  Gauss linear;
+
+    div((((alpha.particles*thermo:rho.particles)*nuEff.particles)*dev2(T(grad(U.particles))))) Gauss linear;
+    div((((alpha.particles1*thermo:rho.particles1)*nuEff.particles1)*dev2(T(grad(U.particles1))))) Gauss linear;
+    div((((alpha.particles2*thermo:rho.particles2)*nuEff.particles2)*dev2(T(grad(U.particles2))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default     Gauss linear corrected;
+    bounded     Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default     linear;
+}
+
+snGradSchemes
+{
+    default     corrected;
+    bounded     corrected;
+}
+
+wallDist
+{
+    method      meshWave;
+}
+
+
+// ************************************************************************* //

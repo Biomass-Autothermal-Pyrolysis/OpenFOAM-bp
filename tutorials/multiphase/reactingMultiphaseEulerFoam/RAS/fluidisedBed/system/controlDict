@@ -1,0 +1,152 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     reactingMuliphaseEulerFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         5;
+
+deltaT          0.0002;
+
+writeControl    adjustableRunTime;
+
+writeInterval   .01;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable on;
+
+adjustTimeStep  yes;
+
+maxCo           0.2;
+
+maxDeltaT       5e-4;
+
+functions
+{
+    fieldAverage1
+    {
+        type            fieldAverage;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    writeTime;
+        timeStart       1.0;
+        fields
+        (
+            U.Particles
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            U.particles
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            U.particles1
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            U.particles2
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+
+            U.air
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+
+            alpha.Particles
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            alpha.particles
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            alpha.particles1
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            alpha.particles2
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+
+            Theta.Particles
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            Theta.particles
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            Theta.particles1
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+            Theta.particles2
+            {
+                 mean        on;
+                 prime2Mean  off;
+                 base        time;
+            }
+
+
+        );
+    }
+}
+
+
+// ************************************************************************* //

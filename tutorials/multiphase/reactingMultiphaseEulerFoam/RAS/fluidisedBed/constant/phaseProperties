@@ -1,0 +1,288 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type basicMultiphaseSystem;
+
+phases (air particles particles1 particles2);
+
+particles
+{
+    type          purePhaseModel;
+
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               3e-4;
+    }
+
+    alphaMax        0.63;
+    residualAlpha   1e-6;
+}
+
+particles1
+{
+    type          purePhaseModel;
+
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               6e-4;
+    }
+
+    alphaMax        0.63;
+    residualAlpha   1e-6;
+}
+
+particles2
+{
+    type          purePhaseModel;
+
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               9e-4;
+    }
+
+    alphaMax        0.63;
+    residualAlpha   1e-6;
+}
+
+air
+{
+    type          purePhaseModel;
+
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               1;
+    }
+
+    residualAlpha   0;
+}
+
+blending
+{
+
+    default
+    {
+        type                none;
+        continuousPhase     air;
+        minFullyContinuousAlpha.air 0;
+        minPartlyContinuousAlpha.air 0;
+        minFullyContinuousAlpha.particles 1.0;
+        minPartlyContinuousAlpha.particles 1.0;
+        minFullyContinuousAlpha.particles1 1.0;
+        minPartlyContinuousAlpha.particles1 1.0;
+        minFullyContinuousAlpha.particles2 1.0;
+        minPartlyContinuousAlpha.particles2 1.0;
+    }
+}
+
+interfaceCompression
+();
+
+surfaceTension
+(
+    (air and particles)
+    {
+        type            constant;
+        sigma           0;
+    }
+    (air and particles1)
+    {
+        type            constant;
+        sigma           0;
+    }
+    (air and particles2)
+    {
+        type            constant;
+        sigma           0;
+    }
+    (particles and particles1)
+    {
+        type            constant;
+        sigma           0;
+    }
+    (particles and particles2)
+    {
+        type            constant;
+        sigma           0;
+    }
+    (particles1 and particles2)
+    {
+        type            constant;
+        sigma           0;
+    }
+);
+
+
+aspectRatio
+(
+);
+
+drag
+(
+    (particles in air)
+    {
+        type            GidaspowErgunWenYu;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+    (particles1 in air)
+    {
+        type            GidaspowErgunWenYu;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+    (particles2 in air)
+    {
+        type            GidaspowErgunWenYu;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+    (particles and particles1)
+    {
+        type            Syamlal;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+    (particles and particles2)
+    {
+        type            Syamlal;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+    (particles1 and particles2)
+    {
+        type            Syamlal;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+);
+
+heatTransfer
+(
+);
+
+lift
+(
+);
+
+wallLubrication
+(
+);
+
+turbulentDispersion
+(
+);
+
+phaseTransfer
+(
+);
+
+kineticTheory
+{
+    name                    Particles;
+    writeTotal              true;
+    alphaMax                0.63;
+    residualAlpha           1e-4;
+
+    packingLimitModel       YuStandish;
+    radialModel             Lebowitz;
+    viscosityModel          Princeton;
+    conductivityModel       Princeton;
+    granularPressureModel   Princeton;
+    frictionalStressModel   Schaeffer;
+
+    coeffRest
+    (
+        (particles and particles)   0.8
+        (particles and particles1)  0.8
+        (particles1 and particles1) 0.8
+        (particles and particles2)  0.8
+        (particles1 and particles2) 0.8
+        (particles2 and particles2) 0.8
+    );
+    coeffFric
+    (
+        (particles and particles)   0.1
+        (particles and particles1)  0.1
+        (particles1 and particles1) 0.1
+        (particles and particles2)  0.1
+        (particles1 and particles2) 0.1
+        (particles2 and particles2) 0.1
+    );
+
+    SchaefferCoeffs
+    {
+        alphaMinFrictionByAlphap 0.99;
+        Fr                      0.05;
+        eta                     2;
+        p                       5;
+        phi                     28.5;
+        alphaDeltaMin           0.001;
+    }
+
+    JohnsonJacksonCoeffs
+    {
+        alphaMinFriction        0.55;
+        Fr                      0.05;
+        eta                     2;
+        p                       5;
+        phi                     28.5;
+        alphaDeltaMin           0.05;
+    }
+
+    PrincetonCoeffs
+    {
+        alphaMinFrictionByAlphap 0.99;
+        alphaMinFriction        0.55;
+        Fr                      0.05;
+        eta                     2;
+        p                       5;
+        phi                     28.5;
+        alphaDeltaMin           0.05;
+    }
+}
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //
