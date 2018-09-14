@@ -81,4 +81,8 @@ makeLESModel(Smagorinsky);
 makeLESModel(kEqn);
 
 
+#include "kineticTheoryModel.H"
+makeTurbulenceModel
+(phaseModelPhaseCompressibleTurbulenceModel, RAS, kineticTheoryModel);
+
 // ************************************************************************* //
