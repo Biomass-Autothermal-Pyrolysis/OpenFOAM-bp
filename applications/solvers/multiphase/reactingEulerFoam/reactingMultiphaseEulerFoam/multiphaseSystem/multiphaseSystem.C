@@ -25,6 +25,7 @@ License
 
 #include "multiphaseSystem.H"
 #include "alphaContactAngleFvPatchScalarField.H"
+#include "multiphaseKineticTheorySystem.H"
 
 #include "MULES.H"
 #include "subCycle.H"
@@ -192,6 +193,62 @@ void Foam::multiphaseSystem::solveAlphas()
             zeroField(),
             true
         );
+    }
+
+    bool polydisperse =
+        mesh_.foundObject<multiphaseKineticTheorySystem>
+        (
+            "kineticTheorySystem"
+        );
+
+    if (polydisperse)
+    {
+        polydisperse =
+            mesh_.lookupObject<multiphaseKineticTheorySystem>
+            (
+                "kineticTheorySystem"
+            ).polydisperse();
+    }
+
+    // Limit total granular flux
+    if(polydisperse)
+    {
+        multiphaseKineticTheorySystem& kineticTheoryModel =
+            mesh_.lookupObjectRef<multiphaseKineticTheorySystem>
+            (
+                "kineticTheorySystem"
+            );
+
+        kineticTheoryModel.correctAlphap();
+        const volScalarField& alphap(kineticTheoryModel.alphap());
+        const volScalarField& alphaMax(kineticTheoryModel.alphaMax());
+        const wordList& granularPhases(kineticTheoryModel.phases());
+        labelList granularIndicies(granularPhases.size());
+
+        PtrList<surfaceScalarField> alphaPhips(granularPhases.size());
+        forAll(granularPhases, phasei)
+        {
+            alphaPhips.set
+            (
+                phasei,
+                alphaPhiCorrs[phases()[granularPhases[phasei]].index()]
+            );
+        }
+
+        MULES::limitSum
+        (
+            alphap,
+            phi_,
+            alphaPhips,
+            alphaMax.internalField(),
+            scalarField(alphaMax.size(), 0.0)
+        );
+
+        forAll(granularPhases, phasei)
+        {
+            alphaPhiCorrs[phases()[granularPhases[phasei]].index()] =
+                alphaPhips[phasei];
+        }
     }
 
     // Limit the flux sums, fixing those of the stationary phases
@@ -636,6 +693,42 @@ void Foam::multiphaseSystem::solve()
     label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
 
     bool LTS = fv::localEulerDdt::enabled(mesh_);
+
+    forAll(phases(), phasei)
+    {
+        const phaseModel& phase = phases()[phasei];
+
+        if (DByAfs().found(phase.name()))
+        {
+            const volScalarField& alpha = phase;
+            surfaceScalarField DbyA(*DByAfs()[phase.name()]);
+
+            surfaceScalarField alphaDbyA
+            (
+                IOobject::groupName("alphaDbyA", phase.name()),
+                fvc::interpolate(max(alpha, scalar(0)))
+                *fvc::interpolate(max(1.0 - alpha, scalar(0)))
+                *DbyA
+            );
+
+            fvScalarMatrix alphaEqn
+            (
+                fvm::ddt(alpha)
+              - fvm::laplacian(alphaDbyA, alpha, "bounded")
+            );
+
+            alphaEqn.relax();
+            alphaEqn.solve();
+
+            // Revert to old alpha, and correct granular flux
+            phases()[phasei] == alpha.oldTime();
+            phases()[phasei].alphaPhiRef() +=
+                (
+                    alphaEqn.flux()
+                  + alphaDbyA*fvc::snGrad(alpha, "bounded")*mesh_.magSf()
+                );
+        }
+    }
 
     if (nAlphaSubCycles > 1)
     {
