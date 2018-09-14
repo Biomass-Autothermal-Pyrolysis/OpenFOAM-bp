@@ -47,6 +47,7 @@ SourceFiles
 #include "surfaceFieldsFwd.H"
 #include "primitiveFieldsFwd.H"
 #include "geometricOneField.H"
+#include "geometricZeroField.H"
 #include "zero.H"
 #include "zeroField.H"
 #include "UPtrList.H"
@@ -207,6 +208,16 @@ void limitSum
     const SurfaceScalarFieldList& alphas,
     SurfaceScalarFieldList& phiPsiCorrs,
     const labelHashSet& fixed
+);
+
+template<class PsiMaxType, class PsiMinType>
+void limitSum
+(
+    const volScalarField& psi,
+    const surfaceScalarField& phi,
+    PtrList<surfaceScalarField>& phiPsis,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

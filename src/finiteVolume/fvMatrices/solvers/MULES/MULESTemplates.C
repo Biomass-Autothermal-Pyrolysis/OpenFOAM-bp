@@ -756,5 +756,108 @@ void Foam::MULES::limitSum
     }
 }
 
+template<class PsiMaxType, class PsiMinType>
+void Foam::MULES::limitSum
+(
+    const volScalarField& psi,
+    const surfaceScalarField& phi,
+    PtrList<surfaceScalarField>& phiPsis,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+)
+{
+    const fvMesh& mesh = phi.mesh();
+
+    surfaceScalarField phiPsi
+    (
+        IOobject
+        (
+            "phiPsi",
+            mesh.time().timeName(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar("0", phi.dimensions(), 0.0)
+    );
+
+    surfaceScalarField phiBD(upwind<scalar>(psi.mesh(), phi).flux(psi));
+
+    surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
+    const surfaceScalarField::Boundary& phiPsiBf = phiPsi.boundaryField();
+
+    forAll(phiBDBf, patchi)
+    {
+        fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
+
+        if (!phiBDPf.coupled())
+        {
+            phiBDPf = phiPsiBf[patchi];
+        }
+    }
+
+    forAll(phiPsis, phasei)
+    {
+        phiPsi += phiPsis[phasei];
+    }
+
+    scalarField allLambda(mesh.nFaces(), 1.0);
+
+    slicedSurfaceScalarField lambda
+    (
+        IOobject
+        (
+            "lambda",
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        mesh,
+        dimless,
+        allLambda,
+        false   // Use slices for the couples
+    );
+
+    if (fv::localEulerDdt::enabled(mesh))
+    {
+        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+        limiter
+        (
+            allLambda,
+            rDeltaT,
+            geometricOneField(),
+            psi,
+            phiBD,
+            phiPsi,
+            geometricZeroField(),
+            geometricZeroField(),
+            psiMax,
+            psiMin
+        );
+    }
+    else
+    {
+        const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
+        limiter
+        (
+            allLambda,
+            rDeltaT,
+            geometricOneField(),
+            psi,
+            phiBD,
+            phiPsi,
+            geometricZeroField(),
+            geometricZeroField(),
+            psiMax,
+            psiMin
+        );
+    }
+
+    forAll(phiPsis, phasei)
+    {
+        phiPsis[phasei] *= lambda;
+    }
+}
 
 // ************************************************************************* //
