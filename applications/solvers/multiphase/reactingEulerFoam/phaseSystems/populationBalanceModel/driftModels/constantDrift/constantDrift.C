@@ -69,11 +69,11 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
 
 void Foam::diameterModels::driftModels::constantDrift::correct()
 {
-    N_ *= 0.0;
+    N_ = Zero;
 
     forAll(popBal_.sizeGroups(), i)
     {
-        const sizeGroup& fi = *popBal_.sizeGroups()[i];
+        const sizeGroup& fi = popBal_.sizeGroups()[i];
 
         N_ += fi*fi.phase()/fi.x();
     }
@@ -86,7 +86,7 @@ void Foam::diameterModels::driftModels::constantDrift::addToDriftRate
     const label i
 )
 {
-    const sizeGroup& fi = *popBal_.sizeGroups()[i];
+    const sizeGroup& fi = popBal_.sizeGroups()[i];
     phaseModel& phase = const_cast<phaseModel&>(fi.phase());
     volScalarField& rho = phase.thermoRef().rho();
 
