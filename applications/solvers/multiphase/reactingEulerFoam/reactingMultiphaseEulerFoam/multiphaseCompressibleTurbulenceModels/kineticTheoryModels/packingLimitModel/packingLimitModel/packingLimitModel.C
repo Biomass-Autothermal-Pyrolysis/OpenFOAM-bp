@@ -67,13 +67,13 @@ Foam::kineticTheoryModels::packingLimitModel::~packingLimitModel()
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
 {
-    tmp<volScalarField> tmpMaxAlpha
+    tmp<volScalarField> tmpAlphaMax
     (
         new volScalarField
         (
             IOobject
             (
-                "maxAlpha",
+                "alphaMax",
                 mesh_.time().timeName(),
                 mesh_,
                 IOobject::NO_READ,
@@ -81,7 +81,12 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
                 false
             ),
             mesh_,
-            dimensionedScalar("0", dimless, 0.0),
+            dimensionedScalar
+            (
+                "alphaMax",
+                dimless,
+                kt_.fluid().phases()[phases[phasei]].alphaMax
+            ),
             wordList
             (
                 mesh_.boundaryMesh().size(),
@@ -89,10 +94,14 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             )
         )
     );
-    volScalarField& maxAlpha(tmpMaxAlpha.ref());
+    volScalarField& alphaMax(tmpAlphaMax.ref());
+
+    if (phases.size() == 1)
+    {
 
     const wordList& phases = kt_.phases();
 
+    // Only sort diameters in one cell to save time
     if (constantDiameters_)
     {
         // Sort diameters from largest to smallest
@@ -102,11 +111,12 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             ds[phasei] = kt_.fluid().phases()[phases[phasei]].d()()[0];
         }
 
-        forAll(maxAlpha, celli)
+        forAll(alphaMax, celli)
         {
-            maxAlpha[celli] = alphaMax(celli, ds);
+            alphaMax[celli] = alphaMax(celli, ds);
         }
     }
+    // Sort particle diameters for every cell
     else
     {
         PtrList<volScalarField> dList(phases.size());
@@ -119,7 +129,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             );
         }
 
-        forAll(maxAlpha, celli)
+        forAll(alphaMax, celli)
         {
             // Sort diameters from largest to smallest
             scalarList ds(phases.size());
@@ -129,7 +139,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
                 ds[phasei] = dList[phasei][celli];
             }
 
-            maxAlpha[celli] = alphaMax(celli, ds);
+            alphaMax[celli] = alphaMax(celli, ds);
         }
     }
 
