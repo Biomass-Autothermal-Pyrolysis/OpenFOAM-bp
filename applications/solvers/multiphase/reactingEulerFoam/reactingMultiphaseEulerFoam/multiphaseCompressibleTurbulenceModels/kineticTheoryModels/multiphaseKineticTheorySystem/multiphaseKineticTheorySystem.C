@@ -185,7 +185,6 @@ Foam::multiphaseKineticTheorySystem::~multiphaseKineticTheorySystem()
 
 bool Foam::multiphaseKineticTheorySystem::read()
 {
-    Info<<"multiphase read"<<endl;
     residualAlpha_.readIfPresent(dict_);
 
     radialModel_->read();
@@ -195,7 +194,7 @@ bool Foam::multiphaseKineticTheorySystem::read()
     conductivityModel_->read();
 
     writeTotal_ = dict_.lookupOrDefault("writeTotal", false);
-    Info<<"write Total: " << writeTotal_<<endl;
+
     if (writeTotal_)
     {
         alphap_.writeOpt() = AUTO_WRITE;
