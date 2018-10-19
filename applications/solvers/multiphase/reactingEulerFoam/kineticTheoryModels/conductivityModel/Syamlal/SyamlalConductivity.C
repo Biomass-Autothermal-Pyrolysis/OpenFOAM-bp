@@ -53,7 +53,7 @@ namespace conductivityModels
 Foam::kineticTheoryModels::conductivityModels::Syamlal::Syamlal
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     conductivityModel(dict, kt)

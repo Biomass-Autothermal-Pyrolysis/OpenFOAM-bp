@@ -31,7 +31,7 @@ Foam::autoPtr<Foam::kineticTheoryModels::conductivityModel>
 Foam::kineticTheoryModels::conductivityModel::New
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 {
     word conductivityModelType(dict.lookup("conductivityModel"));

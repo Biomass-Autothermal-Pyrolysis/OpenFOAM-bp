@@ -43,7 +43,7 @@ namespace kineticTheoryModels
 Foam::kineticTheoryModels::conductivityModel::conductivityModel
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     dict_(dict),

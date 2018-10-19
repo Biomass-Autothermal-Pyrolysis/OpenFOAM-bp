@@ -53,7 +53,7 @@ namespace packingLimitModels
 Foam::kineticTheoryModels::packingLimitModels::constant::constant
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     packingLimitModel(dict, kt),

@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::multiphaseKineticTheorySystem&
+Foam::kineticTheorySystem&
 Foam::RASModels::kineticTheoryModel::lookupOrConstruct
 (
     const char* name
@@ -39,18 +39,16 @@ Foam::RASModels::kineticTheoryModel::lookupOrConstruct
 
     if (!mesh_.foundObject<volScalarField>(name))
     {
-        multiphaseKineticTheorySystem* ktPtr
+        kineticTheorySystem* ktPtr
         (
-            new multiphaseKineticTheorySystem(phase_.fluid())
+            new kineticTheorySystem(phase_.fluid())
         );
 
         // Transfer ownership of this object to the objectRegistry
         ktPtr->store(ktPtr);
     }
 
-    return
-        mesh_.lookupObjectRef<multiphaseKineticTheorySystem>
-        (name);
+    return mesh_.lookupObjectRef<kineticTheorySystem>(name);
 }
 
 Foam::RASModels::kineticTheoryModel::kineticTheoryModel
@@ -354,8 +352,6 @@ void Foam::RASModels::kineticTheoryModel::correct()
            *max(sqr(alpha), residualAlpha_)
            *rho*gs0*(1.0/da)*ThetaSqrt/sqrtPi
         );
-
-        //- NEEDS TO BE REDEFINED FOR MULTIPLE GRANULAR PHASES
 
         volScalarField J1
         (

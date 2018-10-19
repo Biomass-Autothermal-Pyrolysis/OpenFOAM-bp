@@ -63,11 +63,7 @@ public:
     // Constructors
 
         //- Construct from components
-        Princeton
-        (
-            const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
-        );
+        Princeton(const dictionary& dict, const kineticTheorySystem& kt);
 
 
     //- Destructor

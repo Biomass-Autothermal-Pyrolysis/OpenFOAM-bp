@@ -52,7 +52,7 @@ namespace radialModels
 Foam::kineticTheoryModels::radialModels::CarnahanStarling::CarnahanStarling
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     radialModel(dict, kt)

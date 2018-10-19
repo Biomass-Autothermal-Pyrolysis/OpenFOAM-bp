@@ -113,12 +113,9 @@ turbulentDispersion
 
 kineticTheory
 {
-    name                    Particles;
-    writeTotal              false;
     alphaMax                0.63;
     residualAlpha           1e-4;
 
-    packingLimitModel       constant;
     radialModel             SinclairJackson;
     viscosityModel          Gidaspow;
     conductivityModel       Gidaspow;

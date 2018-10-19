@@ -63,7 +63,7 @@ public:
     // Constructors
 
         //- Construct from components
-        Huilin(const dictionary& dict, const multiphaseKineticTheorySystem& kt);
+        Huilin(const dictionary& dict, const kineticTheorySystem& kt);
 
 
     //- Destructor

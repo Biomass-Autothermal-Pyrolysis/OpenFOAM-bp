@@ -1,5 +1,5 @@
 kineticTheoryModel/kineticTheoryModel.C
-multiphaseKineticTheorySystem/multiphaseKineticTheorySystem.C
+kineticTheorySystem/kineticTheorySystem.C
 
 packingLimitModel/packingLimitModel/packingLimitModel.C
 packingLimitModel/packingLimitModel/newPackingLimitModel.C

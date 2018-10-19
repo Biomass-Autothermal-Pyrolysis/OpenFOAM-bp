@@ -37,7 +37,7 @@ SourceFiles
 #include "dimensionedTypes.H"
 #include "runTimeSelectionTables.H"
 #include "phaseModel.H"
-#include "multiphaseKineticTheorySystem.H"
+#include "kineticTheorySystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

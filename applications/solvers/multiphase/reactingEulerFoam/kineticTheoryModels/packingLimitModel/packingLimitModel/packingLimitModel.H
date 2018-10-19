@@ -37,7 +37,7 @@ SourceFiles
 #include "dimensionedTypes.H"
 #include "runTimeSelectionTables.H"
 #include "phaseModel.H"
-#include "multiphaseKineticTheorySystem.H"
+#include "kineticTheorySystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,7 +75,7 @@ protected:
         const dictionary& dict_;
 
         //- Const reference to kinetic theories
-        const multiphaseKineticTheorySystem& kt_;
+        const kineticTheorySystem& kt_;
 
         //- Const reference to mesh
         const fvMesh& mesh_;
@@ -94,7 +94,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         ),
         (dict, kt)
     );
@@ -106,7 +106,7 @@ public:
         packingLimitModel
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         );
 
 
@@ -115,7 +115,7 @@ public:
         static autoPtr<packingLimitModel> New
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         );
 
 

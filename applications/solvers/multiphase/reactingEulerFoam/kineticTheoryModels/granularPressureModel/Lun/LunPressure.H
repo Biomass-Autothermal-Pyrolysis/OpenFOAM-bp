@@ -63,7 +63,7 @@ public:
     // Constructors
 
         //- Construct from components
-        Lun(const dictionary& dict, const multiphaseKineticTheorySystem& kt);
+        Lun(const dictionary& dict, const kineticTheorySystem& kt);
 
 
     //- Destructor

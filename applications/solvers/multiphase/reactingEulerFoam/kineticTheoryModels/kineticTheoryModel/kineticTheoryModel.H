@@ -52,7 +52,7 @@ SourceFiles
 #include "phaseModel.H"
 #include "phasePairKey.H"
 #include "dragModel.H"
-#include "multiphaseKineticTheorySystem.H"
+#include "kineticTheorySystem.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -89,7 +89,7 @@ class kineticTheoryModel
             const phaseModel& phase_;
 
             //- Pointer to central kineticTheory model
-            multiphaseKineticTheorySystem& kineticTheorySystem_;
+            kineticTheorySystem& kineticTheorySystem_;
 
 
         // Kinetic Theory Model coefficients
@@ -130,8 +130,8 @@ class kineticTheoryModel
         //- Disallow default bitwise assignment
         void operator=(const kineticTheoryModel&);
 
-        //- Lookup or construct multiphaseKineticTheorySystem
-        multiphaseKineticTheorySystem& lookupOrConstruct(const char*) const;
+        //- Lookup or construct kineticTheorySystem
+        kineticTheorySystem& lookupOrConstruct(const char*) const;
 
 
 public:

@@ -31,7 +31,7 @@ Foam::autoPtr<Foam::kineticTheoryModels::viscosityModel>
 Foam::kineticTheoryModels::viscosityModel::New
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 {
     word viscosityModelType(dict.lookup("viscosityModel"));

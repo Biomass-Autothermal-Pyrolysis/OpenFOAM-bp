@@ -119,12 +119,9 @@ turbulentDispersion
 
 kineticTheory
 {
-    name Solids;
-    writeTotal              false;
     alphaMax                0.65;
     residualAlpha           1e-6;
 
-    packingLimitModel       constant;
     radialModel             CarnahanStarling;
     viscosityModel          Syamlal;
     conductivityModel       Syamlal;

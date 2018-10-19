@@ -31,7 +31,7 @@ Foam::autoPtr<Foam::kineticTheoryModels::granularPressureModel>
 Foam::kineticTheoryModels::granularPressureModel::New
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 {
     word granularPressureModelType(dict.lookup("granularPressureModel"));

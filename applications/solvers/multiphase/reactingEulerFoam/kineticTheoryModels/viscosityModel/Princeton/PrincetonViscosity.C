@@ -47,7 +47,7 @@ namespace viscosityModels
 Foam::kineticTheoryModels::viscosityModels::Princeton::Princeton
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     viscosityModel(dict, kt)

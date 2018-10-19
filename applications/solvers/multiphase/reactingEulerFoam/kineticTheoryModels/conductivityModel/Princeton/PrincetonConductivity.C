@@ -54,7 +54,7 @@ namespace conductivityModels
 Foam::kineticTheoryModels::conductivityModels::Princeton::Princeton
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     conductivityModel(dict, kt)

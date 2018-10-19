@@ -25,7 +25,7 @@ License
 
 #include "multiphaseSystem.H"
 #include "alphaContactAngleFvPatchScalarField.H"
-#include "multiphaseKineticTheorySystem.H"
+#include "kineticTheorySystem.H"
 
 #include "MULES.H"
 #include "subCycle.H"
@@ -196,7 +196,7 @@ void Foam::multiphaseSystem::solveAlphas()
     }
 
     bool polydisperse =
-        mesh_.foundObject<multiphaseKineticTheorySystem>
+        mesh_.foundObject<kineticTheorySystem>
         (
             "kineticTheorySystem"
         );
@@ -204,7 +204,7 @@ void Foam::multiphaseSystem::solveAlphas()
     if (polydisperse)
     {
         polydisperse =
-            mesh_.lookupObject<multiphaseKineticTheorySystem>
+            mesh_.lookupObject<kineticTheorySystem>
             (
                 "kineticTheorySystem"
             ).polydisperse();
@@ -213,16 +213,16 @@ void Foam::multiphaseSystem::solveAlphas()
     // Limit total granular flux
     if(polydisperse)
     {
-        multiphaseKineticTheorySystem& kineticTheoryModel =
-            mesh_.lookupObjectRef<multiphaseKineticTheorySystem>
+        kineticTheorySystem& kineticTheory =
+            mesh_.lookupObjectRef<kineticTheorySystem>
             (
                 "kineticTheorySystem"
             );
 
-        kineticTheoryModel.correctAlphap();
-        const volScalarField& alphap(kineticTheoryModel.alphap());
-        const volScalarField& alphaMax(kineticTheoryModel.alphaMax());
-        const wordList& granularPhases(kineticTheoryModel.phases());
+        kineticTheory.correctAlphap();
+        const volScalarField& alphap(kineticTheory.alphap());
+        const volScalarField& alphaMax(kineticTheory.alphaMax());
+        const wordList& granularPhases(kineticTheory.phases());
         labelList granularIndicies(granularPhases.size());
 
         PtrList<surfaceScalarField> alphaPhips(granularPhases.size());

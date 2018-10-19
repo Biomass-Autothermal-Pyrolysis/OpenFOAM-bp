@@ -3,6 +3,7 @@ EXE_INC = \
     -I../../interfacialCompositionModels/lnInclude \
     -I../../phaseSystems/lnInclude \
     -I../multiphaseCompressibleTurbulenceModels/lnInclude \
+    -I../../kineticTheoryModels/lnInclude \
     -I../../derivedFvPatchFields/lnInclude \
     -IalphaContactAngle \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
@@ -19,4 +20,5 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lcombustionModels \
-    -lreactingPhaseSystem
+    -lreactingPhaseSystem \
+    -lreactingKineticTheoryModels

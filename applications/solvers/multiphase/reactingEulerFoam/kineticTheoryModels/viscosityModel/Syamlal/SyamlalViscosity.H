@@ -63,7 +63,7 @@ public:
     // Constructors
 
         //- Construct from components
-        Syamlal(const dictionary& dict, const multiphaseKineticTheorySystem& kt);
+        Syamlal(const dictionary& dict, const kineticTheorySystem& kt);
 
 
     //- Destructor

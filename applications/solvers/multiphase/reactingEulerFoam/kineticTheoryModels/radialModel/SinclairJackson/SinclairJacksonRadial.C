@@ -52,7 +52,7 @@ namespace radialModels
 Foam::kineticTheoryModels::radialModels::SinclairJackson::SinclairJackson
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     radialModel(dict, kt),

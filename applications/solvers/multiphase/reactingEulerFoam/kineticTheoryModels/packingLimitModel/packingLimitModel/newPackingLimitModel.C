@@ -31,10 +31,13 @@ Foam::autoPtr<Foam::kineticTheoryModels::packingLimitModel>
 Foam::kineticTheoryModels::packingLimitModel::New
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 {
-    word packingLimitModelType(dict.lookup("packingLimitModel"));
+    word packingLimitModelType
+    (
+        dict.lookupOrDefault<word>("packingLimitModel", "constant")
+    );
 
     Info<< "Selecting packingLimitModel "
         << packingLimitModelType << endl;

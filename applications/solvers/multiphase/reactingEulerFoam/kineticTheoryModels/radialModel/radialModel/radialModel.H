@@ -34,7 +34,7 @@ SourceFiles
 
 #include "dictionary.H"
 #include "volFields.H"
-#include "multiphaseKineticTheorySystem.H"
+#include "kineticTheorySystem.H"
 #include "dimensionedTypes.H"
 #include "runTimeSelectionTables.H"
 
@@ -66,7 +66,7 @@ protected:
 
         const dictionary& dict_;
 
-        const multiphaseKineticTheorySystem& kt_;
+        const kineticTheorySystem& kt_;
 
 
 public:
@@ -82,7 +82,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         ),
         (dict, kt)
     );
@@ -94,7 +94,7 @@ public:
         radialModel
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         );
 
 
@@ -103,7 +103,7 @@ public:
         static autoPtr<radialModel> New
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         );
 
 

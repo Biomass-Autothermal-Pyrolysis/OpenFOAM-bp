@@ -42,7 +42,7 @@ namespace kineticTheoryModels
 Foam::kineticTheoryModels::noneViscosity::noneViscosity
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     viscosityModel(dict, kt)

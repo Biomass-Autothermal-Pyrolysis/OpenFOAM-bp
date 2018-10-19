@@ -53,7 +53,7 @@ namespace viscosityModels
 Foam::kineticTheoryModels::viscosityModels::HrenyaSinclair::HrenyaSinclair
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     viscosityModel(dict, kt),

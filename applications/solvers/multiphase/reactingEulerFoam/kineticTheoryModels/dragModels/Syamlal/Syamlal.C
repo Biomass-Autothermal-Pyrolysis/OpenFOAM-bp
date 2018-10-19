@@ -26,7 +26,7 @@ License
 #include "Syamlal.H"
 #include "phasePair.H"
 #include "addToRunTimeSelectionTable.H"
-#include "multiphaseKineticTheorySystem.H"
+#include "kineticTheorySystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -78,8 +78,8 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Syamlal::K() const
     const phaseModel& phase1 = pair_.phase1();
     const phaseModel& phase2 = pair_.phase2();
 
-    const multiphaseKineticTheorySystem& kt =
-        mesh.lookupObject<multiphaseKineticTheorySystem>
+    const kineticTheorySystem& kt =
+        mesh.lookupObject<kineticTheorySystem>
         (
             "kineticTheorySystem"
         );

@@ -53,7 +53,7 @@ namespace conductivityModels
 Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::HrenyaSinclair
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     conductivityModel(dict, kt),

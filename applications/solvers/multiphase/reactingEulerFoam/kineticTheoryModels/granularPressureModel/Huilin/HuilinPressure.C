@@ -52,7 +52,7 @@ namespace granularPressureModels
 Foam::kineticTheoryModels::granularPressureModels::Huilin::Huilin
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     granularPressureModel(dict, kt)

@@ -73,7 +73,7 @@ public:
         HrenyaSinclair
         (
             const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const kineticTheorySystem& kt
         );
 
 

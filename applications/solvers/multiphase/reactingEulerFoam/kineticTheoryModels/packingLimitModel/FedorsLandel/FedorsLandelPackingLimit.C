@@ -52,7 +52,7 @@ namespace packingLimitModels
 Foam::kineticTheoryModels::packingLimitModels::FedorsLandel::FedorsLandel
 (
     const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const kineticTheorySystem& kt
 )
 :
     packingLimitModel(dict, kt),
