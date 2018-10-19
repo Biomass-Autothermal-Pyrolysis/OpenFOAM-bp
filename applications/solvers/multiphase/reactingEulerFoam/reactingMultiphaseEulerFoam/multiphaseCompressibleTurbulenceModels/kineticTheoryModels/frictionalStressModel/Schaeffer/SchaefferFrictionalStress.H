@@ -74,11 +74,7 @@ public:
     // Constructors
 
         //- Construct from components
-        Schaeffer
-        (
-            const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
-        );
+        Schaeffer(const dictionary& dict);
 
 
     //- Destructor
@@ -90,18 +86,21 @@ public:
         virtual tmp<volScalarField> frictionalPressure
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const;
 
         virtual tmp<volScalarField> frictionalPressurePrime
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const;
 
         virtual tmp<volScalarField> nu
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax,
             const volScalarField& pf,
             const volSymmTensorField& D

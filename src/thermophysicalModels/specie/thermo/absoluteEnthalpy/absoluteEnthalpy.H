@@ -99,6 +99,7 @@ public:
                 const scalar T
             ) const
             {
+                Info<<"He"<<endl;
                 return thermo.Ha(p, T);
             }
 

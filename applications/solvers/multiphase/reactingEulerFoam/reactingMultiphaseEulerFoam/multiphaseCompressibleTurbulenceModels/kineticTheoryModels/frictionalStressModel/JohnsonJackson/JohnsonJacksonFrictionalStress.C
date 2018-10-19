@@ -53,11 +53,10 @@ namespace frictionalStressModels
 Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
 JohnsonJackson
 (
-    const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const dictionary& dict
 )
 :
-    frictionalStressModel(dict, kt),
+    frictionalStressModel(dict),
     coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
     Fr_("Fr", dimensionSet(1, -1, -2, 0, 0), coeffDict_),
     eta_("eta", dimless, coeffDict_),
@@ -89,10 +88,10 @@ Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
 frictionalPressure
 (
     const phaseModel& phase,
+    const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
 {
-    const volScalarField& alphap = kt_.alphap();
     return
         Fr_*pow(max(alphap - alphaMinFriction_, scalar(0)), eta_)
        /pow(max(alphaMax - alphap, alphaDeltaMin_), p_);
@@ -104,11 +103,10 @@ Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
 frictionalPressurePrime
 (
     const phaseModel& phase,
+    const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
 {
-    const volScalarField& alphap = kt_.alphap();
-
     return Fr_*
     (
         eta_*pow(max(alphap - alphaMinFriction_, scalar(0)), eta_ - 1.0)
@@ -122,6 +120,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
 (
     const phaseModel& phase,
+    const volScalarField& alphap,
     const volScalarField& alphaMax,
     const volScalarField& pf,
     const volSymmTensorField& D

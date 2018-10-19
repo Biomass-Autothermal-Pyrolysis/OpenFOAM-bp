@@ -30,8 +30,7 @@ License
 Foam::autoPtr<Foam::kineticTheoryModels::frictionalStressModel>
 Foam::kineticTheoryModels::frictionalStressModel::New
 (
-    const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const dictionary& dict
 )
 {
     word frictionalStressModelType(dict.lookup("frictionalStressModel"));
@@ -54,7 +53,7 @@ Foam::kineticTheoryModels::frictionalStressModel::New
             << abort(FatalError);
     }
 
-    return autoPtr<frictionalStressModel>(cstrIter()(dict, kt));
+    return autoPtr<frictionalStressModel>(cstrIter()(dict));
 }
 
 

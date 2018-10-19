@@ -106,7 +106,7 @@ Foam::multiphaseKineticTheorySystem::multiphaseKineticTheorySystem
         kineticTheoryModels::packingLimitModel::New
         (
             dict_,
-         *this
+            *this
         )
     ),
     radialModel_
@@ -138,25 +138,15 @@ Foam::multiphaseKineticTheorySystem::multiphaseKineticTheorySystem
         kineticTheoryModels::conductivityModel::New
         (
             dict_,
-         *this
+            *this
         )
     ),
     frictionalStressModel_
     (
-        kineticTheoryModels::frictionalStressModel::New
-        (
-            dict_,
-            *this
-        )
+        kineticTheoryModels::frictionalStressModel::New(dict_)
     ),
-    eTable_
-    (
-        dict_.lookup("coeffRest")
-    ),
-    CfTable_
-    (
-        dict_.lookup("coeffFric")
-    ),
+    eTable_(dict_.lookup("coeffRest")),
+    CfTable_(dict_.lookup("coeffFric")),
     alphaMax_
     (
         IOobject
@@ -431,6 +421,7 @@ frictionalPressure(const phaseModel& phase) const
     return frictionalStressModel_->frictionalPressure
     (
         phase,
+        alphap_,
         alphaMax_
     );
 }
@@ -443,6 +434,7 @@ frictionalPressurePrime(const phaseModel& phase) const
     return frictionalStressModel_->frictionalPressurePrime
     (
         phase,
+        alphap_,
         alphaMax_
     );
 }
@@ -458,6 +450,7 @@ Foam::multiphaseKineticTheorySystem::nuFrictional(const phaseModel& phase) const
     return frictionalStressModel_->nu
     (
         phase,
+        alphap_,
         alphaMax_,
         frictionalPressure(phase)/phase.rho(),
         D

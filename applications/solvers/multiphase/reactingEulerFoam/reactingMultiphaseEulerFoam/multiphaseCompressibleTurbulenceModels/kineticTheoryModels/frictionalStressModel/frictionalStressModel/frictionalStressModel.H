@@ -68,8 +68,6 @@ protected:
         //- Reference to higher-level dictionary for re-read
         const dictionary& dict_;
 
-        const multiphaseKineticTheorySystem& kt_;
-
 
 public:
 
@@ -83,10 +81,9 @@ public:
         frictionalStressModel,
         dictionary,
         (
-            const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const dictionary& dict
         ),
-        (dict, kt)
+        (dict)
     );
 
 
@@ -95,8 +92,7 @@ public:
         //- Construct from components
         frictionalStressModel
         (
-            const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const dictionary& dict
         );
 
 
@@ -104,8 +100,7 @@ public:
 
         static autoPtr<frictionalStressModel> New
         (
-            const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
+            const dictionary& dict
         );
 
 
@@ -118,18 +113,21 @@ public:
         virtual tmp<volScalarField> frictionalPressure
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const = 0;
 
         virtual tmp<volScalarField> frictionalPressurePrime
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const = 0;
 
         virtual tmp<volScalarField> nu
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax,
             const volScalarField& pf,
             const volSymmTensorField& D

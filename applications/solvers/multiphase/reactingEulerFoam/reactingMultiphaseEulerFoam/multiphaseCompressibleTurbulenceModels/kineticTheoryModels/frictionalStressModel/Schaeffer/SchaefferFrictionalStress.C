@@ -51,11 +51,10 @@ namespace frictionalStressModels
 
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::Schaeffer
 (
-    const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const dictionary& dict
 )
 :
-    frictionalStressModel(dict, kt),
+    frictionalStressModel(dict),
     coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
     phi_("phi", dimless, coeffDict_),
     alphaMinFrictionByAlphap_
@@ -82,10 +81,10 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
 frictionalPressure
 (
     const phaseModel& phase,
+    const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
 {
-    volScalarField alphap(min(kt_.alphap(), alphaMax));
     volScalarField alphaMinFriction(alphaMinFrictionByAlphap_*alphaMax);
 
     return
@@ -99,10 +98,10 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
 frictionalPressurePrime
 (
     const phaseModel& phase,
+    const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
 {
-    volScalarField alphap(min(kt_.alphap(), alphaMax));
     volScalarField alphaMinFriction(alphaMinFrictionByAlphap_*alphaMax);
 
     return
@@ -115,12 +114,12 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 (
     const phaseModel& phase,
+    const volScalarField& alphap,
     const volScalarField& alphaMax,
     const volScalarField& pf,
     const volSymmTensorField& D
 ) const
 {
-    const volScalarField& alphap = kt_.alphap();
     volScalarField alphaMinFriction(alphaMinFrictionByAlphap_*alphaMax);
 
     tmp<volScalarField> tnu

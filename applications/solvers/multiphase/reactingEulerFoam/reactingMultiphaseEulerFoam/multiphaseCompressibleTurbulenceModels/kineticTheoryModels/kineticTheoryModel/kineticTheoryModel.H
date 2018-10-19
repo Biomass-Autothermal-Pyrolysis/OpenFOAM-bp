@@ -89,7 +89,7 @@ class kineticTheoryModel
             const phaseModel& phase_;
 
             //- Pointer to central kineticTheory model
-            multiphaseKineticTheorySystem& KTs_;
+            multiphaseKineticTheorySystem& kineticTheorySystem_;
 
 
         // Kinetic Theory Model coefficients

@@ -82,9 +82,9 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
 
     phase_(phase),
 
-    KTs_(lookupOrConstruct("kineticTheorySystem")),
+    kineticTheorySystem_(lookupOrConstruct("kineticTheorySystem")),
     equilibrium_(coeffDict_.lookup("equilibrium")),
-    residualAlpha_(KTs_.residualAlpha()),
+    residualAlpha_(kineticTheorySystem_.residualAlpha()),
 
     maxNut_
     (
@@ -148,7 +148,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         dimensionedScalar("zero", dimensionSet(0, 2, -1, 0, 0), 0.0)
     )
 {
-    KTs_.addPhase(phase);
+    kineticTheorySystem_.addPhase(phase);
 
     if (type == typeName)
     {
@@ -229,8 +229,8 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
 {
     tmp<volScalarField> tpPrime
     (
-        Theta_*KTs_.PsCoeffPrime(phase_)
-     +  KTs_.frictionalPressurePrime(phase_)
+        Theta_*kineticTheorySystem_.PsCoeffPrime(phase_)
+     +  kineticTheorySystem_.frictionalPressurePrime(phase_)
     );
 
     volScalarField::Boundary& bpPrime =
@@ -270,8 +270,7 @@ Foam::RASModels::kineticTheoryModel::devRhoReff() const
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-          - (rho_*nut_)
-           *dev(twoSymm(fvc::grad(U_)))
+          - (rho_*nut_)*dev(twoSymm(fvc::grad(U_)))
           - ((rho_*lambda_)*fvc::div(phi_))*symmTensor::I
         )
     );
@@ -299,9 +298,9 @@ Foam::RASModels::kineticTheoryModel::divDevRhoReff
 
 void Foam::RASModels::kineticTheoryModel::correct()
 {
-    if (phase_.name() == KTs_.phases()[0])
+    if (phase_.name() == kineticTheorySystem_.phases()[0])
     {
-        KTs_.correct();
+        kineticTheorySystem_.correct();
     }
 
     // Local references
@@ -325,16 +324,16 @@ void Foam::RASModels::kineticTheoryModel::correct()
     (
         "e",
         dimless,
-        KTs_.es()[phasePairKey(phase_.name(), phase_.name())]
+        kineticTheorySystem_.es()[phasePairKey(phase_.name(), phase_.name())]
     );
 
     // Calculating the radial distribution function
-    volScalarField gs0(KTs_.gs0(phase_, phase_));
+    volScalarField gs0(kineticTheorySystem_.gs0(phase_, phase_));
 
     if (!equilibrium_)
     {
         // Particle viscosity (Table 3.2, p.47)
-        nut_ = KTs_.nu(phase_, Theta_);
+        nut_ = kineticTheorySystem_.nu(phase_, Theta_);
 
         volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
@@ -438,10 +437,10 @@ void Foam::RASModels::kineticTheoryModel::correct()
 
 
         // particle pressure - coefficient in front of Theta (Eq. 3.22, p. 45)
-        tmp<volScalarField> PsCoeff(KTs_.PsCoeff(phase_));
+        tmp<volScalarField> PsCoeff(kineticTheorySystem_.PsCoeff(phase_));
 
         // 'thermal' conductivity (Table 3.3, p. 49)
-        kappa_ = KTs_.kappa(phase_, Theta_);
+        kappa_ = kineticTheorySystem_.kappa(phase_, Theta_);
 
         fv::options& fvOptions(fv::options::New(mesh_));
 
@@ -523,7 +522,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
            /(2.0*max(alpha, residualAlpha_)*K4)
         );
 
-        kappa_ = KTs_.kappa(phase_, Theta_);
+        kappa_ = kineticTheorySystem_.kappa(phase_, Theta_);
     }
 
     Theta_.max(0);
@@ -531,14 +530,14 @@ void Foam::RASModels::kineticTheoryModel::correct()
 
     {
         // particle viscosity (Table 3.2, p.47)
-        nut_ = KTs_.nu(phase_, Theta_);;
+        nut_ = kineticTheorySystem_.nu(phase_, Theta_);;
 
         volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
         // Bulk viscosity  p. 45 (Lun et al. 1984).
         lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0*(1.0 + e)*ThetaSqrt/sqrtPi;
 
-        nuFric_ = KTs_.nuFrictional(phase_);
+        nuFric_ = kineticTheorySystem_.nuFrictional(phase_);
 
         // Limit viscosity and add frictional viscosity
         nut_.min(maxNut_);
@@ -546,9 +545,13 @@ void Foam::RASModels::kineticTheoryModel::correct()
         nut_ += nuFric_;
     }
 
-    if (phase_.name() == KTs_.phases()[KTs_.phases().size() - 1])
+    if
+    (
+        phase_.name()
+     == kineticTheorySystem_.phases()[kineticTheorySystem_.phases().size() - 1]
+    )
     {
-        KTs_.correct();
+        kineticTheorySystem_.correct();
     }
 
     if (debug)

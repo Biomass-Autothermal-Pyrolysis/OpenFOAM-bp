@@ -85,11 +85,7 @@ public:
     // Constructors
 
         //- Construct from components
-        JohnsonJackson
-        (
-            const dictionary& dict,
-            const multiphaseKineticTheorySystem& kt
-        );
+        JohnsonJackson(const dictionary& dict);
 
 
     //- Destructor
@@ -101,18 +97,21 @@ public:
         virtual tmp<volScalarField> frictionalPressure
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const;
 
         virtual tmp<volScalarField> frictionalPressurePrime
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const;
 
         virtual tmp<volScalarField> nu
         (
             const phaseModel& phase,
+            const volScalarField& alphap,
             const volScalarField& alphaMax,
             const volScalarField& pf,
             const volSymmTensorField& D

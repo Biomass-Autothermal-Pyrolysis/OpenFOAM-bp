@@ -42,12 +42,10 @@ namespace kineticTheoryModels
 
 Foam::kineticTheoryModels::frictionalStressModel::frictionalStressModel
 (
-    const dictionary& dict,
-    const multiphaseKineticTheorySystem& kt
+    const dictionary& dict
 )
 :
-    dict_(dict),
-    kt_(kt)
+    dict_(dict)
 {}
 
 
