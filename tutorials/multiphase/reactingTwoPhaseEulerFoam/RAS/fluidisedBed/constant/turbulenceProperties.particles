@@ -27,26 +27,6 @@ RAS
     kineticTheoryCoeffs
     {
         equilibrium             off;
-
-        e                       0.8;
-        alphaMax                0.62;
-        alphaMinFriction        0.5;
-        residualAlpha           1e-4;
-
-        viscosityModel          Gidaspow;
-        conductivityModel       Gidaspow;
-        granularPressureModel   Lun;
-        frictionalStressModel   JohnsonJackson;
-        radialModel             SinclairJackson;
-
-        JohnsonJacksonCoeffs
-        {
-            Fr                      0.05;
-            eta                     2;
-            p                       5;
-            phi                     28.5;
-            alphaDeltaMin           0.05;
-        }
     }
 
     phasePressureCoeffs

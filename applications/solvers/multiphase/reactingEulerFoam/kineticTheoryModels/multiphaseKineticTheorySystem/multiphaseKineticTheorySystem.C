@@ -25,7 +25,6 @@ License
 
 #include "multiphaseKineticTheorySystem.H"
 #include "kineticTheoryModel.H"
-#include "multiphaseSystem.H"
 #include "packingLimitModel.H"
 #include "radialModel.H"
 #include "viscosityModel.H"

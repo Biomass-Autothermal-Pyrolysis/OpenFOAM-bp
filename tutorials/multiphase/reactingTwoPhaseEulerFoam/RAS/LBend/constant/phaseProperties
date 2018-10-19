@@ -31,6 +31,7 @@ solids
     }
 
     residualAlpha   1e-5;
+    alphaMax 0.65;
 }
 
 gas
@@ -115,6 +116,36 @@ wallLubrication
 turbulentDispersion
 (
 );
+
+kineticTheory
+{
+    name Solids;
+    writeTotal              false;
+    alphaMax                0.65;
+    residualAlpha           1e-6;
+
+    packingLimitModel       constant;
+    radialModel             CarnahanStarling;
+    viscosityModel          Syamlal;
+    conductivityModel       Syamlal;
+    granularPressureModel   SyamlalRogersOBrien;
+    frictionalStressModel   Schaeffer;
+
+    coeffRest
+    (
+        (solids and solids)   0.8
+    );
+    coeffFric
+    (
+        (solids and solids)   0.1
+    );
+
+    SchaefferCoeffs
+    {
+        phi                     36;
+        alphaMinFrictionByAlphap 0.90;
+    }
+}
 
 // Minimum allowable pressure
 pMin            10000;

@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
+   \\    /   O peration     |
     \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ License
 
 #include "JohnsonJacksonParticleSlipFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -153,16 +153,14 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
     }
 
     // lookup the fluid model and the phase
-    const twoPhaseSystem& fluid = db().lookupObject<twoPhaseSystem>
+    const phaseSystem& fluid = db().lookupObject<phaseSystem>
     (
         "phaseProperties"
     );
 
     const phaseModel& phased
     (
-        fluid.phase1().name() == internalField().group()
-      ? fluid.phase1()
-      : fluid.phase2()
+        fluid.phases()[internalField().group()]
     );
 
     // lookup all the fields on this patch
@@ -212,14 +210,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
     (
         "alphaMax",
         dimless,
-        db()
-       .lookupObject<IOdictionary>
-        (
-            IOobject::groupName("turbulenceProperties", phased.name())
-        )
-       .subDict("RAS")
-       .subDict("kineticTheoryCoeffs")
-       .lookup("alphaMax")
+        phased.alphaMax()
     );
 
     // calculate the slip value fraction
@@ -229,8 +220,8 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
        *alpha
        *gs0
        *specularityCoefficient_.value()
-       *sqrt(3*Theta)
-       /max(6*(nu - nuFric)*alphaMax.value(), small)
+       *sqrt(3.0*Theta)
+       /max(6.0*(nu - nuFric)*alphaMax.value(), SMALL)
     );
 
     this->valueFraction() = c/(c + patch().deltaCoeffs());

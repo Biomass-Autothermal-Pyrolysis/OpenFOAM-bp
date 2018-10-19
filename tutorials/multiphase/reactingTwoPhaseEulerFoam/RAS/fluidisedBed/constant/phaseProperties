@@ -111,6 +111,40 @@ turbulentDispersion
 (
 );
 
+kineticTheory
+{
+    name                    Particles;
+    writeTotal              false;
+    alphaMax                0.63;
+    residualAlpha           1e-4;
+
+    packingLimitModel       constant;
+    radialModel             SinclairJackson;
+    viscosityModel          Gidaspow;
+    conductivityModel       Gidaspow;
+    granularPressureModel   Lun;
+    frictionalStressModel   JohnsonJackson;
+
+    coeffRest
+    (
+        (particles and particles)   0.8
+    );
+    coeffFric
+    (
+        (particles and particles)   0.1
+    );
+
+    JohnsonJacksonCoeffs
+    {
+        alphaMinFriction        0.55;
+        Fr                      0.05;
+        eta                     2;
+        p                       5;
+        phi                     28.5;
+        alphaDeltaMin           0.05;
+    }
+}
+
 // Minimum allowable pressure
 pMin            10000;
 

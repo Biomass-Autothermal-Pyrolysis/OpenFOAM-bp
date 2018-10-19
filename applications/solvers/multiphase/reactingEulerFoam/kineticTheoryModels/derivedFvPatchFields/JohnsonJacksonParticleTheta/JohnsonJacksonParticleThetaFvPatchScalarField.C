@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     | Website:  https://openfoam.org
+   \\    /   O peration     |
     \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ License
 
 #include "JohnsonJacksonParticleThetaFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -174,16 +174,14 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
     }
 
     // lookup the fluid model and the phase
-    const twoPhaseSystem& fluid = db().lookupObject<twoPhaseSystem>
+    const phaseSystem& fluid = db().lookupObject<phaseSystem>
     (
         "phaseProperties"
     );
 
     const phaseModel& phased
     (
-        fluid.phase1().name() == internalField().group()
-      ? fluid.phase1()
-      : fluid.phase2()
+        fluid.phases()[internalField().group()]
     );
 
     // lookup all the fields on this patch
@@ -226,14 +224,7 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
     (
         "alphaMax",
         dimless,
-        db()
-       .lookupObject<IOdictionary>
-        (
-            IOobject::groupName("turbulenceProperties", phased.name())
-        )
-       .subDict("RAS")
-       .subDict("kineticTheoryCoeffs")
-       .lookup("alphaMax")
+        phased.alphaMax()
     );
 
     // calculate the reference value and the value fraction
@@ -253,8 +244,8 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
             *alpha
             *gs0
             *(scalar(1) - sqr(restitutionCoefficient_.value()))
-            *sqrt(3*Theta)
-            /max(4*kappa*alphaMax.value(), small)
+            *sqrt(3.0*Theta)
+            /max(4.0*kappa*alphaMax.value(), SMALL)
         );
 
         this->valueFraction() = c/(c + patch().deltaCoeffs());
@@ -267,16 +258,16 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
         this->refValue() = 0.0;
 
         this->refGrad() =
-            pos0(alpha - small)
+            pos0(alpha - SMALL)
            *constant::mathematical::pi
            *specularityCoefficient_.value()
            *alpha
            *gs0
-           *sqrt(3*Theta)
+           *sqrt(3.0*Theta)
            *magSqr(U)
-           /max(6*kappa*alphaMax.value(), small);
+           /max(6.0*kappa*alphaMax.value(), SMALL);
 
-        this->valueFraction() = 0;
+        this->valueFraction() = 0.0;
     }
 
     mixedFvPatchScalarField::updateCoeffs();
