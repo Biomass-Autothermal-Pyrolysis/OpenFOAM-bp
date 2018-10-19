@@ -67,6 +67,7 @@ Foam::kineticTheoryModels::packingLimitModel::~packingLimitModel()
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
 {
+    const wordList& phases = kt_.phases();
     tmp<volScalarField> tmpAlphaMax
     (
         new volScalarField
@@ -85,7 +86,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             (
                 "alphaMax",
                 dimless,
-                kt_.fluid().phases()[phases[phasei]].alphaMax
+                kt_.fluid().phases()[phases[0]].alphaMax()
             ),
             wordList
             (
@@ -94,12 +95,13 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             )
         )
     );
-    volScalarField& alphaMax(tmpAlphaMax.ref());
+    volScalarField& alphaMaxField(tmpAlphaMax.ref());
 
     if (phases.size() == 1)
     {
+        return tmpAlphaMax;
+    }
 
-    const wordList& phases = kt_.phases();
 
     // Only sort diameters in one cell to save time
     if (constantDiameters_)
@@ -111,9 +113,9 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             ds[phasei] = kt_.fluid().phases()[phases[phasei]].d()()[0];
         }
 
-        forAll(alphaMax, celli)
+        forAll(alphaMaxField, celli)
         {
-            alphaMax[celli] = alphaMax(celli, ds);
+            alphaMaxField[celli] = alphaMax(celli, ds);
         }
     }
     // Sort particle diameters for every cell
@@ -129,7 +131,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             );
         }
 
-        forAll(alphaMax, celli)
+        forAll(alphaMaxField, celli)
         {
             // Sort diameters from largest to smallest
             scalarList ds(phases.size());
@@ -139,10 +141,10 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
                 ds[phasei] = dList[phasei][celli];
             }
 
-            alphaMax[celli] = alphaMax(celli, ds);
+            alphaMaxField[celli] = alphaMax(celli, ds);
         }
     }
 
-    return tmpMaxAlpha;
+    return tmpAlphaMax;
 }
 // ************************************************************************* //
