@@ -89,11 +89,6 @@ Foam::kineticTheoryModels::packingLimitModels::YuStandish::alphaMax
         const phaseModel& phase1 = kt_.fluid().phases()[phasei];
         scalar alpha1 = phase1[celli];
 
-        if (alpha1 < phase1.residualAlpha().value())
-        {
-            continue;
-        }
-
         scalar alphaMax1 = phase1.alphaMax();
         scalar d1 = ds[phasei];
 
@@ -103,35 +98,34 @@ Foam::kineticTheoryModels::packingLimitModels::YuStandish::alphaMax
 
         forAll(ds, phasej)
         {
-            if (phasej == phasei)
+            if (phasej != phasei)
             {
-                continue;
-            }
-            scalar d2 = ds[phasej];
+                scalar d2 = ds[phasej];
 
-            scalar rij = d1/d2;
-            scalar Xij = 1.0;
-            scalar pij = alphaMax1;
+                scalar rij = d1/d2;
+                scalar Xij = 1.0;
+                scalar pij = alphaMax1;
 
-            if (rij >= 1)
-            {
-                rij = 1.0/rij;
-                Xij = (1.0 - sqr(rij))/(2.0 - alphaMax1);
-            }
-            else
-            {
-                rij = d2/d1;
-                Xij = 1.0 - (1.0 - sqr(rij))/(2.0 - alphaMax1);
-            }
+                if (rij >= 1)
+                {
+                    rij = 1.0/rij;
+                    Xij = (1.0 - sqr(rij))/(2.0 - alphaMax1);
+                }
+                else
+                {
+                    rij = d2/d1;
+                    Xij = 1.0 - (1.0 - sqr(rij))/(2.0 - alphaMax1);
+                }
 
-            if (rij <= 0.741)
-            {
-                pij +=
-                    alphaMax1
-                   *(1.0 - alphaMax1)
-                   *(1.0 - 2.35*rij + 1.35*sqr(rij));
+                if (rij <= 0.741)
+                {
+                    pij +=
+                        alphaMax1
+                       *(1.0 - alphaMax1)
+                       *(1.0 - 2.35*rij + 1.35*sqr(rij));
+                }
+                sum += (1.0 - alphaMax1/pij)*cxi/Xij;
             }
-            sum += (1.0 - alphaMax1/pij)*cxi/Xij;
         }
         maxAlpha = min(maxAlpha, alphaMax1/(1.0 - sum));
     }

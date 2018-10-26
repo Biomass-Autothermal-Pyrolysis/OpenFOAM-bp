@@ -121,6 +121,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
     // Sort particle diameters for every cell
     else
     {
+        //- Create copys so d fields arent created for each cell
         PtrList<volScalarField> dList(phases.size());
         forAll(phases, phasei)
         {
