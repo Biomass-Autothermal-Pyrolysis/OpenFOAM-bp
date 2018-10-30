@@ -177,6 +177,32 @@ Foam::kineticTheorySystem::kineticTheorySystem
         "residualAlpha",
         dimless,
         dict_
+    ),
+    Pfr_
+    (
+        IOobject
+        (
+            IOobject::groupName("Pfr", name_),
+            fluid.mesh().time().timeName(),
+            fluid.mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        fluid.mesh(),
+        dimensionedScalar("zero", dimPressure, 0.0)
+    ),
+    PfrPrime_
+    (
+        IOobject
+        (
+            IOobject::groupName("PfrPrime", name_),
+            fluid.mesh().time().timeName(),
+            fluid.mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        fluid.mesh(),
+        dimensionedScalar("zero", dimPressure, 0.0)
     )
 {}
 
@@ -425,12 +451,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheorySystem::
 frictionalPressure(const phaseModel& phase) const
 {
-    return frictionalStressModel_->frictionalPressure
-    (
-        phase,
-        alphap_,
-        alphaMax_
-    );
+    return Pfr_*phase;
 }
 
 
@@ -438,12 +459,7 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheorySystem::
 frictionalPressurePrime(const phaseModel& phase) const
 {
-    return frictionalStressModel_->frictionalPressurePrime
-    (
-        phase,
-        alphap_,
-        alphaMax_
-    );
+    return PfrPrime_*phase;
 }
 
 
@@ -461,7 +477,7 @@ Foam::kineticTheorySystem::nuFrictional(const phaseModel& phase) const
         alphaMax_,
         frictionalPressure(phase)/phase.rho(),
         D
-    );
+    )*phase/max(alphap_, residualAlpha_);
 }
 
 
@@ -654,6 +670,18 @@ void Foam::kineticTheorySystem::correct()
                 eTable_[key]
             );
     }
+
+    Pfr_ = frictionalStressModel_->frictionalPressure
+    (
+        alphap_,
+        alphaMax_
+    );
+
+    PfrPrime_ = frictionalStressModel_->frictionalPressurePrime
+    (
+        alphap_,
+        alphaMax_
+    );
 
     alphaMax_ = packingLimitModel_->alphaMax();
     alphaMax_.correctBoundaryConditions();

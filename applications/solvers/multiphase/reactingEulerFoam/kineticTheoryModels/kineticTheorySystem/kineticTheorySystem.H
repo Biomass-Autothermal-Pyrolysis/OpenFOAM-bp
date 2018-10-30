@@ -169,6 +169,12 @@ class kineticTheorySystem
                 phasePairKey::hash
             > PsCoeffsPrime_;
 
+            //- Frictional pressure
+            volScalarField Pfr_;
+
+            //- Frictional pressure prime
+            volScalarField PfrPrime_;
+
 
     // Private Member Functions
 

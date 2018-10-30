@@ -80,7 +80,6 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
 frictionalPressure
 (
-    const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
@@ -97,7 +96,6 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
 frictionalPressurePrime
 (
-    const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const

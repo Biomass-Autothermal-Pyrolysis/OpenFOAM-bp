@@ -85,14 +85,12 @@ public:
 
         virtual tmp<volScalarField> frictionalPressure
         (
-            const phaseModel& phase,
             const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const;
 
         virtual tmp<volScalarField> frictionalPressurePrime
         (
-            const phaseModel& phase,
             const volScalarField& alphap,
             const volScalarField& alphaMax
         ) const;

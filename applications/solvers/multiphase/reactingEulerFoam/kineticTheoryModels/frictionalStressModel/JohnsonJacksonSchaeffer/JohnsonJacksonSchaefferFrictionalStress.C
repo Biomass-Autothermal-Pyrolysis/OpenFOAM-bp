@@ -93,7 +93,6 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::
 JohnsonJacksonSchaeffer::frictionalPressure
 (
-    const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
@@ -108,7 +107,6 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::
 JohnsonJacksonSchaeffer::frictionalPressurePrime
 (
-    const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
@@ -116,7 +114,7 @@ JohnsonJacksonSchaeffer::frictionalPressurePrime
     return Fr_*
     (
         eta_*pow(max(alphap - alphaMinFriction_, scalar(0)), eta_ - 1.0)
-       *(alphaMax-alphap)
+       *(alphaMax - alphap)
       + p_*pow(max(alphap - alphaMinFriction_, scalar(0)), eta_)
     )/pow(max(alphaMax - alphap, alphaDeltaMin_), p_ + 1.0);
 }

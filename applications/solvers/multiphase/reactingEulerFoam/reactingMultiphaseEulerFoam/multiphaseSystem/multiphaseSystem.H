@@ -83,6 +83,12 @@ private:
 
         void solveAlphas();
 
+        void solvePhaseFluxes
+        (
+            PtrList<surfaceScalarField>& phiPs,
+            const PtrList<surfaceScalarField>& alphaDbyAs
+        );
+
         tmp<surfaceVectorField> nHatfv
         (
             const volScalarField& alpha1,

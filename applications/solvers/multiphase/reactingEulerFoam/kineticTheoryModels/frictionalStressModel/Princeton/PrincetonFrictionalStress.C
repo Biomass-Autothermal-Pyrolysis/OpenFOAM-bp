@@ -94,7 +94,6 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Princeton::
 frictionalPressure
 (
-    const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
@@ -114,7 +113,6 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Princeton::
 frictionalPressurePrime
 (
-    const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax
 ) const
@@ -140,7 +138,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
     const phaseModel& phase,
     const volScalarField& alphap,
     const volScalarField& alphaMax,
-    const volScalarField& pf,
+    const volScalarField& Pc,
     const volSymmTensorField& D
 ) const
 {
@@ -150,7 +148,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
     const volScalarField& Theta =
         phase.mesh().lookupObject<volScalarField>
         (
-            IOobject::groupName("Theta", phase.name())
+            IOobject::groupName("Theta", alphap.group())
         );
 
     tmp<volScalarField> tnu
@@ -181,7 +179,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
       + 1.03*neg(divU)
     );
 
-    tmp<volScalarField> PcByPf
+    tmp<volScalarField> PfByPc
     (
         pow
         (
@@ -195,21 +193,20 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
         )
        *phase/max(alphap, phase.residualAlpha())
     );
-    tmp<volScalarField> Pc(PcByPf()*pf);
+    tmp<volScalarField> Pf(PfByPc()*Pc);
 
     forAll(D, celli)
     {
         if (alphap[celli] > alphaMinFriction[celli])
         {
             nuf[celli] =
-                sqrt(2.0)*Pc()[celli]*sin(phi_.value())
+                sqrt(2.0)*Pf()[celli]*sin(phi_.value())
                /(Sdd()[celli] + Theta[celli]/sqr(da()[celli]))
                *(
                     n[celli]
                   - (n[celli] - 1.0)
-                   *pow(PcByPf()[celli], 1.0/(n[celli] - 1.0))
-                )
-               *phase[celli]/alphap[celli];
+                   *pow(PfByPc()[celli], 1.0/(n[celli] - 1.0))
+                );
         }
     }
 
@@ -223,7 +220,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
         {
             nufBf[patchi] =
             (
-                pf.boundaryField()[patchi]*sin(phi_.value())
+                Pc.boundaryField()[patchi]*sin(phi_.value())
                 /(
                     mag(U.boundaryField()[patchi].snGrad())
                     + SMALL
