@@ -3,6 +3,7 @@ EXE_INC = \
     -I../phaseSystems/lnInclude \
     -I../interfacialModels/lnInclude \
     -I../interfacialCompositionModels/lnInclude \
+    -I../fvOptions/lnInclude \
     -ImultiphaseCompressibleTurbulenceModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
@@ -21,5 +22,6 @@ EXE_LIBS = \
     -lmultiphaseReactingTurbulenceModels \
     -lfiniteVolume \
     -lfvOptions \
+    -lreactingFvOptions \
     -lmeshTools \
     -lsampling

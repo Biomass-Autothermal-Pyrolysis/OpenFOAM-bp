@@ -1,0 +1,6 @@
+meanPhaseVelocityForce/meanPhaseVelocityForce.C
+meanPhaseVelocityForce/meanPhaseVelocityForceIO.C
+meanPhaseVelocityForce/patchMeanPhaseVelocityForce/patchMeanPhaseVelocityForce.C
+
+
+LIB = $(FOAM_LIBBIN)/libreactingFvOptions

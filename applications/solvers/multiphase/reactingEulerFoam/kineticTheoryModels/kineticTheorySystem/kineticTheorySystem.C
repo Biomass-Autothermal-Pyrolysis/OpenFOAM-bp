@@ -164,7 +164,7 @@ Foam::kineticTheorySystem::kineticTheorySystem
             IOobject::NO_WRITE
         ),
         fluid.mesh(),
-        dimensionedScalar("one", dimless, 1.0),
+        dimensionedScalar("one", dimless, 0.0),
         wordList
         (
             alphap_.boundaryField().size(),
