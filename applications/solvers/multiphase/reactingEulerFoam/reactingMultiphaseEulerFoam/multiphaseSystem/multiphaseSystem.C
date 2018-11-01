@@ -393,7 +393,6 @@ void Foam::multiphaseSystem::solveAlphas()
 
 void Foam::multiphaseSystem::solvePhaseFluxes
 (
-    PtrList<surfaceScalarField>& phiPs,
     const PtrList<surfaceScalarField>& alphaDbyAs
 )
 {
@@ -401,9 +400,9 @@ void Foam::multiphaseSystem::solvePhaseFluxes
     {
         const phaseModel& phase = phases()[phasei];
 
-        if (phiPs.set(phasei))
+        if (alphaDbyAs.set(phasei))
         {
-            const volScalarField& alpha = phase;
+            volScalarField& alpha = phases()[phasei];
 
             fvScalarMatrix alphaEqn
             (
@@ -414,10 +413,8 @@ void Foam::multiphaseSystem::solvePhaseFluxes
             alphaEqn.solve();
 
             // Revert to old alpha, and correct granular flux
-            phases()[phasei].alphaPhiRef() += (alphaEqn.flux() + phiPs[phasei]);
-            phases()[phasei] == alpha.oldTime();
-
-            phiPs[phasei] = -alphaEqn.flux();
+            phases()[phasei].alphaPhiRef() += alphaEqn.flux();
+           alpha = phase.oldTime();
         }
     }
 }
@@ -726,7 +723,6 @@ void Foam::multiphaseSystem::solve()
 
     bool LTS = fv::localEulerDdt::enabled(mesh_);
 
-    PtrList<surfaceScalarField> phiPs(phases().size());
     PtrList<surfaceScalarField> alphaDbyAs(phases().size());
     forAll(phases(), phasei)
     {
@@ -751,23 +747,17 @@ void Foam::multiphaseSystem::solve()
             );
 
             // Store original particle flux
-            phiPs.set
-            (
-                phasei,
-                new surfaceScalarField
-                (
-                    DbyA*alphaf
-                   *fvc::snGrad(alpha, "bounded")
-                   *mesh_.magSf()
-                )
-            );
+            phases()[phasei].phiRef() +=
+                DbyA
+               *fvc::snGrad(alpha, "bounded")
+               *mesh_.magSf();
         }
     }
 
 
     for (label corri = 0; corri < nAlphaCorr; corri++)
     {
-        solvePhaseFluxes(phiPs, alphaDbyAs);
+        solvePhaseFluxes(alphaDbyAs);
 
         if (nAlphaSubCycles > 1)
         {
