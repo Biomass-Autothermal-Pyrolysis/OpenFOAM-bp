@@ -64,7 +64,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
 {
     volScalarField alpha2
     (
-        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(pair_.continuous(), pair_.continuous().residualAlpha())
     );
 
     volScalarField A(pow(alpha2, 4.14));

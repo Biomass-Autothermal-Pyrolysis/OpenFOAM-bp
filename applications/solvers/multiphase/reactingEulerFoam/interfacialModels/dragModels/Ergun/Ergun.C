@@ -68,7 +68,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Ergun::CdRe() const
             150
            *max
             (
-                scalar(1) - pair_.continuous(),
+                pair_.dispersed(),
                 pair_.continuous().residualAlpha()
             )/max(pair_.continuous(), pair_.continuous().residualAlpha())
           + 1.75
