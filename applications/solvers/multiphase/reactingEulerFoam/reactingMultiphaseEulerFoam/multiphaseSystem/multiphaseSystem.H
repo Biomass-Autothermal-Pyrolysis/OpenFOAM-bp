@@ -85,6 +85,7 @@ private:
 
         void solvePhaseFluxes
         (
+            PtrList<surfaceScalarField>& phiPs,
             const PtrList<surfaceScalarField>& alphaDbyAs
         );
 

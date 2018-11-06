@@ -195,34 +195,28 @@ void Foam::multiphaseSystem::solveAlphas()
         );
     }
 
-    bool polydisperse =
-        mesh_.foundObject<kineticTheorySystem>
-        (
-            "kineticTheorySystem"
-        );
-
-    if (polydisperse)
+    kineticTheorySystem* kineticTheory;
+    if
+    (
+        mesh_.foundObject<kineticTheorySystem>("kineticTheorySystem")
+    )
     {
-        polydisperse =
-            mesh_.lookupObject<kineticTheorySystem>
-            (
-                "kineticTheorySystem"
-            ).polydisperse();
+        kineticTheory =
+            &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem");
+
+        if (!kineticTheory->polydisperse())
+        {
+            kineticTheory = NULL;
+        }
     }
 
     // Limit total granular flux
-    if(polydisperse)
+    if(kineticTheory)
     {
-        kineticTheorySystem& kineticTheory =
-            mesh_.lookupObjectRef<kineticTheorySystem>
-            (
-                "kineticTheorySystem"
-            );
-
-        kineticTheory.correctAlphap();
-        const volScalarField& alphap(kineticTheory.alphap());
-        const volScalarField& alphaMax(kineticTheory.alphaMax());
-        const wordList& granularPhases(kineticTheory.phases());
+        kineticTheory->correctAlphap();
+        const volScalarField& alphap(kineticTheory->alphap());
+        const volScalarField& alphaMax(kineticTheory->alphaMax());
+        const wordList& granularPhases(kineticTheory->phases());
         labelList granularIndicies(granularPhases.size());
 
         PtrList<surfaceScalarField> alphaPhips(granularPhases.size());
@@ -361,6 +355,15 @@ void Foam::multiphaseSystem::solveAlphas()
             << ' ' << max(phase).value()
             << endl;
     }
+    if (kineticTheory)
+    {
+        const volScalarField& alphap = kineticTheory->alphap();
+        Info<< kineticTheory->name() << " fraction, min, max = "
+            << alphap.weightedAverage(mesh_.V()).value()
+            << ' ' << min(alphap).value()
+            << ' ' << max(alphap).value()
+            << endl;
+    }
 
     volScalarField sumAlphaMoving
     (
@@ -393,6 +396,7 @@ void Foam::multiphaseSystem::solveAlphas()
 
 void Foam::multiphaseSystem::solvePhaseFluxes
 (
+    PtrList<surfaceScalarField>& phiPs,
     const PtrList<surfaceScalarField>& alphaDbyAs
 )
 {
@@ -400,9 +404,9 @@ void Foam::multiphaseSystem::solvePhaseFluxes
     {
         const phaseModel& phase = phases()[phasei];
 
-        if (alphaDbyAs.set(phasei))
+        if (phiPs.set(phasei))
         {
-            volScalarField& alpha = phases()[phasei];
+            const volScalarField& alpha = phase;
 
             fvScalarMatrix alphaEqn
             (
@@ -413,8 +417,10 @@ void Foam::multiphaseSystem::solvePhaseFluxes
             alphaEqn.solve();
 
             // Revert to old alpha, and correct granular flux
-            phases()[phasei].alphaPhiRef() += alphaEqn.flux();
-           alpha = phase.oldTime();
+            phases()[phasei].alphaPhiRef() += (alphaEqn.flux() + phiPs[phasei]);
+            phases()[phasei] == alpha.oldTime();
+
+            phiPs[phasei] = -alphaEqn.flux();
         }
     }
 }
@@ -723,6 +729,7 @@ void Foam::multiphaseSystem::solve()
 
     bool LTS = fv::localEulerDdt::enabled(mesh_);
 
+    PtrList<surfaceScalarField> phiPs(phases().size());
     PtrList<surfaceScalarField> alphaDbyAs(phases().size());
     forAll(phases(), phasei)
     {
@@ -747,17 +754,23 @@ void Foam::multiphaseSystem::solve()
             );
 
             // Store original particle flux
-            phases()[phasei].phiRef() +=
-                DbyA
-               *fvc::snGrad(alpha, "bounded")
-               *mesh_.magSf();
+            phiPs.set
+            (
+                phasei,
+                new surfaceScalarField
+                (
+                    DbyA*alphaf
+                   *fvc::snGrad(alpha, "bounded")
+                   *mesh_.magSf()
+                )
+            );
         }
     }
 
 
     for (label corri = 0; corri < nAlphaCorr; corri++)
     {
-        solvePhaseFluxes(alphaDbyAs);
+        solvePhaseFluxes(phiPs, alphaDbyAs);
 
         if (nAlphaSubCycles > 1)
         {
