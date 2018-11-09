@@ -64,7 +64,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Gibilaro::CdRe() const
 {
     volScalarField alpha2
     (
-        max(pair_.continuous(), pair_.continuous().residualAlpha())
+        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
     return
