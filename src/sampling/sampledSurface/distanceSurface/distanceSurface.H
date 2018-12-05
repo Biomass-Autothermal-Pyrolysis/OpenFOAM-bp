@@ -27,8 +27,6 @@ Class
 Description
     A sampledSurface defined by a distance to a surface.
 
-    Uses either isoSurfaceCell or isoSurface.
-
 SourceFiles
     distanceSurface.C
 
@@ -39,7 +37,6 @@ SourceFiles
 
 #include "sampledSurface.H"
 #include "searchableSurface.H"
-#include "isoSurfaceCell.H"
 #include "isoSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -66,9 +63,6 @@ class distanceSurface
         //- Signed distance
         const bool signed_;
 
-        //- Whether to use isoSurfaceCell or isoSurface
-        const bool cell_;
-
         //- Whether to coarsen
         const Switch regularise_;
 
@@ -89,13 +83,7 @@ class distanceSurface
         scalarField pointDistance_;
 
         //- Constructed iso surface
-        autoPtr<isoSurfaceCell> isoSurfCellPtr_;
-
-        //- Constructed iso surface
         autoPtr<isoSurface> isoSurfPtr_;
-
-        //- Triangles converted to faceList
-        mutable autoPtr<faceList> facesPtr_;
 
 
     // Private Member Functions
@@ -142,7 +130,6 @@ public:
             const word& surfaceName,
             const scalar distance,
             const bool signedDistance,
-            const bool cell,
             const Switch regularise,
             const Switch average
         );
@@ -175,30 +162,12 @@ public:
         //- Faces of surface
         virtual const faceList& faces() const
         {
-            if (facesPtr_.empty())
-            {
-                const triSurface& s = surface();
-
-                facesPtr_.reset(new faceList(s.size()));
-
-                forAll(s, i)
-                {
-                    facesPtr_()[i] = s[i].triFaceFace();
-                }
-            }
-            return facesPtr_;
+            return surface().faces();
         }
 
-        const triSurface& surface() const
+        const isoSurface& surface() const
         {
-            if (cell_)
-            {
-                return isoSurfCellPtr_();
-            }
-            else
-            {
-                return isoSurfPtr_();
-            }
+            return isoSurfPtr_();
         }
 
         //- Sample field on surface

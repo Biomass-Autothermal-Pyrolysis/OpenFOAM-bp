@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "perfectFluid.H"
-#include "specie.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -95,7 +94,7 @@ inline Foam::scalar Foam::perfectFluid<Specie>::rho(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::perfectFluid<Specie>::H(scalar p, scalar T) const
 {
-    return 0;
+    return p/rho(p, T) - Pstd/rho(Pstd, T);
 }
 
 
@@ -144,7 +143,10 @@ inline Foam::scalar Foam::perfectFluid<Specie>::Z(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::perfectFluid<Specie>::CpMCv(scalar p, scalar T) const
 {
-    return 0;
+    const scalar R = this->R();
+    const scalar rho = this->rho(p, T);
+
+    return R*sqr(p/(rho*R*T));
 }
 
 

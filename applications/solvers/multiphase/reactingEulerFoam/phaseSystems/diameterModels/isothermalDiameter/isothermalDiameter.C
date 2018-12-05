@@ -66,7 +66,7 @@ Foam::diameterModels::isothermal::isothermal
             IOobject::AUTO_WRITE
         ),
         phase_.mesh(),
-        dimensionedScalar("d", dimLength, 0.0)
+        d0_
     )
 {}
 
@@ -81,18 +81,11 @@ Foam::diameterModels::isothermal::~isothermal()
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::isothermal::d() const
 {
-    const volScalarField& p = phase_.db().lookupObject<volScalarField>
-    (
-        "p"
-    );
+    const volScalarField& p = phase_.db().lookupObject<volScalarField>("p");
 
-    return d0_*pow(p0_/p, 1.0/3.0);
-}
+    d_ = d0_*pow(p0_/p, 1.0/3.0);
 
-
-void Foam::diameterModels::isothermal::correct()
-{
-    d_ = d();
+    return d_;
 }
 
 

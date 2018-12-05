@@ -133,13 +133,22 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
         fieldSet_.insert(wordList(dict.lookup("fields")));
     }
 
+    if (dict.lookupOrDefault<Switch>("prefix", false))
+    {
+        prefix_ = modelName() + ':';
+    }
+    else
+    {
+        prefix_ = word::null;
+    }
+
     Info<< type() << " " << name() << ": ";
     if (fieldSet_.size())
     {
         Info<< "storing fields:" << nl;
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {
-            Info<< "    " << modelName() << ':' << iter.key() << nl;
+            Info<< "    " << prefix_ + iter.key() << nl;
         }
         Info<< endl;
     }
@@ -197,6 +206,59 @@ bool Foam::functionObjects::turbulenceFields::execute()
                 case compressibleField::alphaEff:
                 {
                     processField<scalar>(f, model.alphaEff());
+                    break;
+                }
+                case compressibleField::R:
+                {
+                    processField<symmTensor>(f, model.R());
+                    break;
+                }
+                case compressibleField::devRhoReff:
+                {
+                    processField<symmTensor>(f, model.devRhoReff());
+                    break;
+                }
+                default:
+                {
+                    FatalErrorInFunction
+                        << "Invalid field selection" << exit(FatalError);
+                }
+            }
+        }
+    }
+    else if (obr_.foundObject<compressibleTurbulenceModel>(modelName()))
+    {
+        const compressibleTurbulenceModel& model =
+            obr_.lookupObject<compressibleTurbulenceModel>(modelName());
+
+        forAllConstIter(wordHashSet, fieldSet_, iter)
+        {
+            const word& f = iter.key();
+            switch (compressibleFieldNames_[f])
+            {
+                case compressibleField::k:
+                {
+                    processField<scalar>(f, model.k());
+                    break;
+                }
+                case compressibleField::epsilon:
+                {
+                    processField<scalar>(f, model.epsilon());
+                    break;
+                }
+                case compressibleField::omega:
+                {
+                    processField<scalar>(f, omega(model));
+                    break;
+                }
+                case compressibleField::mut:
+                {
+                    processField<scalar>(f, model.mut());
+                    break;
+                }
+                case compressibleField::muEff:
+                {
+                    processField<scalar>(f, model.muEff());
                     break;
                 }
                 case compressibleField::R:
@@ -285,7 +347,7 @@ bool Foam::functionObjects::turbulenceFields::write()
 {
     forAllConstIter(wordHashSet, fieldSet_, iter)
     {
-        const word fieldName = modelName() + ':' + iter.key();
+        const word fieldName = prefix_ + iter.key();
         writeObject(fieldName);
     }
 

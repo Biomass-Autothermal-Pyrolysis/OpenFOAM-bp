@@ -20,8 +20,8 @@ thermoType
     type            heRhoThermo;
     mixture         multiComponentMixture;
     transport       const;
-    thermo          hConst;
-    equationOfState perfectFluid;
+    thermo          eConst;
+    equationOfState rhoConst;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -42,13 +42,12 @@ H2O
     }
     equationOfState
     {
-        R               3000;
-        rho0            1027;
+        rho             1027;
     }
     thermodynamics
     {
         Hf              -1.5879e+07;
-        Cp              4195;
+        Cv              4195;
     }
     transport
     {
@@ -67,11 +66,12 @@ C3H8O
     {
         R               3000;
         rho0            786;
+        rho             786;
     }
     thermodynamics
     {
         Hf              -5.303e+06;
-        Cp              2680;
+        Cv              2680;
     }
     transport
     {

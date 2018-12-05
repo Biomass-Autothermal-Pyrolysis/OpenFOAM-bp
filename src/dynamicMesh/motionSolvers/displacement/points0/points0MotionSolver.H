@@ -61,10 +61,6 @@ protected:
         //- Starting points
         pointIOField points0_;
 
-    // Protected Member Functions
-
-        //- Return IO object for points0
-        IOobject points0IO(const polyMesh& mesh) const;
 
 private:
 

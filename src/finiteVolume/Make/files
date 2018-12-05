@@ -139,11 +139,11 @@ $(derivedFvPatchFields)/codedFixedValue/codedFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/codedMixed/codedMixedFvPatchFields.C
 $(derivedFvPatchFields)/cylindricalInletVelocity/cylindricalInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/externalCoupledMixed/externalCoupledMixedFvPatchFields.C
-$(derivedFvPatchFields)/fan/fanFvPatchFields.C
+$(derivedFvPatchFields)/fanPressureJump/fanPressureJumpFvPatchScalarField.C
 $(derivedFvPatchFields)/fanPressure/fanPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedFluxPressure/fixedFluxPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedFluxExtrapolatedPressure/fixedFluxExtrapolatedPressureFvPatchScalarField.C
-$(derivedFvPatchFields)/fixedInternalValueFvPatchField/fixedInternalValueFvPatchFields.C
+$(derivedFvPatchFields)/fixedInternalValue/fixedInternalValueFvPatchFields.C
 $(derivedFvPatchFields)/fixedJump/fixedJumpFvPatchFields.C
 $(derivedFvPatchFields)/fixedJumpAMI/fixedJumpAMIFvPatchFields.C
 $(derivedFvPatchFields)/fixedMean/fixedMeanFvPatchFields.C

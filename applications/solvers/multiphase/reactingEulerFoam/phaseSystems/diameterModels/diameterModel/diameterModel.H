@@ -120,9 +120,6 @@ public:
         //- Return the phase mean diameter field
         virtual tmp<volScalarField> d() const = 0;
 
-        //- Correct the diameter field
-        virtual void correct();
-
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties) = 0;
 };
