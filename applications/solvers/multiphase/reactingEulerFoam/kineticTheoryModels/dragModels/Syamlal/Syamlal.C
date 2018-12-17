@@ -49,7 +49,17 @@ Foam::dragModels::Syamlal::Syamlal
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dragModel(dict, pair, registerObject),
+    C1_
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "C1",
+            dict,
+            dimensionSet(0, -2, 1, 0, 0, 0, 0),
+            0.3
+        )
+    )
 {}
 
 
@@ -83,13 +93,12 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Syamlal::K() const
         (
             "kineticTheorySystem"
         );
-
+    const volScalarField& Pfric = kt.Pfr();
     scalar e = kt.es()[pair_];
     scalar Cf = kt.Cfs()[pair_];
     scalar pi = Foam::constant::mathematical::pi;
 
-    tmp<volScalarField> g0Tmp = kt.gs0(phase1, phase2);
-    const volScalarField g0 = g0Tmp();
+    tmp<volScalarField> g0 = kt.gs0(phase1, phase2);
     return
         (
             3.0*(1.0 + e)*(pi/2.0 + Cf*sqr(pi)/8.0)
@@ -102,7 +111,8 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Syamlal::K() const
                 phase1.rho()*pow3(phase1.d())
               + phase2.rho()*pow3(phase2.d())
             )
-        );
+        )
+      + C1_*Pfric;
 }
 
 

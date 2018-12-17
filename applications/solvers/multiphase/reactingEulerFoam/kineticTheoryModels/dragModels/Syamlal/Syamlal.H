@@ -67,6 +67,8 @@ class Syamlal
 {
     // Private data
 
+        //- Coefficient of frictional pressure
+        dimensionedScalar C1_;
 
 public:
 

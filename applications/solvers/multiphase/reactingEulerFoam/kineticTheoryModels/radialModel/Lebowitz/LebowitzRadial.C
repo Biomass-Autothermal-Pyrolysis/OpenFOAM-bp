@@ -97,9 +97,9 @@ Foam::kineticTheoryModels::radialModels::Lebowitz::g0
         dimensionedScalar("0", inv(dimLength), 0.0)
     );
 
-    forAll(kt_.phases(), phaseI)
+    forAll(kt_.phaseNames(), phaseI)
     {
-        const phaseModel& phase = kt_.fluid().phases()[kt_.phases()[phaseI]];
+        const phaseModel& phase = kt_.fluid().phases()[kt_.phaseNames()[phaseI]];
         alphard += volScalarField(phase)/phase.d();
     }
 
@@ -134,16 +134,24 @@ Foam::kineticTheoryModels::radialModels::Lebowitz::g0prime
         dimensionedScalar("0", inv(dimLength), 0.0)
     );
 
-    forAll(kt_.phases(), phaseI)
+    forAll(kt_.phaseNames(), phaseI)
     {
-        const phaseModel& phase = kt_.fluid().phases()[kt_.phases()[phaseI]];
-        alphard += volScalarField(phase)/phase.d();
+        const phaseModel& phase = kt_.fluid().phases()[kt_.phaseNames()[phaseI]];
+        if (phase.name() != phase1.name())
+        {
+            alphard += volScalarField(phase)/phase.d();
+        }
     }
 
+    volScalarField d1(phase1.d());
+    volScalarField d2(phase2.d());
     return
         1.0/max(sqr(alphag), residualAlpha_)
-      + 3.0*phase2.d()/(pow3(alphag)*(phase1.d() + phase2.d()))
-       *(alphag + 2.0*phase1.d()*alphard);
+       *(
+            1.0
+          + 3.0*d2/(d1 + d2)
+           *(2.0/max(alphag, residualAlpha_)*(d1*alphard + phase1) + 1.0)
+        );
 }
 
 

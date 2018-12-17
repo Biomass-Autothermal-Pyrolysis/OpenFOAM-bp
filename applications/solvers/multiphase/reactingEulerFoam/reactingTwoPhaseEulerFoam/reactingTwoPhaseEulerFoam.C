@@ -100,6 +100,8 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
+            fluid.correctTurbulence(false);
+
             fluid.solve();
             fluid.correct();
 
@@ -122,7 +124,7 @@ int main(int argc, char *argv[])
 
             if (pimple.turbCorr())
             {
-                fluid.correctTurbulence();
+                fluid.correctTurbulence(true);
             }
         }
 

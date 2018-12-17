@@ -69,7 +69,10 @@ void Foam::multiphaseSystem::calcAlphas()
 }
 
 
-void Foam::multiphaseSystem::solveAlphas()
+void Foam::multiphaseSystem::solveAlphas
+(
+    const PtrList<surfaceScalarField>& deltaAlphaPhiPs
+)
 {
     forAll(phases(), phasei)
     {
@@ -178,6 +181,10 @@ void Foam::multiphaseSystem::solveAlphas()
                 phirScheme
             );
         }
+        if (deltaAlphaPhiPs.set(phase.index()))
+        {
+            alphaPhiCorr += deltaAlphaPhiPs[phase.index()];
+        }
 
         phase.correctInflowOutflow(alphaPhiCorr);
 
@@ -195,62 +202,52 @@ void Foam::multiphaseSystem::solveAlphas()
         );
     }
 
-    kineticTheorySystem* kineticTheory;
-    if
-    (
-        mesh_.foundObject<kineticTheorySystem>("kineticTheorySystem")
-    )
-    {
-        kineticTheory =
-            &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem");
-
-        if (!kineticTheory->polydisperse())
-        {
-            kineticTheory = NULL;
-        }
-    }
-
-    // Limit total granular flux
-    if(kineticTheory)
-    {
-        kineticTheory->correctAlphap();
-        const volScalarField& alphap(kineticTheory->alphap());
-        const volScalarField& alphaMax(kineticTheory->alphaMax());
-        const wordList& granularPhases(kineticTheory->phases());
-        labelList granularIndicies(granularPhases.size());
-
-        PtrList<surfaceScalarField> alphaPhips(granularPhases.size());
-        forAll(granularPhases, phasei)
-        {
-            alphaPhips.set
-            (
-                phasei,
-                alphaPhiCorrs[phases()[granularPhases[phasei]].index()]
-            );
-        }
-
-        MULES::limitSum
-        (
-            alphap,
-            phi_,
-            alphaPhips,
-            alphaMax.internalField(),
-            scalarField(alphaMax.size(), 0.0)
-        );
-
-        forAll(granularPhases, phasei)
-        {
-            alphaPhiCorrs[phases()[granularPhases[phasei]].index()] =
-                alphaPhips[phasei];
-        }
-    }
-
     // Limit the flux sums, fixing those of the stationary phases
     labelHashSet fixedAlphaPhiCorrs;
     forAll(stationaryPhases(), stationaryPhasei)
     {
         fixedAlphaPhiCorrs.insert(stationaryPhases()[stationaryPhasei].index());
     }
+
+    // Limit total granular flux
+    if(polydisperseKineticTheory_)
+    {
+        kineticTheoryPtr_->correctAlphap();
+        const volScalarField& alphap(kineticTheoryPtr_->alphap());
+        const volScalarField& alphaMax(kineticTheoryPtr_->alphaMax());
+        const labelList& granularIndexes(kineticTheoryPtr_->phaseIndexes());
+
+        PtrList<surfaceScalarField> alphaPhiCorrPs(granularIndexes.size());
+        forAll(granularIndexes, phasei)
+        {
+
+            //- Use tmp so alphaPhiCorr is not deleted upon exit
+            alphaPhiCorrPs.set
+            (
+                phasei,
+                alphaPhiCorrs[granularIndexes[phasei]]
+            );
+
+            // Fix alphaPhi of the granular phases
+            fixedAlphaPhiCorrs.insert(phases()[granularIndexes[phasei]].index());
+        }
+
+        MULES::limitSum
+        (
+            alphap,
+            phi_,
+            alphaPhiCorrPs,
+            alphaMax.internalField(),
+            scalarField(alphaMax.size(), 0.0)
+        );
+
+        forAll(granularIndexes, phasei)
+        {
+            //- Use tmp so alphaPhiCorr is not deleted upon exit
+            alphaPhiCorrs[granularIndexes[phasei]] = alphaPhiCorrPs[phasei];
+        }
+    }
+
     MULES::limitSum(alphafs, alphaPhiCorrs, fixedAlphaPhiCorrs);
 
     // Solve for the moving phase alphas
@@ -355,10 +352,11 @@ void Foam::multiphaseSystem::solveAlphas()
             << ' ' << max(phase).value()
             << endl;
     }
-    if (kineticTheory)
+    if (polydisperseKineticTheory_)
     {
-        const volScalarField& alphap = kineticTheory->alphap();
-        Info<< kineticTheory->name() << " fraction, min, max = "
+        kineticTheoryPtr_->correctAlphap();
+        const volScalarField& alphap = kineticTheoryPtr_->alphap();
+        Info<< kineticTheoryPtr_->name() << " fraction, min, max = "
             << alphap.weightedAverage(mesh_.V()).value()
             << ' ' << min(alphap).value()
             << ' ' << max(alphap).value()
@@ -391,37 +389,6 @@ void Foam::multiphaseSystem::solveAlphas()
     forAll(movingPhases(), movingPhasei)
     {
         movingPhases()[movingPhasei] *= alphaVoid/sumAlphaMoving;
-    }
-}
-
-void Foam::multiphaseSystem::solvePhaseFluxes
-(
-    PtrList<surfaceScalarField>& phiPs,
-    const PtrList<surfaceScalarField>& alphaDbyAs
-)
-{
-    forAll(phases(), phasei)
-    {
-        const phaseModel& phase = phases()[phasei];
-
-        if (phiPs.set(phasei))
-        {
-            const volScalarField& alpha = phase;
-
-            fvScalarMatrix alphaEqn
-            (
-                fvm::ddt(alpha)
-              - fvm::laplacian(alphaDbyAs[phasei], alpha, "bounded")
-            );
-            alphaEqn.relax();
-            alphaEqn.solve();
-
-            // Revert to old alpha, and correct granular flux
-            phases()[phasei].alphaPhiRef() += (alphaEqn.flux() + phiPs[phasei]);
-            phases()[phasei] == alpha.oldTime();
-
-            phiPs[phasei] = -alphaEqn.flux();
-        }
     }
 }
 
@@ -729,8 +696,10 @@ void Foam::multiphaseSystem::solve()
 
     bool LTS = fv::localEulerDdt::enabled(mesh_);
 
-    PtrList<surfaceScalarField> phiPs(phases().size());
     PtrList<surfaceScalarField> alphaDbyAs(phases().size());
+    PtrList<surfaceScalarField> alphaPhiPs(phases().size());
+    PtrList<surfaceScalarField> deltaAlphaPhiPs(phases().size());
+
     forAll(phases(), phasei)
     {
         const phaseModel& phase = phases()[phasei];
@@ -748,20 +717,43 @@ void Foam::multiphaseSystem::solve()
                 (
                     IOobject::groupName("alphaDbyA", phase.name()),
                     alphaf
-                   *fvc::interpolate(max(1.0 - alpha, scalar(0)))
+                   *max(1.0 - alphaf, scalar(0))
                    *DbyA
                 )
             );
-
-            // Store original particle flux
-            phiPs.set
+            alphaPhiPs.set
             (
                 phasei,
                 new surfaceScalarField
                 (
-                    DbyA*alphaf
+                    IOobject::groupName
+                    (
+                        "alphaPhiP",
+                        phase.name()
+                    ),
+                    DbyA
                    *fvc::snGrad(alpha, "bounded")
                    *mesh_.magSf()
+                )
+            );
+
+            deltaAlphaPhiPs.set
+            (
+                phasei,
+                new surfaceScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName
+                        (
+                            "deltaAlphaPhiP",
+                            phase.name()
+                        ),
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedScalar("0", phase.alphaPhi()().dimensions(), 0.0)
                 )
             );
         }
@@ -770,7 +762,39 @@ void Foam::multiphaseSystem::solve()
 
     for (label corri = 0; corri < nAlphaCorr; corri++)
     {
-        solvePhaseFluxes(phiPs, alphaDbyAs);
+        // Correct particle phase fluxes
+        forAll(phases(), phasei)
+        {
+            const phaseModel& phase = phases()[phasei];
+
+            if (deltaAlphaPhiPs.set(phasei))
+            {
+                const volScalarField& alpha = phase;
+                word alphaScheme("div(phi," + alpha.name() + ')');
+                word alpharScheme("div(phir," + alpha.name() + ')');
+
+                fvScalarMatrix alphaEqn
+                (
+                    fvm::ddt(alpha)
+                  + fvc::div
+                    (
+                        -fvc::flux
+                        (
+                                -alphaPhiPs[phasei],
+                                scalar(1) - alpha,
+                                alpharScheme
+                        ),
+                        alpha,
+                        alpharScheme
+                    )
+                  - fvm::laplacian(alphaDbyAs[phasei], alpha, "bounded")
+                );
+                alphaEqn.relax();
+                alphaEqn.solve();
+
+                deltaAlphaPhiPs[phasei] = alphaEqn.flux();
+            }
+        }
 
         if (nAlphaSubCycles > 1)
         {
@@ -823,7 +847,7 @@ void Foam::multiphaseSystem::solve()
                 !(++alphaSubCycle).end();
             )
             {
-                solveAlphas();
+                solveAlphas(deltaAlphaPhiPs);
 
                 forAll(phases(), phasei)
                 {
@@ -851,7 +875,7 @@ void Foam::multiphaseSystem::solve()
         }
         else
         {
-            solveAlphas();
+            solveAlphas(deltaAlphaPhiPs);
         }
     }
 

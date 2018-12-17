@@ -296,7 +296,7 @@ Foam::RASModels::kineticTheoryModel::divDevRhoReff
 
 void Foam::RASModels::kineticTheoryModel::correct()
 {
-    if (phase_.name() == kineticTheorySystem_.phases()[0])
+    if (phase_.index() == kineticTheorySystem_.phaseIndexes()[0])
     {
         kineticTheorySystem_.correct();
     }
@@ -540,11 +540,13 @@ void Foam::RASModels::kineticTheoryModel::correct()
         nuFric_ = min(nuFric_, maxNut_ - nut_);
         nut_ += nuFric_;
     }
-
     if
     (
-        phase_.name()
-     == kineticTheorySystem_.phases()[kineticTheorySystem_.phases().size() - 1]
+        phase_.index()
+     == kineticTheorySystem_.phaseIndexes()
+        [
+            kineticTheorySystem_.phaseIndexes().size() - 1
+        ]
     )
     {
         kineticTheorySystem_.correct();

@@ -106,7 +106,8 @@ Foam::kineticTheorySystem::kineticTheorySystem
         fluid.mesh(),
         dimensionedScalar("0", sqr(dimVelocity), 0.0)
     ),
-    phases_(),
+    phaseNames_(),
+    phaseIndexes_(),
     packingLimitModel_
     (
         kineticTheoryModels::packingLimitModel::New
@@ -227,7 +228,7 @@ bool Foam::kineticTheorySystem::read()
 
     writeTotal_ = dict_.lookupOrDefault("writeTotal", false);
 
-    if (phases_.size() > 1 && writeTotal_)
+    if (phaseNames_.size() > 1 && writeTotal_)
     {
         alphap_.writeOpt() = AUTO_WRITE;
         Up_.writeOpt() = AUTO_WRITE;
@@ -262,7 +263,7 @@ bool Foam::kineticTheorySystem::readIfModified()
 
 bool Foam::kineticTheorySystem::polydisperse() const
 {
-    return (phases_.size() > 1);
+    return (phaseNames_.size() > 1);
 }
 
 
@@ -312,7 +313,7 @@ Foam::kineticTheorySystem::nu
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheorySystem::PsCoeff(const phaseModel& phase) const
 {
-    if (phases_.size() == 1)
+    if (phaseNames_.size() == 1)
     {
         phasePairKey key(phase.name(), phase.name(), false);
         const volScalarField& Theta =
@@ -351,9 +352,9 @@ Foam::kineticTheorySystem::PsCoeff(const phaseModel& phase) const
     );
     volScalarField& psCoeff = tmpPsCoeff.ref();
 
-    forAll(phases_, phasei)
+    forAll(phaseNames_, phasei)
     {
-        const phaseModel& phase2 = fluid_.phases()[phases_[phasei]];
+        const phaseModel& phase2 = fluid_.phases()[phaseIndexes_[phasei]];
         phasePairKey key(phase.name(), phase2.name(), false);
         const volScalarField& Theta =
             fluid_.mesh().lookupObject<volScalarField>
@@ -372,7 +373,7 @@ Foam::kineticTheorySystem::PsCoeff(const phaseModel& phase) const
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheorySystem::PsCoeffPrime(const phaseModel& phase) const
 {
-    if (phases_.size() == 1)
+    if (phaseNames_.size() == 1)
     {
         phasePairKey key(phase.name(), phase.name(), false);
         const volScalarField& Theta =
@@ -411,9 +412,9 @@ Foam::kineticTheorySystem::PsCoeffPrime(const phaseModel& phase) const
     );
     volScalarField& psCoeffPrime = tmpPsCoeffPrime.ref();
 
-    forAll(phases_, phasei)
+    forAll(phaseNames_, phasei)
     {
-        const phaseModel& phase2 = fluid_.phases()[phases_[phasei]];
+        const phaseModel& phase2 = fluid_.phases()[phaseIndexes_[phasei]];
         phasePairKey key(phase.name(), phase2.name(), false);
         const volScalarField& Theta =
             fluid_.mesh().lookupObject<volScalarField>
@@ -482,9 +483,15 @@ Foam::kineticTheorySystem::nuFrictional(const phaseModel& phase) const
 
 
 
-const Foam::wordList& Foam::kineticTheorySystem::phases() const
+const Foam::wordList& Foam::kineticTheorySystem::phaseNames() const
 {
-    return phases_;
+    return phaseNames_;
+}
+
+
+const Foam::labelList& Foam::kineticTheorySystem::phaseIndexes() const
+{
+    return phaseIndexes_;
 }
 
 
@@ -494,12 +501,13 @@ void Foam::kineticTheorySystem::addPhase
 )
 {
     const word& phaseName(phase.name());
-    phases_.append(phaseName);
+    phaseNames_.append(phaseName);
+    phaseIndexes_.append(phase.index());
 
     minAlphaMax_ = min(minAlphaMax_, phase.alphaMax());
 
     // Print granular quantities only if more than 1 phase is present
-    if (phases_.size() > 1 && writeTotal_)
+    if (phaseNames_.size() > 1 && writeTotal_)
     {
         alphap_.writeOpt() = AUTO_WRITE;
         Up_.writeOpt() = AUTO_WRITE;
@@ -507,18 +515,18 @@ void Foam::kineticTheorySystem::addPhase
         alphaMax_.writeOpt() = AUTO_WRITE;
     }
 
-    forAll(phases_, phasei)
+    forAll(phaseNames_, phasei)
     {
         phasePairKey key
         (
             phaseName,
-            phases_[phasei],
+            phaseNames_[phasei],
             false
         );
         pairs_.append(key);
         word name = key.first() + "And" + key.second();
 
-        if (phaseName == phases_[phasei])
+        if (phaseName == phaseNames_[phasei])
         {
             name = phaseName;
         }
@@ -593,9 +601,9 @@ void Foam::kineticTheorySystem::addPhase
 
 bool Foam::kineticTheorySystem::found(const word& phaseName) const
 {
-    forAll(phases_, phasei)
+    forAll(phaseNames_, phasei)
     {
-        if (phases_[phasei] == phaseName)
+        if (phaseNames_[phasei] == phaseName)
         {
             return true;
         }
@@ -610,10 +618,10 @@ void Foam::kineticTheorySystem::correct()
     Up_ = dimensionedVector("0", dimVelocity, Zero);
     Thetap_ = dimensionedScalar("0", sqr(dimVelocity), 0.0);
 
-    forAll(phases_, phasei)
+    forAll(phaseNames_, phasei)
     {
-        const phaseModel& phase = fluid_.phases()[phases_[phasei]];
-        const volScalarField& alpha = fluid_.phases()[phases_[phasei]];
+        const phaseModel& phase = fluid_.phases()[phaseIndexes_[phasei]];
+        const volScalarField& alpha = phase;
         const volScalarField& Theta =
             fluid_.mesh().lookupObject<volScalarField>
             (
@@ -691,9 +699,9 @@ void Foam::kineticTheorySystem::correct()
 void Foam::kineticTheorySystem::correctAlphap()
 {
     alphap_ = 0.0;
-    forAll(phases_, phasei)
+    forAll(phaseNames_, phasei)
     {
-        alphap_ += fluid_.phases()[phases_[phasei]];
+        alphap_ += fluid_.phases()[phaseIndexes_[phasei]];
     }
     alphap_.correctBoundaryConditions();
 }

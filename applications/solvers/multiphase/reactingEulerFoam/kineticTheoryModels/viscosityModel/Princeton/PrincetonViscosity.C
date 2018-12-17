@@ -88,9 +88,9 @@ Foam::kineticTheoryModels::viscosityModels::Princeton::nu
      dimensionedScalar("0", dimless, 0.0)
     );
 
-    forAll(kt_.phases(), phasei)
+    forAll(kt_.phaseNames(), phasei)
     {
-        const word& name2(kt_.phases()[phasei]);
+        const word& name2(kt_.phaseNames()[phasei]);
         const phaseModel& phase2 = kt_.fluid().phases()[name2];
         phasePairKey key(phase.name(), name2, false);
         scalar eij(kt_.es()[key]);

@@ -30,6 +30,8 @@ License
 #include "fvcDdt.H"
 #include "localEulerDdtScheme.H"
 
+#include "kineticTheorySystem.H"
+
 #include "dragModel.H"
 #include "BlendedInterfacialModel.H"
 
@@ -142,6 +144,9 @@ Foam::phaseSystem::phaseSystem
 
     phaseModels_(lookup("phases"), phaseModel::iNew(*this)),
 
+    kineticTheoryPtr_(NULL),
+    polydisperseKineticTheory_(false),
+
     phi_(calcPhi(phaseModels_)),
 
     dpdt_
@@ -222,6 +227,20 @@ Foam::phaseSystem::phaseSystem
     // Sub-models
     generatePairsAndSubModels("surfaceTension", surfaceTensionModels_);
     generatePairsAndSubModels("aspectRatio", aspectRatioModels_);
+
+    if (mesh_.foundObject<kineticTheorySystem>("kineticTheorySystem"))
+    {
+        kineticTheoryPtr_ =
+            &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem");
+
+        //- If only one granular phase is used, the multiphase limiting is not
+        //  needed so it is skipped
+        if (kineticTheoryPtr_->polydisperse())
+        {
+            polydisperseKineticTheory_ = true;
+        }
+    }
+
 
     // Update motion fields
     correctKinematics();
@@ -421,11 +440,26 @@ void Foam::phaseSystem::correctThermo()
 }
 
 
-void Foam::phaseSystem::correctTurbulence()
+void Foam::phaseSystem::correctTurbulence(const bool postSolve)
 {
     forAll(phaseModels_, phasei)
     {
-        phaseModels_[phasei].correctTurbulence();
+        if
+        (
+            postSolve
+         && !kineticTheoryPtr_->found(phaseModels_[phasei].name())
+        )
+        {
+            phaseModels_[phasei].correctTurbulence();
+        }
+        else if
+        (
+            !postSolve
+         && kineticTheoryPtr_->found(phaseModels_[phasei].name())
+        )
+        {
+            phaseModels_[phasei].correctTurbulence();
+        }
     }
 }
 

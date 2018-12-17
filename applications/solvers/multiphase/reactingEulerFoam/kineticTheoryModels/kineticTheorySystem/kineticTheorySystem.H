@@ -98,7 +98,10 @@ class kineticTheorySystem
 
 
         //- List of granular phase names
-        wordList phases_;
+        wordList phaseNames_;
+
+        //- List of granular phase indexes
+        labelList phaseIndexes_;
 
         //- Table of granular pairs
         List<phasePairKey> pairs_;
@@ -223,7 +226,10 @@ public:
         }
 
         //- Const refrence to list of granular phases
-        const wordList& phases() const;
+        const wordList& phaseNames() const;
+
+        //- Const refrence to list of granular indexes
+        const labelList& phaseIndexes() const;
 
         //- Add phase to list of kinetic theory phases.
         void addPhase(const phaseModel&);
@@ -303,6 +309,12 @@ public:
             const phaseModel&,
             const volScalarField&
         ) const;
+
+        //- Const ref to unsaled frictional pressure (used in drag)
+        const volScalarField& Pfr() const
+        {
+            return Pfr_;
+        }
 
         //- Return the fricitional-pressure
         tmp<volScalarField> frictionalPressure(const phaseModel&) const;
