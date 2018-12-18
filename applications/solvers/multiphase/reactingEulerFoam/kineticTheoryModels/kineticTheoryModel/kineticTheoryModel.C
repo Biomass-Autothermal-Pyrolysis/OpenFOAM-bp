@@ -37,7 +37,7 @@ Foam::RASModels::kineticTheoryModel::lookupOrConstruct
 ) const
 {
 
-    if (!mesh_.foundObject<volScalarField>(name))
+    if (!mesh_.foundObject<kineticTheorySystem>(name))
     {
         kineticTheorySystem* ktPtr
         (
