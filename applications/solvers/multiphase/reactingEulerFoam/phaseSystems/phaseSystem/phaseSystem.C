@@ -442,6 +442,11 @@ void Foam::phaseSystem::correctThermo()
 
 void Foam::phaseSystem::correctTurbulence(const bool postSolve)
 {
+    if (kineticTheoryPtr_)
+    {
+        kineticTheoryPtr_->correct();
+    }
+
     forAll(phaseModels_, phasei)
     {
         if
@@ -460,6 +465,11 @@ void Foam::phaseSystem::correctTurbulence(const bool postSolve)
         {
             phaseModels_[phasei].correctTurbulence();
         }
+    }
+
+    if (kineticTheoryPtr_)
+    {
+        kineticTheoryPtr_->correct();
     }
 }
 

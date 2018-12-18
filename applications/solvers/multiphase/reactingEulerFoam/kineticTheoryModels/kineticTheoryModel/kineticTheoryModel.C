@@ -296,11 +296,6 @@ Foam::RASModels::kineticTheoryModel::divDevRhoReff
 
 void Foam::RASModels::kineticTheoryModel::correct()
 {
-    if (phase_.index() == kineticTheorySystem_.phaseIndexes()[0])
-    {
-        kineticTheorySystem_.correct();
-    }
-
     // Local references
     volScalarField alpha(max(alpha_, scalar(0)));
     const volScalarField& rho = phase_.rho();
@@ -539,17 +534,6 @@ void Foam::RASModels::kineticTheoryModel::correct()
         nut_.min(maxNut_);
         nuFric_ = min(nuFric_, maxNut_ - nut_);
         nut_ += nuFric_;
-    }
-    if
-    (
-        phase_.index()
-     == kineticTheorySystem_.phaseIndexes()
-        [
-            kineticTheorySystem_.phaseIndexes().size() - 1
-        ]
-    )
-    {
-        kineticTheorySystem_.correct();
     }
 
     if (debug)
