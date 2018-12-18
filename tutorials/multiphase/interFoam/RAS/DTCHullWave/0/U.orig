@@ -15,11 +15,11 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Umean 1.668;
+#include        "$FOAM_CASE/constant/waveProperties";
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (#neg $Umean 0 0);
+internalField   uniform ($UxMean 0 0);
 
 boundaryField
 {
@@ -29,27 +29,13 @@ boundaryField
     inlet
     {
         type            waveVelocity;
-        origin          (0 0 0.244);
-        direction       (-1 0 0);
-        speed           $Umean;
-        waves
-        (
-            Stokes2
-            {
-                length      3;
-                amplitude   0.04;
-                phase       0;
-                angle       0;
-            }
-        );
-        scale           table ((4 1) (12 0));
     }
 
     outlet
     {
         type            outletPhaseMeanVelocity;
         alpha           alpha.water;
-        Umean           $Umean;
+        UnMean          #neg $UxMean;
         value           $internalField;
     }
 

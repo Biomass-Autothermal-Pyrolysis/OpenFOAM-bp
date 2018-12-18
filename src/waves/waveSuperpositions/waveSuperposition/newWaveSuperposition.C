@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,38 +23,52 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMatrices.H"
-#include "fvcDdt.H"
+#include "waveSuperposition.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-template<class RhoFieldType>
-void Foam::fv::solidificationMeltingSource::apply
+const Foam::waveSuperposition& Foam::waveSuperposition::New
 (
-    const RhoFieldType& rho,
-    fvMatrix<scalar>& eqn
+    const objectRegistry& db
 )
 {
-    if (debug)
+    if (db.foundObject<waveSuperposition>(dictName))
     {
-        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
+        return db.lookupObject<waveSuperposition>(dictName);
     }
 
-    const volScalarField Cp(this->Cp());
+    const IOdictionary dict
+    (
+        IOobject
+        (
+            dictName,
+            db.time().constant(),
+            db,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
 
-    update(Cp);
+    const word type =
+        dict.lookupOrDefault<word>("type", waveSuperposition::typeName);
 
-    dimensionedScalar L("L", dimEnergy/dimMass, L_);
+    objectRegistryConstructorTable::iterator cstrIter =
+        objectRegistryConstructorTablePtr_->find(type);
 
-    // Contributions added to rhs of solver equation
-    if (eqn.psi().dimensions() == dimTemperature)
+    if (cstrIter == objectRegistryConstructorTablePtr_->end())
     {
-        eqn -= L/Cp*(fvc::ddt(rho, alpha1_));
+        FatalErrorInFunction
+            << "Unknown " << waveSuperposition::typeName << " " << type
+            << nl << nl << "Valid types are:" << nl
+            << objectRegistryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
-    else
-    {
-        eqn -= L*(fvc::ddt(rho, alpha1_));
-    }
+
+    waveSuperposition* ptr = cstrIter()(db).ptr();
+
+    ptr->store();
+
+    return *ptr;
 }
 
 

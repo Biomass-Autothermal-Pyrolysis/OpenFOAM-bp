@@ -25,8 +25,50 @@ Class
     Foam::waveSuperposition
 
 Description
-    A wrapper around a list of wave models. Superimposes the modelled values
-    of elevation and velocity.
+    A wrapper around a list of wave models. Superimposes the modelled values of
+    elevation and velocity. The New method looks up or or constructs an
+    instance of this class on demand and returns a reference. Properties are
+    read from a dictionary in constant.
+
+Usage
+    \table
+        Property   | Description                             | Req'd? | Default
+        origin     | origin of the wave coordinate system    | yes    |
+        direction  | direction of the wave coordinate system | yes    |
+        waves      | list of wave models to superimpose      | yes    |
+        UMean      | velocity of the mean flow               | yes    |
+        scale      | scale factor in the direction           | no     | None
+        crossScale | scale factor perpendicular to the direction | no | None
+        heightAboveWave | use the height above the wave as the vertical \\
+        coordinate | no | false
+    \endtable
+
+    Example specification:
+    \verbatim
+    origin      (0 25 0);
+    direction   (1 0 0);
+    waves
+    (
+        Airy
+        {
+            length      40;
+            amplitude   0.5;
+            phase       0;
+            angle       0;
+        }
+        Airy
+        {
+            length      20;
+            amplitude   0.25;
+            phase       1.5708;
+            angle       0;
+        }
+    );
+    UMean       (2 0 0);
+    scale       table ((100 1) (200 0));
+    crossScale  constant 1;
+    heightAboveWave no;
+    \endverbatim
 
 SourceFiles
     waveSuperposition.C
@@ -37,6 +79,7 @@ SourceFiles
 #define waveSuperposition_H
 
 #include "waveModel.H"
+#include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,34 +91,32 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class waveSuperposition
+:
+    public IOdictionary
 {
-    // Private data
+protected:
 
-        //- Reference to the database
-        const objectRegistry& db_;
+    // Protected Data
 
         //- The origin of the wave coordinate system
         const vector origin_;
 
-        //- The mean flow direction
+        //- The direction of the wave coordinate system
         const vector direction_;
-
-        //- The mean flow speed
-        const scalar speed_;
 
         //- Wave models to superimpose
         PtrList<waveModel> waveModels_;
 
-        //- The angle relative to the mean velocity at which the waves propagate
+        //- The angle relative to the direction at which the waves propagate
         scalarList waveAngles_;
 
-        //- Ramp for the mean flow speed
-        const autoPtr<Function1<scalar>> ramp_;
+        //- Mean velocity
+        const autoPtr<Function1<vector>> UMean_;
 
-        //- Scaling in the flow direction
+        //- Scaling in the local x-direction
         const autoPtr<Function1<scalar>> scale_;
 
-        //- Scaling perpendicular to the flow direction
+        //- Scaling perpendicular to the local x-direction
         const autoPtr<Function1<scalar>> crossScale_;
 
         //- Calculate wave properties using the height above the wave (true) or
@@ -83,34 +124,34 @@ class waveSuperposition
         const Switch heightAboveWave_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Get the transformation to actual coordinates
         void transformation
         (
+            const scalar t,
             const vectorField& p,
             tensor& axes,
-            scalar& u,
             vectorField& xyz
         ) const;
 
-        //- Get the wave elevation relative to the mean at a given time, mean
-        //  velocity and local coordinates. Local x is aligned with the mean
-        //  velocity, and y is perpendicular to both x and gravity.
+        //- Get the wave elevation relative to the mean at a given time and
+        //  local coordinates. Local x is aligned with the direction, and y is
+        //  perpendicular to both x and gravity.
         tmp<scalarField> elevation
         (
             const scalar t,
             const vector2DField& xy
         ) const;
 
-        //- Get the wave velocity at a given time, mean velocity and local
-        //  coordinates. Local x is aligned with the mean velocity, z with
-        //  negative gravity, and y is perpendicular to both.
+        //- Get the wave velocity at a given time and local coordinates. Local
+        //  x is aligned with the direction, z with negative gravity, and y is
+        //  perpendicular to both.
         tmp<vectorField> velocity(const scalar t, const vectorField& xyz) const;
 
-        //- Get the wave pressure at a given time, mean velocity and local
-        //  coordinates. Local x is aligned with the mean velocity, z with
-        //  negative gravity, and y is perpendicular to both.
+        //- Get the wave pressure at a given time and local coordinates. Local
+        //  x is aligned with the direction, z with negative gravity, and y is
+        //  perpendicular to both.
         tmp<scalarField> pressure(const scalar t, const vectorField& xyz) const;
 
         //- Get the scaling factor, calculated from the optional scaling
@@ -120,16 +161,38 @@ class waveSuperposition
 
 public:
 
+    //- Runtime type information
+    TypeName("wave");
+
+
+    // Declare runtime construction
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        waveSuperposition,
+        objectRegistry,
+        (const objectRegistry& db),
+        (db)
+    );
+
+
+    // Static Data
+
+        //- The name of the dictionary
+        static const word dictName;
+
+
+    // Static Member Functions
+
+        //- Return a reference to the wave model on the given database,
+        //  constructing if it doesn't exist
+        static const waveSuperposition& New(const objectRegistry& db);
+
+
     // Constructors
 
         //- Construct from a database
         waveSuperposition(const objectRegistry& db);
-
-        //- Construct a copy
-        waveSuperposition(const waveSuperposition& waves);
-
-        //- Construct from a database and gravity
-        waveSuperposition(const objectRegistry& db, const dictionary& dict);
 
 
     //- Destructor
@@ -139,25 +202,42 @@ public:
     // Member Functions
 
         //- Get the height above the waves at a given time and global positions
-        tmp<scalarField> height(const scalar t, const vectorField& p) const;
+        virtual tmp<scalarField> height
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the liquid velocity at a given time and global positions
-        tmp<vectorField> ULiquid(const scalar t, const vectorField& p) const;
+        virtual tmp<vectorField> ULiquid
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the gas velocity at a given time and global positions
-        tmp<vectorField> UGas(const scalar t, const vectorField& p) const;
+        virtual tmp<vectorField> UGas
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the liquid pressure at a given time and global positions
-        tmp<scalarField> pLiquid(const scalar t, const vectorField& p) const;
+        virtual tmp<scalarField> pLiquid
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
         //- Get the gas pressure at a given time and global positions
-        tmp<scalarField> pGas(const scalar t, const vectorField& p) const;
+        virtual tmp<scalarField> pGas
+        (
+            const scalar t,
+            const vectorField& p
+        ) const;
 
-        //- Get the mean flow velocity
-        inline vector UMean(const scalar t) const
-        {
-            return (ramp_.valid() ? ramp_->value(t) : 1)*direction_*speed_;
-        }
+        //- Inherit write from regIOobject
+        using regIOobject::write;
 
         //- Write
         void write(Ostream&) const;

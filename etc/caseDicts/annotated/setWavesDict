@@ -10,31 +10,19 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvOptions;
+    object      setWavesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-option1
-{
-    type            verticalDamping;
+// Optional name of the volume fraction field
+alpha   alpha.water;
 
-    selectionMode   all;
+// Optional name of the velocity field
+U       U;
 
-    origin          (1200 0 0);
-    direction       (1 0 0);
-    scale
-    {
-        type        halfCosineRamp;
-        start       0;
-        duration    600;
-    }
-
-    lambda          0.5;
-
-    timeStart       0;
-    duration        1e6;
-}
+// Optional flag which indicates whether the alpha field is that of the liquid
+// under the waves (true) or the gas over the waves (false)
+liquid  true;
 
 
-//************************************************************************* //
+// ************************************************************************* //

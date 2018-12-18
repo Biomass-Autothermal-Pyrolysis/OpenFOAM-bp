@@ -11,30 +11,30 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      fvOptions;
+    object      waveProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-option1
-{
-    type            verticalDamping;
+origin          (0 0 0);
 
-    selectionMode   all;
+direction       (1 0 0);
 
-    origin          (1200 0 0);
-    direction       (1 0 0);
-    scale
+waves
+(
+    Airy
     {
-        type        halfCosineRamp;
-        start       0;
-        duration    600;
+        length      300;
+        amplitude   2.5;
+        phase       0;
+        angle       0;
     }
+);
 
-    lambda          0.5;
+UMean           (2 0 0);
 
-    timeStart       0;
-    duration        1e6;
-}
+scale           table ((1200 1) (1800 0));
+
+crossScale      constant 1;
 
 
-//************************************************************************* //
+// ************************************************************************* //
