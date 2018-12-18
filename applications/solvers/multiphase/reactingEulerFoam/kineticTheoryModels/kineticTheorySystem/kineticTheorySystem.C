@@ -500,7 +500,7 @@ void Foam::kineticTheorySystem::addPhase
     const phaseModel& phase
 )
 {
-    const word& phaseName(phase.name());
+    word phaseName(phase.name());
     phaseNames_.append(phaseName);
     phaseIndexes_.append(phase.index());
 
@@ -524,7 +524,9 @@ void Foam::kineticTheorySystem::addPhase
             false
         );
         pairs_.append(key);
-        word name = key.first() + "And" + key.second();
+        word name(key.second());
+        name[0] = toupper(name[0]);
+        name = key.first() + "And" + name;
 
         if (phaseName == phaseNames_[phasei])
         {
