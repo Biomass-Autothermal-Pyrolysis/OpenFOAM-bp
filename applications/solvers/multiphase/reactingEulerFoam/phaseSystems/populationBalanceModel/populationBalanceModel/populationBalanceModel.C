@@ -152,7 +152,7 @@ Foam::diameterModels::populationBalanceModel::add(sizeGroup& group)
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("Su", inv(dimTime), 0)
+            dimensionedScalar(inv(dimTime), 0)
         )
     );
 
@@ -167,7 +167,7 @@ Foam::diameterModels::populationBalanceModel::add(sizeGroup& group)
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("SuSp", inv(dimTime), 0)
+            dimensionedScalar(inv(dimTime), 0)
         )
     );
 }
@@ -803,16 +803,11 @@ Foam::diameterModels::populationBalanceModel::calcDsm()
 {
     tmp<volScalarField> tInvDsm
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "invDsm",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "invDsm",
             mesh_,
-            dimensionedScalar("invDsm", inv(dimLength), Zero)
+            dimensionedScalar(inv(dimLength), Zero)
         )
     );
 
@@ -900,7 +895,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             mesh_
         ),
         mesh_,
-        dimensionedScalar("Sui", inv(dimTime), Zero)
+        dimensionedScalar(inv(dimTime), Zero)
     ),
     coalescence_
     (
@@ -968,7 +963,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                      mesh_
                 ),
                 mesh_,
-                dimensionedScalar("coalescenceRate", dimVolume/dimTime, Zero)
+                dimensionedScalar(dimVolume/dimTime, Zero)
             )
         );
     }
@@ -986,7 +981,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar("breakupRate", inv(dimTime), Zero)
+                dimensionedScalar(inv(dimTime), Zero)
             )
         );
     }
@@ -1027,7 +1022,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar("driftRate", dimVolume/dimTime, Zero)
+                dimensionedScalar(dimVolume/dimTime, Zero)
             )
         );
 
@@ -1042,7 +1037,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar("r", dimless, Zero)
+                dimensionedScalar(dimless, Zero)
             )
         );
 
@@ -1057,7 +1052,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     mesh_
                 ),
                 mesh_,
-                dimensionedScalar("r", dimless, Zero)
+                dimensionedScalar(dimless, Zero)
             )
         );
     }
@@ -1100,7 +1095,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     IOobject::AUTO_WRITE
                 ),
                 mesh_,
-                dimensionedScalar("alpha", dimless, Zero)
+                dimensionedScalar(dimless, Zero)
             )
         );
 
@@ -1117,7 +1112,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     IOobject::AUTO_WRITE
                 ),
                 mesh_,
-                dimensionedScalar("d", dimLength, Zero)
+                dimensionedScalar(dimLength, Zero)
             )
         );
 
@@ -1134,7 +1129,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                     IOobject::AUTO_WRITE
                 ),
                 mesh_,
-                dimensionedVector("U", dimVelocity, Zero)
+                dimensionedVector(dimVelocity, Zero)
             )
         );
     }

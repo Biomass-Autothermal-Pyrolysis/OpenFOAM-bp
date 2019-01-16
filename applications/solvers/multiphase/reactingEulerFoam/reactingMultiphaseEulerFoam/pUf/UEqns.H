@@ -9,6 +9,9 @@ PtrList<fvVectorMatrix> UEqns(phases.size());
     autoPtr<phaseSystem::momentumTransferTable>
         momentumTransferPtr(fluid.momentumTransferf());
 
+    //- Solve granular temperature using new drag coefficients
+    fluid.correctTurbulence(false);
+
     phaseSystem::momentumTransferTable&
         momentumTransfer(momentumTransferPtr());
 

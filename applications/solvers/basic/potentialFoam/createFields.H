@@ -12,7 +12,7 @@ volVectorField U
     mesh
 );
 
-U = dimensionedVector("0", U.dimensions(), Zero);
+U = dimensionedVector(U.dimensions(), Zero);
 
 surfaceScalarField phi
 (
@@ -98,7 +98,7 @@ volScalarField Phi
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("Phi", dimLength*dimVelocity, 0),
+    dimensionedScalar(dimLength*dimVelocity, 0),
     PhiBCTypes
 );
 

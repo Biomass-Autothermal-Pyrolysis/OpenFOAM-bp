@@ -72,18 +72,12 @@ Foam::functionObjects::wallHeatTransferCoeff::calcHeatTransferCoeff
 {
     tmp<volScalarField> twallHeatTransferCoeff
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            type(),
             mesh_,
             dimensionedScalar
             (
-                "0",
                 dimMass/pow3(dimTime)/(dimTemperature/dimLength),
                 0
             )

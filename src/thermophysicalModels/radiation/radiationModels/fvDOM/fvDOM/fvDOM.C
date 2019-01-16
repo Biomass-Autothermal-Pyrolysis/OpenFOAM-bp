@@ -212,7 +212,7 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("G", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     qr_
     (
@@ -225,7 +225,7 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     qem_
     (
@@ -238,7 +238,7 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qem", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     qin_
     (
@@ -251,7 +251,7 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qin", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     a_
     (
@@ -264,7 +264,7 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0)
+        dimensionedScalar(dimless/dimLength, 0)
     ),
     nTheta_(readLabel(coeffs_.lookup("nTheta"))),
     nPhi_(readLabel(coeffs_.lookup("nPhi"))),
@@ -304,7 +304,7 @@ Foam::radiation::fvDOM::fvDOM
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("G", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     qr_
     (
@@ -317,7 +317,7 @@ Foam::radiation::fvDOM::fvDOM
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     qem_
     (
@@ -330,7 +330,7 @@ Foam::radiation::fvDOM::fvDOM
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qem", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     qin_
     (
@@ -343,7 +343,7 @@ Foam::radiation::fvDOM::fvDOM
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qin", dimMass/pow3(dimTime), 0)
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     ),
     a_
     (
@@ -356,7 +356,7 @@ Foam::radiation::fvDOM::fvDOM
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0)
+        dimensionedScalar(dimless/dimLength, 0)
     ),
     nTheta_(readLabel(coeffs_.lookup("nTheta"))),
     nPhi_(readLabel(coeffs_.lookup("nPhi"))),
@@ -448,23 +448,13 @@ Foam::tmp<Foam::volScalarField> Foam::radiation::fvDOM::Rp() const
     // Construct using contribution from first frequency band
     tmp<volScalarField> tRp
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "Rp",
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            (
-                4
-               *physicoChemical::sigma
-               *(aLambda_[0] - absorptionEmission_->aDisp(0)())
-               *blackBody_.deltaLambdaT(T_, absorptionEmission_->bands(0))
-            )
+            "Rp",
+            4
+           *physicoChemical::sigma
+           *(aLambda_[0] - absorptionEmission_->aDisp(0)())
+           *blackBody_.deltaLambdaT(T_, absorptionEmission_->bands(0))
         )
     );
 
@@ -503,7 +493,7 @@ Foam::radiation::fvDOM::Ru() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimensionSet(1, -1, -3, 0, 0), 0)
+            dimensionedScalar(dimensionSet(1, -1, -3, 0, 0), 0)
         )
     );
 
@@ -544,8 +534,8 @@ void Foam::radiation::fvDOM::updateG()
 {
     G_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0);
     qr_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0);
-    qem_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0);
-    qin_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0);
+    qem_ = dimensionedScalar(dimMass/pow3(dimTime), 0);
+    qin_ = dimensionedScalar(dimMass/pow3(dimTime), 0);
 
     forAll(IRay_, rayI)
     {

@@ -101,7 +101,7 @@ void Foam::fvMesh::makeMagSf() const
             IOobject::NO_WRITE,
             false
         ),
-        mag(Sf()) + dimensionedScalar("vs", dimArea, vSmall)
+        mag(Sf()) + dimensionedScalar(dimArea, vSmall)
     );
 }
 
@@ -383,18 +383,9 @@ Foam::tmp<Foam::surfaceVectorField> Foam::fvMesh::delta() const
 
     tmp<surfaceVectorField> tdelta
     (
-        new surfaceVectorField
+        surfaceVectorField::New
         (
-            IOobject
-            (
-                "delta",
-                pointsInstance(),
-                meshSubDir,
-                *this,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "delta",
             *this,
             dimLength
         )
@@ -435,7 +426,7 @@ const Foam::surfaceScalarField& Foam::fvMesh::phi() const
     // mesh motion fluxes if the time has been incremented
     if (!time().subCycling() && phiPtr_->timeIndex() != time().timeIndex())
     {
-        (*phiPtr_) = dimensionedScalar("0", dimVolume/dimTime, 0.0);
+        (*phiPtr_) = dimensionedScalar(dimVolume/dimTime, 0);
     }
 
     return *phiPtr_;

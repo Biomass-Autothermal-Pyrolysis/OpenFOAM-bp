@@ -100,19 +100,11 @@ public:
         {
             tmp<surfaceScalarField> taw
             (
-                new surfaceScalarField
+                surfaceScalarField::New
                 (
-                    IOobject
-                    (
-                        "midPointWeights",
-                        this->mesh().time().timeName(),
-                        this->mesh(),
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
+                    "midPointWeights",
                     this->mesh(),
-                    dimensionedScalar("0.5", dimless, 0.5)
+                    dimensionedScalar(dimless, 0.5)
                 )
             );
 

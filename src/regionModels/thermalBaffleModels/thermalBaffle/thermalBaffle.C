@@ -75,19 +75,11 @@ void thermalBaffle::solveEnergy()
 
     tmp<volScalarField> tQ
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "tQ",
-                regionMesh().time().timeName(),
-                regionMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "tQ",
             regionMesh(),
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )
     );
 
@@ -178,12 +170,7 @@ thermalBaffle::thermalBaffle
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar
-        (
-            "zero",
-            dimEnergy/dimArea/dimTime,
-            Zero
-        )
+        dimensionedScalar(dimEnergy/dimArea/dimTime, Zero)
     ),
     Q_
     (
@@ -196,12 +183,7 @@ thermalBaffle::thermalBaffle
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar
-        (
-            "zero",
-            dimEnergy/dimVolume/dimTime,
-            Zero
-        )
+        dimensionedScalar(dimEnergy/dimVolume/dimTime, Zero)
     ),
     radiation_
     (
@@ -238,12 +220,7 @@ thermalBaffle::thermalBaffle
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar
-        (
-            "zero",
-            dimEnergy/dimArea/dimTime,
-            Zero
-        )
+        dimensionedScalar(dimEnergy/dimArea/dimTime, Zero)
     ),
     Q_
     (
@@ -256,12 +233,7 @@ thermalBaffle::thermalBaffle
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar
-        (
-            "zero",
-            dimEnergy/dimVolume/dimTime,
-            Zero
-        )
+        dimensionedScalar(dimEnergy/dimVolume/dimTime, Zero)
     ),
     radiation_
     (

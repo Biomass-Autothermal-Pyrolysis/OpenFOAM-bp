@@ -89,7 +89,7 @@ void Foam::multiphaseSystem::solveAlphas
             mesh_
         ),
         mesh_,
-        dimensionedScalar("alphaVoid", dimless, 1)
+        dimensionedScalar(dimless, 1)
     );
     forAll(stationaryPhases(), stationaryPhasei)
     {
@@ -269,7 +269,7 @@ void Foam::multiphaseSystem::solveAlphas
                 mesh_
             ),
             mesh_,
-            dimensionedScalar("Sp", dimless/dimTime, 0)
+            dimensionedScalar(dimless/dimTime, 0)
         );
 
         volScalarField::Internal Su
@@ -372,7 +372,7 @@ void Foam::multiphaseSystem::solveAlphas
             mesh_
         ),
         mesh_,
-        dimensionedScalar("sumAlphaMoving", dimless, 0)
+        dimensionedScalar(dimless, 0)
     );
     forAll(movingPhases(), movingPhasei)
     {
@@ -577,7 +577,7 @@ Foam::multiphaseSystem::multiphaseSystem
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("alphas", dimless, 0.0)
+        dimensionedScalar(dimless, 0)
     ),
 
     cAlphas_(lookup("interfaceCompression")),
@@ -611,21 +611,11 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseSystem::surfaceTension
 {
     tmp<surfaceScalarField> tSurfaceTension
     (
-        new surfaceScalarField
+        surfaceScalarField::New
         (
-            IOobject
-            (
-                "surfaceTension",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "surfaceTension",
             mesh_,
-            dimensionedScalar
-            (
-                "surfaceTension",
-                dimensionSet(1, -2, -2, 0, 0),
-                0
-            )
+            dimensionedScalar(dimensionSet(1, -2, -2, 0, 0), 0)
         )
     );
 
@@ -660,16 +650,11 @@ Foam::multiphaseSystem::nearInterface() const
 {
     tmp<volScalarField> tnearInt
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                "nearInterface",
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            "nearInterface",
             mesh_,
-            dimensionedScalar("nearInterface", dimless, 0.0)
+            dimensionedScalar(dimless, 0)
         )
     );
 
@@ -753,7 +738,7 @@ void Foam::multiphaseSystem::solve()
                         mesh_
                     ),
                     mesh_,
-                    dimensionedScalar("0", phase.alphaPhi()().dimensions(), 0.0)
+                    dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
                 )
             );
         }

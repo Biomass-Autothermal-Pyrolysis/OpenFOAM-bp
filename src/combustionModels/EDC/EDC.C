@@ -65,7 +65,7 @@ Foam::combustionModels::EDC<ReactionThermo>::EDC
             IOobject::AUTO_WRITE
         ),
         this->mesh(),
-        dimensionedScalar("kappa", dimless, 0)
+        dimensionedScalar(dimless, 0)
     )
 {}
 
@@ -183,21 +183,10 @@ template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::EDC<ReactionThermo>::Qdot() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                this->thermo().phasePropertyName(typeName + ":Qdot"),
-                this->mesh().time().timeName(),
-                this->mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            kappa_*this->chemistryPtr_->Qdot()
-        )
+        this->thermo().phasePropertyName(typeName + ":Qdot"),
+        kappa_*this->chemistryPtr_->Qdot()
     );
 }
 

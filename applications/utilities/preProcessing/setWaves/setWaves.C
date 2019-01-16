@@ -36,7 +36,7 @@ Description
 #include "timeSelector.H"
 #include "uniformDimensionedFields.H"
 #include "volFields.H"
-#include "wallDist.H"
+#include "wallPolyPatch.H"
 #include "waveAlphaFvPatchScalarField.H"
 #include "waveVelocityFvPatchVectorField.H"
 
@@ -133,37 +133,37 @@ int main(int argc, char *argv[])
         (
             IOobject("h", runTime.timeName(), mesh),
             mesh,
-            dimensionedScalar("0", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         pointScalarField hp
         (
             IOobject("hp", runTime.timeName(), mesh),
             pMesh,
-            dimensionedScalar("0", dimLength, 0)
+            dimensionedScalar(dimLength, 0)
         );
         volVectorField uGas
         (
             IOobject("uGas", runTime.timeName(), mesh),
             mesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
         pointVectorField uGasp
         (
             IOobject("uGasp", runTime.timeName(), mesh),
             pMesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
         volVectorField uLiq
         (
             IOobject("uLiq", runTime.timeName(), mesh),
             mesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
         pointVectorField uLiqp
         (
             IOobject("uLiqp", runTime.timeName(), mesh),
             pMesh,
-            dimensionedVector("0", dimVelocity, vector::zero)
+            dimensionedVector(dimVelocity, vector::zero)
         );
 
         // Cell centres and points
@@ -187,24 +187,32 @@ int main(int argc, char *argv[])
             uLiq.boundaryFieldRef()[patchj] = waves.ULiquid(t, fcs);
         }
 
-        // Set the fields
-        alpha == levelSetFraction(h, hp, !liquid);
-        U == levelSetAverage(h, hp, uGas, uGasp, uLiq, uLiqp);
+        // Calculate the fields
+        volScalarField alphaNoBCs(levelSetFraction(h, hp, !liquid));
+        volVectorField UNoBCs(levelSetAverage(h, hp, uGas, uGasp, uLiq, uLiqp));
 
-        // Set the boundary fields
+        // Set the wave and non-wall fixed-value patch fields
         forAll(mesh.boundary(), patchi)
         {
+            const polyPatch& patch = mesh.boundaryMesh()[patchi];
+
             fvPatchScalarField& alphap = alpha.boundaryFieldRef()[patchi];
-            if (isA<waveAlphaFvPatchScalarField>(alphap))
-            {
-                alphap == refCast<waveAlphaFvPatchScalarField>(alphap).alpha();
-            }
             fvPatchVectorField& Up = U.boundaryFieldRef()[patchi];
-            if (isA<waveVelocityFvPatchVectorField>(Up))
+            if
+            (
+               !isA<wallPolyPatch>(patch)
+             || isA<waveAlphaFvPatchScalarField>(alphap)
+             || isA<waveVelocityFvPatchVectorField>(Up)
+            )
             {
-                Up == refCast<waveVelocityFvPatchVectorField>(Up).U();
+                alphap == alphaNoBCs.boundaryField()[patchi];
+                Up == UNoBCs.boundaryField()[patchi];
             }
         }
+
+        // Set the internal fields and all non-fixed value patch fields
+        alpha = alphaNoBCs;
+        U = UNoBCs;
 
         // Output
         Info<< "Writing " << alpha.name() << nl;

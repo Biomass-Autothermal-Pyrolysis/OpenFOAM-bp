@@ -49,7 +49,7 @@ Foam::combustionModels::PaSR<ReactionThermo>::PaSR
             IOobject::AUTO_WRITE
         ),
         this->mesh(),
-        dimensionedScalar("kappa", dimless, 0)
+        dimensionedScalar(dimless, 0)
     )
 {}
 
@@ -109,13 +109,10 @@ template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::combustionModels::PaSR<ReactionThermo>::Qdot() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            this->thermo().phasePropertyName(typeName + ":Qdot"),
-            kappa_*laminar<ReactionThermo>::Qdot()
-        )
+        this->thermo().phasePropertyName(typeName + ":Qdot"),
+        kappa_*laminar<ReactionThermo>::Qdot()
     );
 }
 

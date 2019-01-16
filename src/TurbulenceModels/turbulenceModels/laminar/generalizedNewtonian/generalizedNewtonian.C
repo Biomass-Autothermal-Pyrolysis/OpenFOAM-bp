@@ -111,22 +111,11 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField>
 generalizedNewtonian<BasicTurbulenceModel>::nut() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("nut", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("nut", dimViscosity, 0.0)
-        )
+        IOobject::groupName("nut", this->alphaRhoPhi_.group()),
+        this->mesh_,
+        dimensionedScalar(dimViscosity, 0)
     );
 }
 
@@ -149,12 +138,10 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField>
 generalizedNewtonian<BasicTurbulenceModel>::nuEff() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject::groupName("nuEff", this->alphaRhoPhi_.group()), nu_
-        )
+        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        nu_
     );
 }
 
@@ -174,22 +161,11 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField>
 generalizedNewtonian<BasicTurbulenceModel>::k() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("k", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("k", sqr(this->U_.dimensions()), 0.0)
-        )
+        IOobject::groupName("k", this->alphaRhoPhi_.group()),
+        this->mesh_,
+        dimensionedScalar(sqr(this->U_.dimensions()), 0)
     );
 }
 
@@ -198,25 +174,11 @@ template<class BasicTurbulenceModel>
 tmp<volScalarField>
 generalizedNewtonian<BasicTurbulenceModel>::epsilon() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar
-            (
-                "epsilon", sqr(this->U_.dimensions())/dimTime, 0.0
-            )
-        )
+        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->mesh_,
+        dimensionedScalar(sqr(this->U_.dimensions())/dimTime, 0)
     );
 }
 
@@ -225,25 +187,11 @@ template<class BasicTurbulenceModel>
 tmp<volSymmTensorField>
 generalizedNewtonian<BasicTurbulenceModel>::R() const
 {
-    return tmp<volSymmTensorField>
+    return volSymmTensorField::New
     (
-        new volSymmTensorField
-        (
-            IOobject
-            (
-                IOobject::groupName("R", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedSymmTensor
-            (
-                "R", sqr(this->U_.dimensions()), Zero
-            )
-        )
+        IOobject::groupName("R", this->alphaRhoPhi_.group()),
+        this->mesh_,
+        dimensionedSymmTensor(sqr(this->U_.dimensions()), Zero)
     );
 }
 

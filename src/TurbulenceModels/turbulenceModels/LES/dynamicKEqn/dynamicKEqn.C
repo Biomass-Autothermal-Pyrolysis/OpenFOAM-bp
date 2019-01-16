@@ -57,7 +57,7 @@ volScalarField dynamicKEqn<BasicTurbulenceModel>::Ck
         simpleFilter_(0.5*(LL && MM))
        /(
             simpleFilter_(magSqr(MM))
-          + dimensionedScalar("small", sqr(MM.dimensions()), vSmall)
+          + dimensionedScalar(sqr(MM.dimensions()), vSmall)
         )
     );
 
@@ -93,7 +93,7 @@ volScalarField dynamicKEqn<BasicTurbulenceModel>::Ce() const
     (
         0.5*(filter_(magSqr(this->U_)) - magSqr(filter_(this->U_)))
     );
-    KK.max(dimensionedScalar("small", KK.dimensions(), small));
+    KK.max(dimensionedScalar(KK.dimensions(), small));
 
     return Ce(D, KK);
 }
@@ -215,20 +215,10 @@ bool dynamicKEqn<BasicTurbulenceModel>::read()
 template<class BasicTurbulenceModel>
 tmp<volScalarField> dynamicKEqn<BasicTurbulenceModel>::epsilon() const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-                this->runTime_.timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            Ce()*k()*sqrt(k())/this->delta()
-        )
+        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        Ce()*k()*sqrt(k())/this->delta()
     );
 }
 
@@ -259,7 +249,7 @@ void dynamicKEqn<BasicTurbulenceModel>::correct()
     tgradU.clear();
 
     volScalarField KK(0.5*(filter_(magSqr(U)) - magSqr(filter_(U))));
-    KK.max(dimensionedScalar("small", KK.dimensions(), small));
+    KK.max(dimensionedScalar(KK.dimensions(), small));
 
     tmp<fvScalarMatrix> kEqn
     (

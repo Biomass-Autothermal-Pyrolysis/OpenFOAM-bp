@@ -151,7 +151,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedScalar("0", dimensionSet(0, 3, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
     ),
     alphaRhoPhi_
     (
@@ -162,7 +162,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedScalar("0", dimensionSet(1, 0, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0)
     ),
     DUDt_(nullptr),
     DUDtf_(nullptr),
@@ -188,7 +188,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedScalar("0", dimDensity/dimTime, 0)
+        dimensionedScalar(dimDensity/dimTime, 0)
     ),
     continuityErrorSources_
     (
@@ -199,7 +199,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             fluid.mesh()
         ),
         fluid.mesh(),
-        dimensionedScalar("0", dimDensity/dimTime, 0)
+        dimensionedScalar(dimDensity/dimTime, 0)
     ),
     K_(nullptr)
 {
@@ -441,12 +441,11 @@ Foam::MovingPhaseModel<BasePhaseModel>::K() const
 {
     if (!K_.valid())
     {
-        K_ =
-            new volScalarField
-            (
-                IOobject::groupName("K", this->name()),
-                0.5*magSqr(this->U())
-            );
+        K_ = volScalarField::New
+        (
+            IOobject::groupName("K", this->name()),
+            0.5*magSqr(this->U())
+        );
     }
 
     return tmp<volScalarField>(K_());

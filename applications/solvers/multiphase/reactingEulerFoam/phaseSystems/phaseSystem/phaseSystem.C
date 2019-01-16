@@ -54,7 +54,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::calcPhi
 {
     tmp<surfaceScalarField> tmpPhi
     (
-        new surfaceScalarField
+        surfaceScalarField::New
         (
             "phi",
             fvc::interpolate(phaseModels[0])*phaseModels[0].phi()
@@ -158,7 +158,7 @@ Foam::phaseSystem::phaseSystem
             mesh
         ),
         mesh,
-        dimensionedScalar("dpdt", dimPressure/dimTime, 0)
+        dimensionedScalar(dimPressure/dimTime, 0)
     ),
 
     MRF_(mesh_)
@@ -318,22 +318,11 @@ Foam::phaseSystem::E(const phasePairKey& key) const
     }
     else
     {
-        return tmp<volScalarField>
+        return volScalarField::New
         (
-            new volScalarField
-            (
-                IOobject
-                (
-                    aspectRatioModel::typeName + ":E",
-                    this->mesh_.time().timeName(),
-                    this->mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                this->mesh_,
-                dimensionedScalar("zero", dimless, 1)
-            )
+            aspectRatioModel::typeName + ":E",
+            this->mesh_,
+            dimensionedScalar(dimless, 1)
         );
     }
 }
@@ -348,22 +337,11 @@ Foam::phaseSystem::sigma(const phasePairKey& key) const
     }
     else
     {
-        return tmp<volScalarField>
+        return volScalarField::New
         (
-            new volScalarField
-            (
-                IOobject
-                (
-                    surfaceTensionModel::typeName + ":sigma",
-                    this->mesh_.time().timeName(),
-                    this->mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                this->mesh_,
-                dimensionedScalar("zero", surfaceTensionModel::dimSigma, 0)
-            )
+            surfaceTensionModel::typeName + ":sigma",
+            this->mesh_,
+            dimensionedScalar(surfaceTensionModel::dimSigma, 0)
         );
     }
 }
@@ -374,19 +352,11 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdt
     const phasePairKey& key
 ) const
 {
-    return tmp<volScalarField>
+    return volScalarField::New
     (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("dmdt", phasePairs_[key]->name()),
-                this->mesh_.time().timeName(),
-                this->mesh_
-            ),
-            this->mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0)
-        )
+        IOobject::groupName("dmdt", phasePairs_[key]->name()),
+        this->mesh_,
+        dimensionedScalar(dimDensity/dimTime, 0)
     );
 }
 

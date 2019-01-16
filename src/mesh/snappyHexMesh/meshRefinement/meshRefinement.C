@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1784,8 +1784,6 @@ Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
     const labelList& adaptPatchIDs
 )
 {
-    const polyMesh& mesh = pMesh();
-
     // Construct displacement field.
     const pointBoundaryMesh& pointPatches = pMesh.boundary();
 
@@ -1817,18 +1815,11 @@ Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
     // postprocessable field.
     tmp<pointVectorField> tfld
     (
-        new pointVectorField
+        pointVectorField::New
         (
-            IOobject
-            (
-                "pointDisplacement",
-                mesh.time().timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
+            "pointDisplacement",
             pMesh,
-            dimensionedVector("displacement", dimLength, Zero),
+            dimensionedVector(dimLength, Zero),
             patchFieldTypes
         )
     );
@@ -2766,7 +2757,7 @@ void Foam::meshRefinement::dumpRefinementLevel() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
 
         const labelList& cellLevel = meshCutter_.cellLevel();
@@ -2795,7 +2786,7 @@ void Foam::meshRefinement::dumpRefinementLevel() const
                 false
             ),
             pMesh,
-            dimensionedScalar("zero", dimless, 0)
+            dimensionedScalar(dimless, 0)
         );
 
         const labelList& pointLevel = meshCutter_.pointLevel();

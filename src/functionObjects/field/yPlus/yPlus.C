@@ -69,16 +69,11 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
 {
     tmp<volScalarField> tyPlus
     (
-        new volScalarField
+        volScalarField::New
         (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_
-            ),
+            type(),
             mesh_,
-            dimensionedScalar("0", dimless, 0.0)
+            dimensionedScalar(dimless, 0)
         )
     );
 
