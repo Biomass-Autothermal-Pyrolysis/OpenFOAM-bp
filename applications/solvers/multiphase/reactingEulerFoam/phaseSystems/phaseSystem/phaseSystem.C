@@ -232,6 +232,7 @@ Foam::phaseSystem::phaseSystem
     {
         kineticTheoryPtr_ =
             &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem");
+        kineticTheoryPtr_->correct();
 
         //- If only one granular phase is used, the multiphase limiting is not
         //  needed so it is skipped

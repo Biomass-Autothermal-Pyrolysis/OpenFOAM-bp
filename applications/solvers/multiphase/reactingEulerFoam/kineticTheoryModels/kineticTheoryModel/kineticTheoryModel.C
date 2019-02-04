@@ -146,7 +146,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
     )
 {
-    kineticTheorySystem_.addPhase(phase);
+    kineticTheorySystem_.addPhase(*this);
 
     if (type == typeName)
     {
@@ -542,6 +542,24 @@ void Foam::RASModels::kineticTheoryModel::correct()
             << "    max(Theta) = " << max(Theta_).value() << nl
             << "    max(nut) = " << max(nut_).value() << endl;
     }
+}
+
+
+const Foam::phaseModel& Foam::RASModels::kineticTheoryModel::phase() const
+{
+    return phase_;
+}
+
+
+const Foam::volScalarField& Foam::RASModels::kineticTheoryModel::Theta() const
+{
+    return Theta_;
+}
+
+
+Foam::volScalarField& Foam::RASModels::kineticTheoryModel::Theta()
+{
+    return Theta_;
 }
 
 

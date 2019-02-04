@@ -49,7 +49,15 @@ Foam::dragModels::Chao::Chao
     const bool registerObject
 )
 :
-    dragModel(dict, pair, registerObject)
+    dragModel(dict, pair, registerObject),
+    kineticTheorySystem_
+    (
+        pair_.phase1().mesh().lookupObject<kineticTheorySystem>
+        (
+            "kineticTheorySystem"
+        )
+    ),
+    Thetas_(kineticTheorySystem_.Thetas())
 {}
 
 
@@ -74,39 +82,31 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Chao::CdRe() const
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Chao::K() const
 {
-    const fvMesh& mesh = pair_.phase1().mesh();
     const phaseModel& phase1 = pair_.phase1();
     const phaseModel& phase2 = pair_.phase2();
 
-    const kineticTheorySystem& kt
-    (
-        mesh.lookupObject<kineticTheorySystem>
-        (
-            "kineticTheorySystem"
-        )
-    );
-
     const volScalarField& rho1(phase1.rho());
     const volScalarField& rho2(phase2.rho());
-    const volScalarField& Theta1
-    (
-        mesh.lookupObject<volScalarField>
-        (
-            IOobject::groupName("Theta", phase1.name())
-        )
-    );
-    const volScalarField& Theta2
-    (
-        mesh.lookupObject<volScalarField>
-        (
-            IOobject::groupName("Theta", phase2.name())
-        )
-    );
+    tmp<volScalarField> tmpTheta1;
+    tmp<volScalarField> tmpTheta2;
+    forAll(Thetas_, phasei)
+    {
+        if (phase1.name() == Thetas_[phasei].group())
+        {
+            tmpTheta1 = tmp<volScalarField>(Thetas_[phasei]);
+        }
+        if (phase2.name() == Thetas_[phasei].group())
+        {
+            tmpTheta2 = tmp<volScalarField>(Thetas_[phasei]);
+        }
+    }
+    const volScalarField& Theta1 = tmpTheta1();
+    const volScalarField& Theta2 = tmpTheta2();
 
-    const scalar& e(kt.es()[pair_]);
+    const scalar& e(kineticTheorySystem_.es()[pair_]);
     const scalar pi(Foam::constant::mathematical::pi);
 
-    tmp<volScalarField> gij(kt.gs0(phase1, phase2));
+    tmp<volScalarField> gij(kineticTheorySystem_.gs0(phase1, phase2));
     volScalarField dij(0.5*(phase1.d() + phase2.d()));
     volScalarField m0
     (

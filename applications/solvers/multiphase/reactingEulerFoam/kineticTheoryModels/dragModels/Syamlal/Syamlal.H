@@ -46,6 +46,7 @@ SourceFiles
 #define SyamlalDrag_H
 
 #include "dragModel.H"
+#include "kineticTheorySystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,6 +70,10 @@ class Syamlal
 
         //- Coefficient of frictional pressure
         dimensionedScalar C1_;
+
+        //- Reference to kineticTheorySystem
+        const kineticTheorySystem& kineticTheorySystem_;
+
 
 public:
 

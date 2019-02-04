@@ -41,6 +41,7 @@ SourceFiles
 #include "phaseModel.H"
 #include "phasePair.H"
 #include "HashPtrTable.H"
+#include "PtrList.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -99,6 +100,9 @@ class kineticTheorySystem
 
         //- List of granular phase names
         wordList phaseNames_;
+
+        //- List of granular temperatures
+        PtrList<volScalarField> Thetas_;
 
         //- List of granular phase indexes
         labelList phaseIndexes_;
@@ -232,7 +236,7 @@ public:
         const labelList& phaseIndexes() const;
 
         //- Add phase to list of kinetic theory phases.
-        void addPhase(const phaseModel&);
+        void addPhase(RASModels::kineticTheoryModel&);
 
         //- Return true if phase is granular
         bool found(const word&) const;
@@ -277,6 +281,12 @@ public:
         const phasePair::scalarTable& Cfs() const
         {
             return CfTable_;
+        }
+
+        //- Return the list of granular temperatures
+        const PtrList<volScalarField>& Thetas() const
+        {
+            return Thetas_;
         }
 
         //- Return radial distribution function

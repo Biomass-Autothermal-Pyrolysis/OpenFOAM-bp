@@ -497,10 +497,12 @@ const Foam::labelList& Foam::kineticTheorySystem::phaseIndexes() const
 
 void Foam::kineticTheorySystem::addPhase
 (
-    const phaseModel& phase
+    RASModels::kineticTheoryModel& kt
 )
 {
+    const phaseModel& phase = kt.phase();
     word phaseName(phase.name());
+    Thetas_.append(&kt.Theta());
     phaseNames_.append(phaseName);
     phaseIndexes_.append(phase.index());
 

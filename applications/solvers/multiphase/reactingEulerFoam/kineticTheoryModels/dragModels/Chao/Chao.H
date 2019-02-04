@@ -45,6 +45,7 @@ SourceFiles
 #define ChaoDrag_H
 
 #include "dragModel.H"
+#include "kineticTheorySystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,6 +66,12 @@ class Chao
     public dragModel
 {
     // Private data
+
+        //- Reference to kineticTheorySystem
+        const kineticTheorySystem& kineticTheorySystem_;
+
+        //- Reference to granular temperature fields
+        const PtrList<volScalarField>& Thetas_;
 
 
 public:

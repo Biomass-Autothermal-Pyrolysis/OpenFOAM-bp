@@ -196,6 +196,15 @@ public:
 
         //- Solve the kinetic theory equations and correct the viscosity
         virtual void correct();
+
+        //- Return cont reference to phase model
+        const phaseModel& phase() const;
+
+        //- Return const reference to granular temperature field
+        const volScalarField& Theta() const;
+
+        //- Return non-const reference to granular temperature field
+        volScalarField& Theta();
 };
 
 
