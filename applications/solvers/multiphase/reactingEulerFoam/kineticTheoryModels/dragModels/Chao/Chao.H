@@ -70,9 +70,6 @@ class Chao
         //- Reference to kineticTheorySystem
         const kineticTheorySystem& kineticTheorySystem_;
 
-        //- Reference to granular temperature fields
-        const PtrList<volScalarField>& Thetas_;
-
 
 public:
 

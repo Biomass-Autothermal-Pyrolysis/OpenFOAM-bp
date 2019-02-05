@@ -131,7 +131,7 @@ class kineticTheoryModel
         void operator=(const kineticTheoryModel&);
 
         //- Lookup or construct kineticTheorySystem
-        kineticTheorySystem& lookupOrConstruct(const char*) const;
+        kineticTheorySystem& lookupOrConstruct(const fvMesh& mesh, const char*) const;
 
 
 public:

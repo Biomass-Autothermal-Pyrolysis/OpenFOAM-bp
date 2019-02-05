@@ -33,11 +33,11 @@ License
 Foam::kineticTheorySystem&
 Foam::RASModels::kineticTheoryModel::lookupOrConstruct
 (
+    const fvMesh& mesh,
     const char* name
 ) const
 {
-
-    if (!mesh_.foundObject<kineticTheorySystem>(name))
+    if (!mesh.foundObject<kineticTheorySystem>(name))
     {
         kineticTheorySystem* ktPtr
         (
@@ -48,7 +48,7 @@ Foam::RASModels::kineticTheoryModel::lookupOrConstruct
         ktPtr->store(ktPtr);
     }
 
-    return mesh_.lookupObjectRef<kineticTheorySystem>(name);
+    return mesh.lookupObjectRef<kineticTheorySystem>(name);
 }
 
 Foam::RASModels::kineticTheoryModel::kineticTheoryModel
@@ -80,7 +80,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
 
     phase_(phase),
 
-    kineticTheorySystem_(lookupOrConstruct("kineticTheorySystem")),
+    kineticTheorySystem_(lookupOrConstruct(alpha.mesh(), "kineticTheorySystem")),
     equilibrium_(coeffDict_.lookup("equilibrium")),
     residualAlpha_(kineticTheorySystem_.residualAlpha()),
 

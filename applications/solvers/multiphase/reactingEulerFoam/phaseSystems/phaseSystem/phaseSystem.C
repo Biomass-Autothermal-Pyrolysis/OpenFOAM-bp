@@ -231,7 +231,9 @@ Foam::phaseSystem::phaseSystem
     if (mesh_.foundObject<kineticTheorySystem>("kineticTheorySystem"))
     {
         kineticTheoryPtr_ =
-            &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem");
+        (
+            &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem")
+        );
         kineticTheoryPtr_->correct();
 
         //- If only one granular phase is used, the multiphase limiting is not
@@ -425,34 +427,30 @@ void Foam::phaseSystem::correctTurbulence(const bool postSolve)
         return;
     }
 
-    if (kineticTheoryPtr_ && postSolve)
+    if (!postSolve)
     {
+        kineticTheoryPtr_->correct();
+
+        forAll(phaseModels_, phasei)
+        {
+            if (kineticTheoryPtr_->found(phaseModels_[phasei].name()))
+            {
+                phaseModels_[phasei].correctTurbulence();
+            }
+        }
+
         kineticTheoryPtr_->correct();
     }
 
-    forAll(phaseModels_, phasei)
+    if (postSolve)
     {
-        if
-        (
-            postSolve
-         && !kineticTheoryPtr_->found(phaseModels_[phasei].name())
-        )
+        forAll(phaseModels_, phasei)
         {
-            phaseModels_[phasei].correctTurbulence();
+            if (!kineticTheoryPtr_->found(phaseModels_[phasei].name()))
+            {
+                phaseModels_[phasei].correctTurbulence();
+            }
         }
-        else if
-        (
-            !postSolve
-         && kineticTheoryPtr_->found(phaseModels_[phasei].name())
-        )
-        {
-            phaseModels_[phasei].correctTurbulence();
-        }
-    }
-
-    if (kineticTheoryPtr_)
-    {
-        kineticTheoryPtr_->correct();
     }
 }
 

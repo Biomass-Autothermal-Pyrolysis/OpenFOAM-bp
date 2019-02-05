@@ -102,7 +102,7 @@ class kineticTheorySystem
         wordList phaseNames_;
 
         //- List of granular temperatures
-        PtrList<volScalarField> Thetas_;
+//         PtrList<volScalarField> Thetas_;
 
         //- List of granular phase indexes
         labelList phaseIndexes_;
@@ -283,11 +283,11 @@ public:
             return CfTable_;
         }
 
-        //- Return the list of granular temperatures
-        const PtrList<volScalarField>& Thetas() const
-        {
-            return Thetas_;
-        }
+//         //- Return the list of granular temperatures
+//         const PtrList<volScalarField>& Thetas() const
+//         {
+//             return Thetas_;
+//         }
 
         //- Return radial distribution function
         tmp<volScalarField> gs0(const phaseModel&, const phaseModel&) const;
