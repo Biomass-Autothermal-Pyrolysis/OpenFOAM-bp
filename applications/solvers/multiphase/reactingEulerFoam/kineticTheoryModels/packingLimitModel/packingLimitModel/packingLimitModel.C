@@ -67,7 +67,7 @@ Foam::kineticTheoryModels::packingLimitModel::~packingLimitModel()
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
 {
-    const wordList& phases = kt_.phaseNames();
+    const labelList& phaseIndexes = kt_.phaseIndexes();
     tmp<volScalarField> tmpAlphaMax
     (
         new volScalarField
@@ -86,7 +86,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
             (
                 "alphaMax",
                 dimless,
-                kt_.fluid().phases()[phases[0]].alphaMax()
+                kt_.fluid().phases()[phaseIndexes[0]].alphaMax()
             ),
             wordList
             (
@@ -97,7 +97,7 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
     );
     volScalarField& alphaMaxField(tmpAlphaMax.ref());
 
-    if (phases.size() == 1)
+    if (phaseIndexes.size() == 1)
     {
         return tmpAlphaMax;
     }
@@ -107,10 +107,10 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
     if (constantDiameters_)
     {
         // Sort diameters from largest to smallest
-        scalarList ds(phases.size());
-        forAll(phases, phasei)
+        scalarList ds(phaseIndexes.size());
+        forAll(phaseIndexes, phasei)
         {
-            ds[phasei] = kt_.fluid().phases()[phases[phasei]].d()()[0];
+            ds[phasei] = kt_.fluid().phases()[phaseIndexes[phasei]].d()()[0];
         }
 
         forAll(alphaMaxField, celli)
@@ -122,22 +122,22 @@ Foam::kineticTheoryModels::packingLimitModel::alphaMax() const
     else
     {
         //- Create copys so d fields arent created for each cell
-        PtrList<volScalarField> dList(phases.size());
-        forAll(phases, phasei)
+        PtrList<volScalarField> dList(phaseIndexes.size());
+        forAll(phaseIndexes, phasei)
         {
             dList.set
             (
                 phasei,
-                new volScalarField(kt_.fluid().phases()[phases[phasei]])
+                new volScalarField(kt_.fluid().phases()[phaseIndexes[phasei]])
             );
         }
 
         forAll(alphaMaxField, celli)
         {
             // Sort diameters from largest to smallest
-            scalarList ds(phases.size());
+            scalarList ds(phaseIndexes.size());
 
-            forAll(phases, phasei)
+            forAll(phaseIndexes, phasei)
             {
                 ds[phasei] = dList[phasei][celli];
             }

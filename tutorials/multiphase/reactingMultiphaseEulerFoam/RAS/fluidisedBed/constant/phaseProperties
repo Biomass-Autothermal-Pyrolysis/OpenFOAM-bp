@@ -228,7 +228,7 @@ kineticTheory
     viscosityModel          Princeton;
     conductivityModel       Princeton;
     granularPressureModel   Princeton;
-    frictionalStressModel   JohnsonJackson;
+    frictionalStressModel   Schaeffer;
 
     coeffRest
     (

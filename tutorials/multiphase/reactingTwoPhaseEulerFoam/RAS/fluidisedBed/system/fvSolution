@@ -19,7 +19,7 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
+        nAlphaCorr      2;
         nAlphaSubCycles 2;
 
         smoothLimiter   0.1;
@@ -88,7 +88,7 @@ PIMPLE
     nOuterCorrectors 3;
     nCorrectors      1;
     nNonOrthogonalCorrectors 0;
-//     faceMomentum     yes;
+    faceMomentum     yes;
 }
 
 relaxationFactors

@@ -98,11 +98,12 @@ class kineticTheorySystem
             volScalarField Thetap_;
 
 
-        //- List of granular phase names
-        wordList phaseNames_;
+        //- PtrList of kinetic theory models
+        PtrListDictionary<tmp<RASModels::kineticTheoryModel>>
+            kineticTheoryModels_;
 
-        //- List of granular temperatures
-//         PtrList<volScalarField> Thetas_;
+        //- PtrList of granular temperatures
+        PtrListDictionary<tmp<volScalarField>> Thetas_;
 
         //- List of granular phase indexes
         labelList phaseIndexes_;
@@ -182,6 +183,9 @@ class kineticTheorySystem
             //- Frictional pressure prime
             volScalarField PfrPrime_;
 
+            //- Frictional viscosity
+            volScalarField nuFric_;
+
 
     // Private Member Functions
 
@@ -228,9 +232,6 @@ public:
         {
             return fluid_;
         }
-
-        //- Const refrence to list of granular phases
-        const wordList& phaseNames() const;
 
         //- Const refrence to list of granular indexes
         const labelList& phaseIndexes() const;
@@ -283,11 +284,11 @@ public:
             return CfTable_;
         }
 
-//         //- Return the list of granular temperatures
-//         const PtrList<volScalarField>& Thetas() const
-//         {
-//             return Thetas_;
-//         }
+        //- Return the list of granular temperatures
+        const PtrList<tmp<volScalarField>>& Thetas() const
+        {
+            return Thetas_;
+        }
 
         //- Return radial distribution function
         tmp<volScalarField> gs0(const phaseModel&, const phaseModel&) const;
@@ -320,21 +321,15 @@ public:
             const volScalarField&
         ) const;
 
-        //- Const ref to unsaled frictional pressure (used in drag)
-        const volScalarField& Pfr() const
-        {
-            return Pfr_;
-        }
-
         //- Return the fricitional-pressure
-        tmp<volScalarField> frictionalPressure(const phaseModel&) const;
+        const volScalarField& frictionalPressure() const;
 
         //- Return the frictional-pressure'
         // (derivative of frictional-pressure w.r.t. phase-fraction)
-        tmp<volScalarField> frictionalPressurePrime(const phaseModel&) const;
+        const volScalarField& frictionalPressurePrime() const;
 
         //- Return the frictional-viscosity'
-        tmp<volScalarField> nuFrictional(const phaseModel&) const;
+        const volScalarField& nuFrictional() const;
 
         //- Solve the kinetic theory equations and correct the viscosity
         void correct();

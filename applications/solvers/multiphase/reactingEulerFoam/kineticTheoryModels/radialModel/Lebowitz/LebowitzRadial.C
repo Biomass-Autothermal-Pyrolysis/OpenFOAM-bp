@@ -97,9 +97,10 @@ Foam::kineticTheoryModels::radialModels::Lebowitz::g0
         dimensionedScalar("0", inv(dimLength), 0.0)
     );
 
-    forAll(kt_.phaseNames(), phaseI)
+    forAll(kt_.phaseIndexes(), phaseI)
     {
-        const phaseModel& phase = kt_.fluid().phases()[kt_.phaseNames()[phaseI]];
+        const phaseModel& phase =
+            kt_.fluid().phases()[kt_.phaseIndexes()[phaseI]];
         alphard += volScalarField(phase)/phase.d();
     }
 
@@ -134,9 +135,10 @@ Foam::kineticTheoryModels::radialModels::Lebowitz::g0prime
         dimensionedScalar("0", inv(dimLength), 0.0)
     );
 
-    forAll(kt_.phaseNames(), phaseI)
+    forAll(kt_.phaseIndexes(), phaseI)
     {
-        const phaseModel& phase = kt_.fluid().phases()[kt_.phaseNames()[phaseI]];
+        const phaseModel& phase =
+            kt_.fluid().phases()[kt_.phaseIndexes()[phaseI]];
         if (phase.name() != phase1.name())
         {
             alphard += volScalarField(phase)/phase.d();

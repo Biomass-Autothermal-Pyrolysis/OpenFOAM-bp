@@ -72,7 +72,8 @@ class kineticTheoryModel
     public eddyViscosity
     <
         RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
-    >
+    >,
+    public tmp<kineticTheoryModel>::refCount
 {
     // Private data
 
@@ -115,8 +116,9 @@ class kineticTheoryModel
             //- The granular "thermal" conductivity
             volScalarField kappa_;
 
-            //- The frictional viscosity
+            //- Frictional viscosity
             volScalarField nuFric_;
+
 
 
     // Private Member Functions

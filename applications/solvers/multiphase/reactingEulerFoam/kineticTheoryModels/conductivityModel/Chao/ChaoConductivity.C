@@ -106,18 +106,18 @@ Foam::kineticTheoryModels::conductivityModels::Chao::kappa
      dimensionedScalar("0", dimless, 0.0)
     );
 
-    forAll(kt_.phaseNames(), phasei)
+    forAll(kt_.phaseIndexes(), phasei)
     {
-        const word& name2(kt_.phaseNames()[phasei]);
-        const phaseModel& phase2 = kt_.fluid().phases()[name2];
-        const scalar& eij(kt_.es()[phasePairKey(phase.name(), name2)]);
+        label index2(kt_.phaseIndexes()[phasei]);
+        const phaseModel& phase2 = kt_.fluid().phases()[index2];
+        const scalar& eij(kt_.es()[phasePairKey(phase.name(), phase2.name())]);
         tmp<volScalarField> gs0ij(kt_.gs0(phase, phase2));
 
         alphaCoeff += gs0ij*phase2*(1.0 + eij);
         coeff += gs0ij*(1.0 + eij);
     }
 
-    coeff /= kt_.phaseNames().size();
+    coeff /= kt_.phaseIndexes().size();
 
     return
     (

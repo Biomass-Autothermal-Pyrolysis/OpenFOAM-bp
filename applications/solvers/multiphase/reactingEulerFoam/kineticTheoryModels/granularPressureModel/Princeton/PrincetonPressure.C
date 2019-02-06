@@ -88,11 +88,9 @@ Foam::kineticTheoryModels::granularPressureModels::Princeton::granularPressureCo
           + 4.0*eta*phase1*g0
         );
     }
-    else
-    {
-        return phase1*phase1.rho()*Theta1*4.0*eta*phase2*g0;
-    }
+    return phase1*phase1.rho()*Theta1*4.0*eta*phase2*g0;
 }
+
 
 
 Foam::tmp<Foam::volScalarField>
@@ -122,14 +120,12 @@ granularPressureCoeffPrime
             )
         );
     }
-    else
-    {
-        return phase1.rho()*Theta1*4.0*eta
+    return
+        phase1.rho()*Theta1*4.0*eta
        *(
            phase2*g0
          + phase1*phase2*g0prime
         );
-    }
 }
 
 

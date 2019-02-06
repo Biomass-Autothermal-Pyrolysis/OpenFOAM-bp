@@ -94,7 +94,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Syamlal::K() const
     const phaseModel& phase1 = pair_.phase1();
     const phaseModel& phase2 = pair_.phase2();
 
-    const volScalarField& Pfric = kineticTheorySystem_.Pfr();
+    const volScalarField& Pfric = kineticTheorySystem_.frictionalPressure();
     scalar e = kineticTheorySystem_.es()[pair_];
     scalar Cf = kineticTheorySystem_.Cfs()[pair_];
     scalar pi = Foam::constant::mathematical::pi;

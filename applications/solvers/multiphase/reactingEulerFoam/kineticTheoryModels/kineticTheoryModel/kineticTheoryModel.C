@@ -228,7 +228,7 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
     tmp<volScalarField> tpPrime
     (
         Theta_*kineticTheorySystem_.PsCoeffPrime(phase_)
-     +  kineticTheorySystem_.frictionalPressurePrime(phase_)
+     +  kineticTheorySystem_.frictionalPressurePrime()
     );
 
     volScalarField::Boundary& bpPrime =
@@ -528,11 +528,9 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // Bulk viscosity  p. 45 (Lun et al. 1984).
         lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0*(1.0 + e)*ThetaSqrt/sqrtPi;
 
-        nuFric_ = kineticTheorySystem_.nuFrictional(phase_);
-
         // Limit viscosity and add frictional viscosity
         nut_.min(maxNut_);
-        nuFric_ = min(nuFric_, maxNut_ - nut_);
+        nuFric_ = min(kineticTheorySystem_.nuFrictional(), maxNut_ - nut_);
         nut_ += nuFric_;
     }
 

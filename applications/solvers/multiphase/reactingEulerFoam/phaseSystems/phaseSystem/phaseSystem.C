@@ -426,7 +426,6 @@ void Foam::phaseSystem::correctTurbulence(const bool postSolve)
         }
         return;
     }
-
     if (!postSolve)
     {
         kineticTheoryPtr_->correct();

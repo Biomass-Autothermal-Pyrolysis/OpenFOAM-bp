@@ -56,7 +56,8 @@ Foam::dragModels::Chao::Chao
         (
             "kineticTheorySystem"
         )
-    )
+    ),
+    Thetas_(kineticTheorySystem_.Thetas())
 {}
 
 
@@ -81,26 +82,26 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Chao::CdRe() const
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::Chao::K() const
 {
-    const fvMesh& mesh = pair_.phase1().mesh();
     const phaseModel& phase1 = pair_.phase1();
     const phaseModel& phase2 = pair_.phase2();
 
     const volScalarField& rho1(phase1.rho());
     const volScalarField& rho2(phase2.rho());
-    const volScalarField& Theta1
-    (
-        mesh.lookupObject<volScalarField>
-        (
-            IOobject::groupName("Theta", phase1.name())
-        )
-    );
-    const volScalarField& Theta2
-    (
-        mesh.lookupObject<volScalarField>
-        (
-            IOobject::groupName("Theta", phase2.name())
-        )
-    );
+    tmp<volScalarField> tmpTheta1;
+    tmp<volScalarField> tmpTheta2;
+    forAll(Thetas_, phasei)
+    {
+        if (phase1.name() == Thetas_[phasei]().group())
+        {
+            tmpTheta1 = Thetas_[phasei];
+        }
+        if (phase2.name() == Thetas_[phasei]().group())
+        {
+            tmpTheta2 = Thetas_[phasei];
+        }
+    }
+    const volScalarField& Theta1 = tmpTheta1();
+    const volScalarField& Theta2 = tmpTheta2();
 
     const scalar& e(kineticTheorySystem_.es()[pair_]);
     const scalar pi(Foam::constant::mathematical::pi);
