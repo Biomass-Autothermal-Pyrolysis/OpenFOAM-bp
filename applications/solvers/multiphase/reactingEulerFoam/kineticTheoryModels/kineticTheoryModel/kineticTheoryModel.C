@@ -228,7 +228,8 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
     tmp<volScalarField> tpPrime
     (
         Theta_*kineticTheorySystem_.PsCoeffPrime(phase_)
-     +  kineticTheorySystem_.frictionalPressurePrime()
+      + phase_*kineticTheorySystem_.frictionalPressurePrime()
+      + kineticTheorySystem_.frictionalPressure()
     );
 
     volScalarField::Boundary& bpPrime =
