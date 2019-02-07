@@ -229,7 +229,7 @@ void Foam::multiphaseSystem::solveAlphas
             );
 
             // Fix alphaPhi of the granular phases
-            fixedAlphaPhiCorrs.insert(phases()[granularIndexes[phasei]].index());
+            fixedAlphaPhiCorrs.insert(granularIndexes[phasei]);
         }
 
         MULES::limitSum
@@ -721,29 +721,28 @@ void Foam::multiphaseSystem::solve()
                    *mesh_.magSf()
                 )
             );
-
-            deltaAlphaPhiPs.set
-            (
-                phasei,
-                new surfaceScalarField
-                (
-                    IOobject
-                    (
-                        IOobject::groupName
-                        (
-                            "deltaAlphaPhiP",
-                            phase.name()
-                        ),
-                        mesh_.time().timeName(),
-                        mesh_
-                    ),
-                    mesh_,
-                    dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
-                )
-            );
         }
-    }
 
+        deltaAlphaPhiPs.set
+        (
+            phasei,
+            new surfaceScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName
+                    (
+                        "deltaAlphaPhiP",
+                        phase.name()
+                    ),
+                    mesh_.time().timeName(),
+                    mesh_
+                ),
+                mesh_,
+                dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
+            )
+        );
+    }
 
     for (label corri = 0; corri < nAlphaCorr; corri++)
     {
@@ -752,10 +751,10 @@ void Foam::multiphaseSystem::solve()
         {
             const phaseModel& phase = phases()[phasei];
 
-            if (deltaAlphaPhiPs.set(phasei))
+            if (alphaDbyAs.set(phasei))
             {
                 const volScalarField& alpha = phase;
-                word alphaScheme("div(phi," + alpha.name() + ')');
+                volScalarField alphaOld(alpha);
                 word alpharScheme("div(phir," + alpha.name() + ')');
 
                 fvScalarMatrix alphaEqn
@@ -778,6 +777,7 @@ void Foam::multiphaseSystem::solve()
                 alphaEqn.solve();
 
                 deltaAlphaPhiPs[phasei] = alphaEqn.flux();
+                refCast<volScalarField>(phases()[phasei]) = alphaOld;
             }
         }
 

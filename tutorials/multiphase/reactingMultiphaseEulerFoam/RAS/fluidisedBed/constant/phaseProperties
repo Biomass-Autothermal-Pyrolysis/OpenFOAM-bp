@@ -228,7 +228,7 @@ kineticTheory
     viscosityModel          Princeton;
     conductivityModel       Princeton;
     granularPressureModel   Princeton;
-    frictionalStressModel   Schaeffer;
+    frictionalStressModel   JohnsonJackson;
 
     coeffRest
     (
@@ -261,7 +261,7 @@ kineticTheory
 
     JohnsonJacksonCoeffs
     {
-        alphaMinFriction        0.55;
+        alphaMinFriction        0.5;
         Fr                      0.05;
         eta                     2;
         p                       5;
