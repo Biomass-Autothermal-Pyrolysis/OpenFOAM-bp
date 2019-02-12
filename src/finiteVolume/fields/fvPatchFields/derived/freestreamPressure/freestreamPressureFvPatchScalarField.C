@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,13 +131,39 @@ void Foam::freestreamPressureFvPatchScalarField::updateCoeffs()
             UName_
         );
 
+    const Field<scalar> magUp(mag(Up));
+
+    const Field<vector>& nf = patch().nf();
+
+    Field<scalar>& vf = valueFraction();
+
     if (supersonic_)
     {
-        valueFraction() = 0.5 - 0.5*(Up & patch().nf())/mag(Up);
+        forAll(vf, i)
+        {
+            if (magUp[i] > vSmall)
+            {
+                vf[i] = 0.5 - 0.5*(Up[i] & nf[i])/magUp[i];
+            }
+            else
+            {
+                vf[i] = 0.5;
+            }
+        }
     }
     else
     {
-        valueFraction() = 0.5 + 0.5*(Up & patch().nf())/mag(Up);
+        forAll(vf, i)
+        {
+            if (magUp[i] > vSmall)
+            {
+                vf[i] = 0.5 + 0.5*(Up[i] & nf[i])/magUp[i];
+            }
+            else
+            {
+                vf[i] = 0.5;
+            }
+        }
     }
 
     mixedFvPatchField<scalar>::updateCoeffs();
@@ -149,7 +175,7 @@ void Foam::freestreamPressureFvPatchScalarField::write(Ostream& os) const
     fvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     freestreamValue().writeEntry("freestreamValue", os);
-    os.writeKeyword("supersonic") << supersonic_ << token::END_STATEMENT << nl;
+    Foam::writeEntry(os, "supersonic", supersonic_);
     writeEntry("value", os);
 }
 

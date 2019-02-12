@@ -44,11 +44,11 @@ volScalarField DT
 );
 
 
+// Cache "k" for use in thermal BCs
+autoPtr<volScalarField> rhoKPtr;
+
 if (thermalStress)
 {
-
-    autoPtr<volScalarField> CPtr;
-
     IOobject CIO
     (
         "C",
@@ -57,6 +57,8 @@ if (thermalStress)
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
+
+    autoPtr<volScalarField> CPtr;
 
     const dictionary& CDict(thermalProperties.subDict("C"));
     word CType(CDict.lookup("type"));
@@ -100,8 +102,6 @@ if (thermalStress)
     }
 
     volScalarField& C = CPtr();
-
-    autoPtr<volScalarField> rhoKPtr;
 
     IOobject rhoKIO
     (

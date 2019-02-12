@@ -228,12 +228,15 @@ Foam::phaseSystem::phaseSystem
     generatePairsAndSubModels("surfaceTension", surfaceTensionModels_);
     generatePairsAndSubModels("aspectRatio", aspectRatioModels_);
 
+    // Check if a granular phase is used and store at pointer if it is
     if (mesh_.foundObject<kineticTheorySystem>("kineticTheorySystem"))
     {
         kineticTheoryPtr_ =
         (
             &mesh_.lookupObjectRef<kineticTheorySystem>("kineticTheorySystem")
         );
+
+        // Initialize fields after all granular phases are initialized
         kineticTheoryPtr_->correct();
 
         //- If only one granular phase is used, the multiphase limiting is not
@@ -415,6 +418,7 @@ void Foam::phaseSystem::correctThermo()
 
 void Foam::phaseSystem::correctTurbulence(const bool postSolve)
 {
+    // If no granular phases exist, only update turbulence if post solve
     if (!kineticTheoryPtr_)
     {
         if (postSolve)
@@ -426,6 +430,9 @@ void Foam::phaseSystem::correctTurbulence(const bool postSolve)
         }
         return;
     }
+
+    //  Update granular phases before volume fraction transport each pimple
+    //  iteration to improve convergence of fields
     if (!postSolve)
     {
         kineticTheoryPtr_->correct();
@@ -441,6 +448,7 @@ void Foam::phaseSystem::correctTurbulence(const bool postSolve)
         kineticTheoryPtr_->correct();
     }
 
+    // Update non granular phases after outer correctors finish
     if (postSolve)
     {
         forAll(phaseModels_, phasei)
