@@ -210,12 +210,12 @@ void limitSum
     const labelHashSet& fixed
 );
 
-template<class PsiMaxType, class PsiMinType>
+template<class PsiMaxType, class PsiMinType, class SurfaceScalarFieldList>
 void limitSum
 (
     const volScalarField& psi,
     const surfaceScalarField& phi,
-    PtrList<surfaceScalarField>& phiPsis,
+    SurfaceScalarFieldList& phiPsis,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 );

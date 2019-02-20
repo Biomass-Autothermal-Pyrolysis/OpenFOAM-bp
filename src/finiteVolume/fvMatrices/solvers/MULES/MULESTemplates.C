@@ -778,12 +778,12 @@ void Foam::MULES::limitSum
     }
 }
 
-template<class PsiMaxType, class PsiMinType>
+template<class PsiMaxType, class PsiMinType, class SurfaceScalarFieldList>
 void Foam::MULES::limitSum
 (
     const volScalarField& psi,
     const surfaceScalarField& phi,
-    PtrList<surfaceScalarField>& phiPsis,
+    SurfaceScalarFieldList& phiPsis,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 )
