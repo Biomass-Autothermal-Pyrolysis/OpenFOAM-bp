@@ -442,17 +442,26 @@ Foam::kineticTheorySystem::kappa
     );
 }
 
-const Foam::volScalarField&
-Foam::kineticTheorySystem::frictionalPressure() const
+
+const Foam::volScalarField& Foam::kineticTheorySystem::frictionalPressure() const
 {
     return Pfr_;
 }
 
 
-const Foam::volScalarField&
-Foam::kineticTheorySystem::frictionalPressurePrime() const
+Foam::tmp<Foam::volScalarField> Foam::kineticTheorySystem::frictionalPressurePrime
+(
+    const volScalarField& alpha
+) const
 {
-    return PfrPrime_;
+    if (phaseIndexes_.size() == 1)
+    {
+        return PfrPrime_;
+    }
+
+    return
+        alpha/max(alphap_, residualAlpha_)*PfrPrime_
+      + Pfr_*(alphap_ - alpha)/sqr(max(alphap_, residualAlpha_));
 }
 
 
@@ -475,8 +484,16 @@ void Foam::kineticTheorySystem::addPhase
 {
     const phaseModel& phase = kt.phase();
     word phaseName(phase.name());
-    kineticTheoryModels_.append(phaseName, new tmp<RASModels::kineticTheoryModel>(kt));
-    Thetas_.append(phaseName, new tmp<volScalarField>(kt.Theta()));
+    kineticTheoryModels_.append
+    (
+        phaseName,
+        new tmp<RASModels::kineticTheoryModel>(kt)
+    );
+    Thetas_.append
+    (
+        phaseName,
+        new tmp<volScalarField>(kt.Theta())
+    );
     phaseIndexes_.append(phase.index());
 
     minAlphaMax_ = min(minAlphaMax_, phase.alphaMax());
@@ -608,6 +625,9 @@ void Foam::kineticTheorySystem::correct()
     Up_ /= max(alphap_, residualAlpha_);
     Thetap_ /= max(alphap_, residualAlpha_);
 
+    alphaMax_ = packingLimitModel_->alphaMax();
+    alphaMax_.correctBoundaryConditions();
+
     forAll(pairs_, pairi)
     {
         const phasePairKey& key = pairs_[pairi];
@@ -653,14 +673,14 @@ void Foam::kineticTheorySystem::correct()
         alphaMax_
     );
 
-    tmp<volTensorField> tgradU(fvc::grad(Up_));
-    const volTensorField& gradU(tgradU());
-    volSymmTensorField D(symm(gradU));
-
     nuFric_ = dimensionedScalar("0", nuFric_.dimensions(), 0.0);
     forAll(phaseIndexes_, phasei)
     {
         const phaseModel& phase = fluid_.phases()[phaseIndexes_[phasei]];
+        tmp<volTensorField> tgradU(fvc::grad(phase.U()));
+        const volTensorField& gradU(tgradU());
+        volSymmTensorField D(symm(gradU));
+
         nuFric_ += frictionalStressModel_->nu
         (
             phase,
@@ -671,9 +691,6 @@ void Foam::kineticTheorySystem::correct()
         )*phase;
     }
     nuFric_ /= max(alphap_, residualAlpha_);
-
-    alphaMax_ = packingLimitModel_->alphaMax();
-    alphaMax_.correctBoundaryConditions();
 }
 
 

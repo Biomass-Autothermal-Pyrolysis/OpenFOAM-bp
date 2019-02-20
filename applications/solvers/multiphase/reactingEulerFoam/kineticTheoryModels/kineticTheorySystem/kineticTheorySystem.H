@@ -326,7 +326,10 @@ public:
 
         //- Return the frictional-pressure'
         // (derivative of frictional-pressure w.r.t. phase-fraction)
-        const volScalarField& frictionalPressurePrime() const;
+        tmp<volScalarField> frictionalPressurePrime
+        (
+            const volScalarField& alpha
+        ) const;
 
         //- Return the frictional-viscosity'
         const volScalarField& nuFrictional() const;

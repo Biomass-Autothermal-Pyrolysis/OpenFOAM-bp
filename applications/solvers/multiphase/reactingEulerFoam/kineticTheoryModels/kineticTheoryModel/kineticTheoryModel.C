@@ -228,8 +228,7 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
     tmp<volScalarField> tpPrime
     (
         Theta_*kineticTheorySystem_.PsCoeffPrime(phase_)
-      + phase_*kineticTheorySystem_.frictionalPressurePrime()
-      + kineticTheorySystem_.frictionalPressure()
+      + kineticTheorySystem_.frictionalPressurePrime(phase_)
     );
 
     volScalarField::Boundary& bpPrime =
@@ -522,7 +521,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
 
     {
         // particle viscosity (Table 3.2, p.47)
-        nut_ = kineticTheorySystem_.nu(phase_, Theta_);;
+        nut_ = kineticTheorySystem_.nu(phase_, Theta_);
 
         volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
