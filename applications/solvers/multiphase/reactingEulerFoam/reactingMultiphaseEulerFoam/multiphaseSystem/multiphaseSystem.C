@@ -217,7 +217,7 @@ void Foam::multiphaseSystem::solveAlphas
         const volScalarField& alphaMax(kineticTheoryPtr_->alphaMax());
         const labelList& granularIndexes(kineticTheoryPtr_->phaseIndexes());
 
-        PtrList<surfaceScalarField> alphaPhiCorrPs(granularIndexes.size());
+        UPtrList<surfaceScalarField> alphaPhiCorrPs(granularIndexes.size());
         forAll(granularIndexes, phasei)
         {
 
@@ -225,7 +225,7 @@ void Foam::multiphaseSystem::solveAlphas
             alphaPhiCorrPs.set
             (
                 phasei,
-                alphaPhiCorrs[granularIndexes[phasei]]
+                &alphaPhiCorrs[granularIndexes[phasei]]
             );
 
             // Fix alphaPhi of the granular phases
@@ -240,12 +240,6 @@ void Foam::multiphaseSystem::solveAlphas
             alphaMax.internalField(),
             scalarField(alphaMax.size(), 0.0)
         );
-
-        forAll(granularIndexes, phasei)
-        {
-            //- Use tmp so alphaPhiCorr is not deleted upon exit
-            alphaPhiCorrs[granularIndexes[phasei]] = alphaPhiCorrPs[phasei];
-        }
     }
 
     MULES::limitSum(alphafs, alphaPhiCorrs, fixedAlphaPhiCorrs);
