@@ -100,11 +100,11 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            //- Solver granular temperature equation if a model uses kintic theory
-            fluid.correctTurbulence(false);
-
             fluid.solve();
             fluid.correct();
+
+            //- Solver granular temperature equation if a model uses kintic theory
+            fluid.correctTurbulence(false);
 
             #include "YEqns.H"
 

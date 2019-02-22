@@ -31,10 +31,10 @@ regions
 
         fieldValues
         (
-            volScalarFieldValue alpha.air 0.4
-            volScalarFieldValue alpha.particles     0.20
-            volScalarFieldValue alpha.particles1    0.20
-            volScalarFieldValue alpha.particles2    0.20
+            volScalarFieldValue alpha.air 0.45
+            volScalarFieldValue alpha.particles     0.18
+            volScalarFieldValue alpha.particles1    0.19
+            volScalarFieldValue alpha.particles2    0.18
         );
     }
 );

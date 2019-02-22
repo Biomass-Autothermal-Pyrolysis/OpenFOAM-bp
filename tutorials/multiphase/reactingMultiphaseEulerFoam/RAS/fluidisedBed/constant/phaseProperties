@@ -81,14 +81,6 @@ blending
     {
         type                none;
         continuousPhase     air;
-        minFullyContinuousAlpha.air 0;
-        minPartlyContinuousAlpha.air 0;
-        minFullyContinuousAlpha.particles 1.0;
-        minPartlyContinuousAlpha.particles 1.0;
-        minFullyContinuousAlpha.particles1 1.0;
-        minPartlyContinuousAlpha.particles1 1.0;
-        minFullyContinuousAlpha.particles2 1.0;
-        minPartlyContinuousAlpha.particles2 1.0;
     }
 }
 
@@ -198,6 +190,21 @@ virtualMass
 
 heatTransfer
 (
+    (particles in air)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+    (particles1 in air)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+    (particles2 in air)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
 );
 
 lift
@@ -224,7 +231,7 @@ kineticTheory
     residualAlpha           1e-4;
 
     packingLimitModel       YuStandish;
-    radialModel             Lebowitz;
+    radialModel             Gao;
     viscosityModel          Princeton;
     conductivityModel       Princeton;
     granularPressureModel   Princeton;

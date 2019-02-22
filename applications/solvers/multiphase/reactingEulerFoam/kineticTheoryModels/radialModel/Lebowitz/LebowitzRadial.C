@@ -107,7 +107,7 @@ Foam::kineticTheoryModels::radialModels::Lebowitz::g0
     return
         1.0/max(alphag, residualAlpha_)
       + 3.0*phase1.d()*phase2.d()*alphard
-       /(sqr(alphag)*(phase1.d() + phase2.d()));
+       /(sqr(max(alphag, residualAlpha_))*(phase1.d() + phase2.d()));
 }
 
 

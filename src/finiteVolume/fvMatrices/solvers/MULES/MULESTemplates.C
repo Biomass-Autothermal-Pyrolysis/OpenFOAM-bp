@@ -778,10 +778,17 @@ void Foam::MULES::limitSum
     }
 }
 
-template<class PsiMaxType, class PsiMinType, class SurfaceScalarFieldList>
+template
+<
+    class PsiMaxType,
+    class PsiMinType,
+    class VolScalarFieldList,
+    class SurfaceScalarFieldList
+>
 void Foam::MULES::limitSum
 (
     const volScalarField& psi,
+    const VolScalarFieldList& psis,
     const surfaceScalarField& phi,
     SurfaceScalarFieldList& phiPsis,
     const PsiMaxType& psiMax,
@@ -801,26 +808,28 @@ void Foam::MULES::limitSum
         mesh,
         dimensionedScalar("0", phi.dimensions(), 0.0)
     );
-
-    surfaceScalarField phiBD(upwind<scalar>(psi.mesh(), phi).flux(psi));
-
-    surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
-    const surfaceScalarField::Boundary& phiPsiBf = phiPsi.boundaryField();
-
-    forAll(phiBDBf, patchi)
-    {
-        fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
-
-        if (!phiBDPf.coupled())
-        {
-            phiBDPf = phiPsiBf[patchi];
-        }
-    }
-
     forAll(phiPsis, phasei)
     {
         phiPsi += phiPsis[phasei];
     }
+
+    surfaceScalarField phiBD(upwind<scalar>(psi.mesh(), phi).flux(psi));
+
+    {
+        surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
+        const surfaceScalarField::Boundary& phiPsiBf = phiPsi.boundaryField();
+
+        forAll(phiBDBf, patchi)
+        {
+            fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
+
+            if (!phiBDPf.coupled())
+            {
+                phiBDPf = phiPsiBf[patchi];
+            }
+        }
+    }
+    phiPsi -= phiBD;
 
     scalarField allLambda(mesh.nFaces(), 1.0);
 
@@ -878,7 +887,26 @@ void Foam::MULES::limitSum
 
     forAll(phiPsis, phasei)
     {
-        phiPsis[phasei] *= lambda;
+        surfaceScalarField phiPBD
+        (
+            upwind<scalar>(psi.mesh(), phi).flux(psis[phasei])
+        );
+
+        surfaceScalarField::Boundary& phiBDBf = phiPBD.boundaryFieldRef();
+        const surfaceScalarField::Boundary& phiPsiBf =
+            phiPsis[phasei].boundaryField();
+
+        forAll(phiBDBf, patchi)
+        {
+            fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
+
+            if (!phiBDPf.coupled())
+            {
+                phiBDPf = phiPsiBf[patchi];
+            }
+        }
+
+        phiPsis[phasei] = phiPBD + (phiPsis[phasei] - phiPBD)*lambda;
     }
 }
 
