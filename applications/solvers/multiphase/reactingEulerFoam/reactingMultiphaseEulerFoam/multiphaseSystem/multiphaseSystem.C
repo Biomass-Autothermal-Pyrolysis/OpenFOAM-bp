@@ -775,10 +775,10 @@ void Foam::multiphaseSystem::solve()
                   - fvm::laplacian(alphaDbyAs[phasei], alpha, "bounded")
                 );
                 alphaEqn.relax();
-//                 alphaEqn.solve();
+                alphaEqn.solve();
 
                 deltaAlphaPhiPs[phasei] = alphaEqn.flux();
-//                 refCast<volScalarField>(phases()[phasei]) = alphaOld;
+                refCast<volScalarField>(phases()[phasei]) = alphaOld;
             }
         }
 
