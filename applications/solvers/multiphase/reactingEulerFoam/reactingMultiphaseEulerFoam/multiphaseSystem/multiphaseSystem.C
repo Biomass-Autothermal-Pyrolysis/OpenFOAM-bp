@@ -362,6 +362,16 @@ void Foam::multiphaseSystem::solveAlphas
             << ' ' << min(alphap).value()
             << ' ' << max(alphap).value()
             << endl;
+
+        volScalarField alphaPbyAlphaMax
+        (
+            kineticTheoryPtr_->alphap()/kineticTheoryPtr_->alphaMax()
+        );
+        Info<< kineticTheoryPtr_->name() << " packing fraction, min, max = "
+            << alphaPbyAlphaMax.weightedAverage(mesh_.V()).value()
+            << ' ' << min(alphaPbyAlphaMax).value()
+            << ' ' << max(alphaPbyAlphaMax).value()
+            << endl;
     }
 
     volScalarField sumAlphaMoving
