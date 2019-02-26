@@ -30,7 +30,7 @@ particles
     }
 
     alphaMax        0.63;
-    residualAlpha   1e-6;
+    residualAlpha   1e-8;
 }
 
 particles1
@@ -44,7 +44,7 @@ particles1
     }
 
     alphaMax        0.63;
-    residualAlpha   1e-6;
+    residualAlpha   1e-8;
 }
 
 particles2
@@ -58,7 +58,7 @@ particles2
     }
 
     alphaMax        0.63;
-    residualAlpha   1e-6;
+    residualAlpha   1e-8;
 }
 
 air
@@ -273,7 +273,7 @@ kineticTheory
         eta                     2;
         p                       5;
         phi                     28.5;
-        alphaDeltaMin           0.05;
+        alphaDeltaMin           0.001;
     }
 
     PrincetonCoeffs

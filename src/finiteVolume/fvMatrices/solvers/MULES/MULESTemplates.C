@@ -808,16 +808,33 @@ void Foam::MULES::limitSum
         mesh,
         dimensionedScalar("0", phi.dimensions(), 0.0)
     );
+    surfaceScalarField phiBD
+    (
+        IOobject
+        (
+            "phiBD",
+            mesh.time().timeName(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar("0", phi.dimensions(), 0.0)
+    );
+    PtrList<surfaceScalarField> phiPBDs(psis.size());
     forAll(phiPsis, phasei)
     {
         phiPsi += phiPsis[phasei];
-    }
+        phiPBDs.set
+        (
+            phasei,
+            new surfaceScalarField
+            (
+                upwind<scalar>(psi.mesh(), phi).flux(psis[phasei])
+            )
+        );
 
-    surfaceScalarField phiBD(upwind<scalar>(psi.mesh(), phi).flux(psi));
-
-    {
-        surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
-        const surfaceScalarField::Boundary& phiPsiBf = phiPsi.boundaryField();
+        surfaceScalarField::Boundary& phiBDBf = phiPBDs[phasei].boundaryFieldRef();
+        const surfaceScalarField::Boundary& phiPsiBf =
+            phiPsis[phasei].boundaryField();
 
         forAll(phiBDBf, patchi)
         {
@@ -828,7 +845,11 @@ void Foam::MULES::limitSum
                 phiBDPf = phiPsiBf[patchi];
             }
         }
+
+        phiBD += phiPBDs[phasei];
+        phiPsis[phasei] -= phiPBDs[phasei];
     }
+
     phiPsi -= phiBD;
 
     scalarField allLambda(mesh.nFaces(), 1.0);
@@ -887,26 +908,7 @@ void Foam::MULES::limitSum
 
     forAll(phiPsis, phasei)
     {
-        surfaceScalarField phiPBD
-        (
-            upwind<scalar>(psi.mesh(), phi).flux(psis[phasei])
-        );
-
-        surfaceScalarField::Boundary& phiBDBf = phiPBD.boundaryFieldRef();
-        const surfaceScalarField::Boundary& phiPsiBf =
-            phiPsis[phasei].boundaryField();
-
-        forAll(phiBDBf, patchi)
-        {
-            fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
-
-            if (!phiBDPf.coupled())
-            {
-                phiBDPf = phiPsiBf[patchi];
-            }
-        }
-
-        phiPsis[phasei] = phiPBD + (phiPsis[phasei] - phiPBD)*lambda;
+        phiPsis[phasei] = phiPBDs[phasei] + phiPsis[phasei] *lambda;
     }
 }
 

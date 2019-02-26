@@ -19,15 +19,15 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 2;
+        nAlphaCorr      3;
+        nAlphaSubCycles 1;
         implicitPhasePressure yes;
 
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-10;
         relTol          0;
-        minIter         1;
+        minIter         5;
     }
 
     p_rgh
