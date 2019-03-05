@@ -237,7 +237,7 @@ void Foam::multiphaseSystem::solveAlphas
             alphap,
             phi_,
             alphaPhiCorrPs,
-            alphaMax.internalField(),
+            min(alphaVoid.primitiveField(), alphaMax.internalField())(),
             scalarField(alphaMax.size(), 0.0)
         );
     }

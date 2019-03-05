@@ -172,11 +172,14 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
     volScalarField divU(fvc::div(U));
     tmp<volTensorField> S(D - 1.0/3.0*fvc::grad(U));
     tmp<volScalarField> Sdd(S && S);
-
     volScalarField n
     (
-        sqrt(3.0)/(2.0*sin(phi_))*pos(divU)
-      + 1.03*neg(divU)
+        max
+        (
+            sqrt(3.0)/(2.0*sin(phi_))*pos(divU)
+          + 1.03*neg(divU),
+            1e-6
+        )
     );
 
     tmp<volScalarField> PfByPc
@@ -186,7 +189,12 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
             1.0
           - min
             (
-                divU/(n*sqrt(2.0)*sin(phi_)*sqrt(Sdd() + Theta/sqr(da()))),
+                divU
+               /max
+                (
+                    n*sqrt(2.0)*sin(phi_)*sqrt(Sdd() + Theta/sqr(da())),
+                    dimensionedScalar("small", divU.dimensions(), small)
+                ),
                 1.0
             ),
             n - 1
@@ -223,7 +231,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
                 Pc.boundaryField()[patchi]*sin(phi_.value())
                 /(
                     mag(U.boundaryField()[patchi].snGrad())
-                    + SMALL
+                  + SMALL
                 )
             );
         }
