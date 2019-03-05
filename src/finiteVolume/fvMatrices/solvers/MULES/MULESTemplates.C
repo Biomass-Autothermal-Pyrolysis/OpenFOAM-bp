@@ -782,75 +782,43 @@ template
 <
     class PsiMaxType,
     class PsiMinType,
-    class VolScalarFieldList,
     class SurfaceScalarFieldList
 >
 void Foam::MULES::limitSum
 (
     const volScalarField& psi,
-    const VolScalarFieldList& psis,
     const surfaceScalarField& phi,
-    SurfaceScalarFieldList& phiPsis,
+    SurfaceScalarFieldList& phiCorrs,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 )
 {
     const fvMesh& mesh = phi.mesh();
 
-    surfaceScalarField phiPsi
-    (
-        IOobject
-        (
-            "phiPsi",
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar("0", phi.dimensions(), 0.0)
-    );
-    surfaceScalarField phiBD
-    (
-        IOobject
-        (
-            "phiBD",
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar("0", phi.dimensions(), 0.0)
-    );
-    PtrList<surfaceScalarField> phiPBDs(psis.size());
-    forAll(phiPsis, phasei)
+    surfaceScalarField phiCorr("phiCorr", phiCorrs[0]);
+    for (label i = 0; i < phiCorrs.size(); i++)
     {
-        phiPsi += phiPsis[phasei];
-        phiPBDs.set
-        (
-            phasei,
-            new surfaceScalarField
-            (
-                upwind<scalar>(psi.mesh(), phi).flux(psis[phasei])
-            )
-        );
-
-        surfaceScalarField::Boundary& phiBDBf = phiPBDs[phasei].boundaryFieldRef();
-        const surfaceScalarField::Boundary& phiPsiBf =
-            phiPsis[phasei].boundaryField();
-
-        forAll(phiBDBf, patchi)
-        {
-            fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
-
-            if (!phiBDPf.coupled())
-            {
-                phiBDPf = phiPsiBf[patchi];
-            }
-        }
-
-        phiBD += phiPBDs[phasei];
-        phiPsis[phasei] -= phiPBDs[phasei];
+        phiCorr += phiCorrs[i];
     }
 
-    phiPsi -= phiBD;
+    surfaceScalarField phiBD
+    (
+        "phiBD",
+        upwind<scalar>(psi.mesh(), phi).flux(psi)
+    );
+    surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
+    const surfaceScalarField::Boundary& phiCorrBf =
+        phiCorr.boundaryField();
+
+    forAll(phiBDBf, patchi)
+    {
+        fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
+
+        if (!phiBDPf.coupled())
+        {
+            phiBDPf = phiCorrBf[patchi];
+        }
+    }
 
     scalarField allLambda(mesh.nFaces(), 1.0);
 
@@ -881,7 +849,7 @@ void Foam::MULES::limitSum
             geometricOneField(),
             psi,
             phiBD,
-            phiPsi,
+            phiCorr,
             geometricZeroField(),
             geometricZeroField(),
             psiMax,
@@ -898,7 +866,7 @@ void Foam::MULES::limitSum
             geometricOneField(),
             psi,
             phiBD,
-            phiPsi,
+            phiCorr,
             geometricZeroField(),
             geometricZeroField(),
             psiMax,
@@ -906,9 +874,11 @@ void Foam::MULES::limitSum
         );
     }
 
-    forAll(phiPsis, phasei)
+    //- Phases have already have the upwind flux removed with initial single phase
+    //  limiting
+    forAll(phiCorrs, i)
     {
-        phiPsis[phasei] = phiPBDs[phasei] + phiPsis[phasei] *lambda;
+        phiCorrs[i] *= lambda;
     }
 }
 

@@ -231,11 +231,11 @@ kineticTheory
     residualAlpha           1e-4;
 
     packingLimitModel       YuStandish;
-    radialModel             Gao;
+    radialModel             Lebowitz;
     viscosityModel          Princeton;
     conductivityModel       Princeton;
     granularPressureModel   Princeton;
-    frictionalStressModel   JohnsonJackson;
+    frictionalStressModel   Princeton;
 
     coeffRest
     (
@@ -258,7 +258,7 @@ kineticTheory
 
     SchaefferCoeffs
     {
-        alphaMinFrictionByAlphap 0.99;
+        alphaMinFrictionByAlphap 0.97;
         Fr                      0.05;
         eta                     2;
         p                       5;
@@ -278,13 +278,13 @@ kineticTheory
 
     PrincetonCoeffs
     {
-        alphaMinFrictionByAlphap 0.99;
+        alphaMinFrictionByAlphap 0.97;
         alphaMinFriction        0.5;
         Fr                      0.05;
         eta                     2;
         p                       5;
         phi                     28.5;
-        alphaDeltaMin           0.05;
+        alphaDeltaMin           0.001;
     }
 }
 

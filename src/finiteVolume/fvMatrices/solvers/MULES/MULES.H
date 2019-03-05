@@ -214,13 +214,11 @@ template
 <
     class PsiMaxType,
     class PsiMinType,
-    class VolScalarFieldList,
     class SurfaceScalarFieldList
 >
 void limitSum
 (
     const volScalarField& psi,
-    const VolScalarFieldList& psis,
     const surfaceScalarField& phi,
     SurfaceScalarFieldList& phiPsis,
     const PsiMaxType& psiMax,
