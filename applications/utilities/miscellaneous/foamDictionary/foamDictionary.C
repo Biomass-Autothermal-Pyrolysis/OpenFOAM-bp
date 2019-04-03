@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,8 @@ Usage
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "Time.H"
+#include "IOobject.H"
+#include "Pair.H"
 #include "IFstream.H"
 #include "OFstream.H"
 #include "includeEntry.H"
@@ -126,6 +127,42 @@ Usage
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Read dictionary from file and return
+//  Sets steam to binary mode if specified in the optional header
+IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
+{
+    IOstream::streamFormat dictFormat = IOstream::ASCII;
+
+    IFstream dictFile(dictFileName);
+    if (!dictFile().good())
+    {
+        FatalErrorInFunction
+            << "Cannot open file " << dictFileName
+            << exit(FatalError, 1);
+    }
+
+    // Read the first entry from the dictionary
+    autoPtr<entry> firstEntry(entry::New(dictFile()));
+
+    // If the first entry is the "FoamFile" header dictionary
+    // read and set the stream format
+    if (firstEntry->isDict() && firstEntry->keyword() == "FoamFile")
+    {
+        dictFormat = IOstream::formatEnum(firstEntry->dict().lookup("format"));
+        dictFile().format(dictFormat);
+    }
+
+    // Add the first entry to the dictionary
+    dict.add(firstEntry);
+
+    // Read and add the rest of the dictionary entries
+    // preserving the "FoamFile" header dictionary if present
+    dict.read(dictFile(), true);
+
+    return dictFormat;
+}
+
 
 //- Converts old scope syntax to new syntax
 word scope(const fileName& entryName)
@@ -323,20 +360,9 @@ int main(int argc, char *argv[])
     }
 
 
-    fileName dictFileName(args[1]);
-
-    autoPtr<IFstream> dictFile(new IFstream(dictFileName));
-    if (!dictFile().good())
-    {
-        FatalErrorInFunction
-            << "Cannot open file " << dictFileName
-            << exit(FatalError, 1);
-    }
-
-    // Read but preserve headers
+    const fileName dictFileName(args[1]);
     dictionary dict;
-    dict.read(dictFile(), true);
-
+    IOstream::streamFormat dictFormat = readDict(dict, dictFileName);
 
     bool changed = false;
 
@@ -356,20 +382,12 @@ int main(int argc, char *argv[])
 
 
     // Second dictionary for -diff
-    dictionary diffDict;
     fileName diffFileName;
+    dictionary diffDict;
+
     if (args.optionReadIfPresent("diff", diffFileName))
     {
-        autoPtr<IFstream> diffFile(new IFstream(diffFileName));
-        if (!diffFile().good())
-        {
-            FatalErrorInFunction
-                << "Cannot open file " << diffFileName
-                << exit(FatalError, 1);
-        }
-
-        // Read but preserve headers
-        diffDict.read(diffFile(), true);
+        readDict(diffDict, diffFileName);
     }
 
 
@@ -397,15 +415,8 @@ int main(int argc, char *argv[])
             if (args.optionFound("dict"))
             {
                 const fileName fromDictFileName(newValue);
-                autoPtr<IFstream> fromDictFile(new IFstream(fromDictFileName));
-                if (!fromDictFile().good())
-                {
-                    FatalErrorInFunction
-                        << "Cannot open file " << fromDictFileName
-                        << exit(FatalError, 1);
-                }
-
-                dictionary fromDict(fromDictFile());
+                dictionary fromDict;
+                readDict(fromDict, fromDictFileName);
 
                 const entry* fePtr
                 (
@@ -544,7 +555,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                FatalIOErrorInFunction(dictFile)
+                FatalIOErrorInFunction(dict)
                     << "Cannot find entry " << entryName
                     << exit(FatalIOError, 2);
             }
@@ -569,8 +580,7 @@ int main(int argc, char *argv[])
 
     if (changed)
     {
-        dictFile.clear();
-        OFstream os(dictFileName);
+        OFstream os(dictFileName, dictFormat);
         IOobject::writeBanner(os);
         dict.write(os, false);
         IOobject::writeEndDivider(os);

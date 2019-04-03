@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,9 @@ template<class T> class PtrList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UPtrList;
-
-template<class T>
-Istream& operator>>(Istream&, UPtrList<T>&);
-
-template<class T>
-Ostream& operator<<(Ostream&, const UPtrList<T>&);
+template<class T> void writeEntry(Ostream& os, const UPtrList<T>&);
+template<class T> Istream& operator>>(Istream&, UPtrList<T>&);
+template<class T> Ostream& operator<<(Ostream&, const UPtrList<T>&);
 
 
 /*---------------------------------------------------------------------------*\

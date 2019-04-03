@@ -65,7 +65,7 @@ swirlFlowRateInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "origin",
-            patch().size()
+            returnReduce(patch().size(), sumOp<label>())
           ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
           : Zero
         )
@@ -75,7 +75,7 @@ swirlFlowRateInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "axis",
-            patch().size()
+            returnReduce(patch().size(), sumOp<label>())
           ? -gSum(patch().Sf())/gSum(patch().magSf())
           : Zero
         )
@@ -201,11 +201,11 @@ void Foam::swirlFlowRateInletVelocityFvPatchVectorField::write
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    Foam::writeEntry(os, "origin", origin_);
-    Foam::writeEntry(os, "axis", axis_);
-    flowRate_->writeData(os);
-    rpm_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, flowRate_());
+    writeEntry(os, rpm_());
+    writeEntry(os, "value", *this);
 }
 
 

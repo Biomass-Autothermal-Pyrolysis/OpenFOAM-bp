@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,8 @@ namespace Foam
 
 class rigidBodyMeshMotion
 :
-    public displacementMotionSolver
+    public displacementMotionSolver,
+    public RBD::rigidBodyMotion
 {
     //- Class containing the patches and point motion weighting for each body
     class bodyMesh
@@ -96,9 +97,6 @@ class rigidBodyMeshMotion
 
 
     // Private data
-
-        //- Rigid-body model
-        RBD::rigidBodyMotion model_;
 
         //- List of the bodyMeshes containing the patches and point motion
         //  weighting for each body
@@ -144,11 +142,11 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         rigidBodyMeshMotion
         (
             const polyMesh&,
-            const IOdictionary& dict
+            const dictionary& dict
         );
 
 
@@ -163,18 +161,6 @@ public:
 
         //- Solve for motion
         virtual void solve();
-
-        //- Write state using given format, version and compression
-        virtual bool writeObject
-        (
-            IOstream::streamFormat fmt,
-            IOstream::versionNumber ver,
-            IOstream::compressionType cmp,
-            const bool valid
-        ) const;
-
-        //- Read dynamicMeshDict dictionary
-        virtual bool read();
 };
 
 
