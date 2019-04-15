@@ -170,7 +170,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
     );
     volScalarField& nuf = tnu.ref();
     volScalarField divU(fvc::div(U));
-    tmp<volTensorField> S(D - 1.0/3.0*fvc::grad(U));
+    tmp<volTensorField> S(D - 1.0/3.0*divU*tensor::I);
     tmp<volScalarField> Sdd(S && S);
     volScalarField n
     (
@@ -206,7 +206,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
         {
             nuf[celli] =
                 sqrt(2.0)*Pf()[celli]*sin(phi_.value())
-               /(Sdd()[celli] + Theta[celli]/sqr(da()[celli]))
+               /sqrt(Sdd()[celli] + Theta[celli]/sqr(da()[celli]))
                *(
                     n[celli]
                   - (n[celli] - 1.0)
