@@ -764,6 +764,7 @@ void Foam::multiphaseSystem::solve()
                 fvScalarMatrix alphaEqn
                 (
                     fvm::ddt(alpha)
+                  - fvc::ddt(alpha)
                   + fvc::div
                     (
                         -fvc::flux
