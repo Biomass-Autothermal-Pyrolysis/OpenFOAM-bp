@@ -70,10 +70,10 @@ PtrList<surfaceScalarField> phiFfs(fluid.phiFfs(rAUfs));
 // --- Pressure corrector loop
 while (pimple.correct())
 {
-    volScalarField rho("rho", fluid.rho());
+    volScalarField Rho("Rho", fluid.rho());
 
     // Correct p_rgh for consistency with p and the updated densities
-    p_rgh = p - rho*gh;
+    p_rgh = p - Rho*gh;
 
     // Correct fixed-flux BCs to be consistent with the velocity BCs
     forAll(fluid.movingPhases(), movingPhasei)
@@ -88,7 +88,7 @@ while (pimple.correct())
         const surfaceScalarField ghSnGradRho
         (
             "ghSnGradRho",
-            ghf*fvc::snGrad(rho)*mesh.magSf()
+            ghf*fvc::snGrad(Rho)*mesh.magSf()
         );
 
         forAll(phases, phasei)
@@ -101,12 +101,25 @@ while (pimple.correct())
                 (
                     alpharAUfs[phasei]
                    *(
-                       ghSnGradRho
-                     - (fvc::interpolate(phase.rho() - rho))*(g & mesh.Sf())
                      - fluid.surfaceTension(phase)*mesh.magSf()
                     )
                 ).ptr()
             );
+            if (needP_rghRef)
+            {
+                phigFs[phasei] -=
+                    alpharAUfs[phasei]
+                   *fvc::interpolate(phase.rho())*(g & mesh.Sf());
+            }
+            else
+            {
+                phigFs[phasei] +=
+                    alpharAUfs[phasei]
+                   *(
+                       ghSnGradRho
+                     - (fvc::interpolate(phase.rho() - Rho))*(g & mesh.Sf())
+                    );
+            }
 
             if (phiFfs.set(phasei))
             {
@@ -358,6 +371,11 @@ while (pimple.correct())
                 }
             }
 
+            if (needP_rghRef)
+            {
+                pEqn.setReference(pRefCell, pRefValue);
+            }
+
             pEqn.solve();
         }
 
@@ -405,10 +423,10 @@ while (pimple.correct())
     }
 
     // Update and limit the static pressure
-    p = max(p_rgh + rho*gh, pMin);
+    p = max(p_rgh + Rho*gh, pMin);
 
     // Limit p_rgh
-    p_rgh = p - rho*gh;
+    p_rgh = p - Rho*gh;
 
     // Update densities from change in p_rgh
     forAll(phases, phasei)
@@ -418,7 +436,7 @@ while (pimple.correct())
     }
 
     // Correct p_rgh for consistency with p and the updated densities
-    rho = fluid.rho();
-    p_rgh = p - rho*gh;
+    Rho = fluid.rho();
+    p_rgh = p - Rho*gh;
     p_rgh.correctBoundaryConditions();
 }
