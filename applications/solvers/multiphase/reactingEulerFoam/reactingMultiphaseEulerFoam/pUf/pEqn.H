@@ -70,7 +70,7 @@ PtrList<surfaceScalarField> phiFfs(fluid.phiFfs(rAUfs));
 // --- Pressure corrector loop
 while (pimple.correct())
 {
-    volScalarField Rho("Rho", fluid.rho());
+    volScalarField Rho("rho", fluid.rho());
 
     // Correct p_rgh for consistency with p and the updated densities
     p_rgh = p - Rho*gh;
