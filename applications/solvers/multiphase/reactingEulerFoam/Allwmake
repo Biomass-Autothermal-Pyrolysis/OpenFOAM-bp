@@ -6,7 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wmakeLnInclude kineticTheoryModels
 
-wmake $targetType fvOptions
 wmake $targetType phaseSystems
 wmake $targetType interfacialModels
 wmake $targetType interfacialCompositionModels
