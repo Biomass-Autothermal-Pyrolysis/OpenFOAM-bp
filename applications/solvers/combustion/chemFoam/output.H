@@ -8,3 +8,9 @@
 
     post<< runTime.value() << token::TAB << thermo.T()[0] << token::TAB
         << thermo.p()[0] << endl;
+
+	forAll(Y,i)
+        {
+            post<< token::TAB << Y[i][0];
+        }
+	post<< endl;
