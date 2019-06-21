@@ -7,7 +7,7 @@
         << endl;
 
     post<< runTime.value() << token::TAB << thermo.T()[0] << token::TAB
-        << thermo.p()[0] << endl;
+        << thermo.p()[0];
 
 	forAll(Y,i)
         {
