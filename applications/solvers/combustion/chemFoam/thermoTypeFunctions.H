@@ -74,6 +74,10 @@ scalarList W(const rhoReactionThermo& thermo)
     {
         return W<constFluidHThermoPhysics>(thermo);
     }
+    else if (isA<reactingMixture<constHThermoPhysics>>(thermo))
+    {
+        return W<constHThermoPhysics>(thermo);
+    }
     else
     {
         FatalErrorInFunction
@@ -101,6 +105,10 @@ scalar h0
     else if (isA<reactingMixture<constFluidHThermoPhysics>>(thermo))
     {
         return h0<constFluidHThermoPhysics>(thermo, Y, p, T);
+    }
+    else if (isA<reactingMixture<constHThermoPhysics>>(thermo))
+    {
+        return h0<constHThermoPhysics>(thermo, Y, p, T);
     }
     else
     {

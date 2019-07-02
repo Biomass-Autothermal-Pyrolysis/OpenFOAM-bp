@@ -7,7 +7,7 @@
         << endl;
 
     post<< runTime.value() << token::TAB << thermo.T()[0] << token::TAB
-        << thermo.p()[0];
+        << thermo.p()[0] << token::TAB << Qdot << token::TAB << integratedHeat;
 
 	forAll(Y,i)
         {
