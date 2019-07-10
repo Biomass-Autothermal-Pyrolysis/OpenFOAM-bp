@@ -85,19 +85,19 @@ class fvDOM
 :
     public radiationModel
 {
-    // Private data
+    // Private Data
 
 
-        //- Incident radiation  [W/m2]
+        //- Incident radiation  [W/m^2]
         volScalarField G_;
 
-        //- Total radiative heat flux [W/m2]
+        //- Total radiative heat flux [W/m^2]
         volScalarField qr_;
 
-         //- Emitted radiative heat flux [W/m2]
+         //- Emitted radiative heat flux [W/m^2]
         volScalarField qem_;
 
-        //- Incidet radiative heat flux [W/m2]
+        //- Incidet radiative heat flux [W/m^2]
         volScalarField qin_;
 
         //- Total absorption coefficient [1/m]
@@ -139,12 +139,6 @@ class fvDOM
         //- Initialise
         void initialise();
 
-        //- Disallow default bitwise copy construct
-        fvDOM(const fvDOM&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvDOM&);
-
         //- Update nlack body emission
         void updateBlackBodyEmission();
 
@@ -163,12 +157,15 @@ public:
         //- Construct from components
         fvDOM(const dictionary& dict, const volScalarField& T);
 
+        //- Disallow default bitwise copy construction
+        fvDOM(const fvDOM&) = delete;
+
 
     //- Destructor
     virtual ~fvDOM();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -244,6 +241,12 @@ public:
 
             //- Return omegaMax
             inline scalar omegaMax() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvDOM&) = delete;
 };
 
 

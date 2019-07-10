@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class Time
     public objectRegistry,
     public TimeState
 {
-    // Private data
+    // Private Data
 
         //- Any loaded dynamic libraries. Make sure to construct before
         //  reading controlDict.
@@ -247,7 +247,7 @@ public:
     virtual ~Time();
 
 
-    // Member functions
+    // Member Functions
 
         // Database functions
 
@@ -364,7 +364,7 @@ public:
                 IOstream::streamFormat,
                 IOstream::versionNumber,
                 IOstream::compressionType,
-                const bool valid
+                const bool write
             ) const;
 
             //- Write the objects now (not at end of iteration) and continue
@@ -535,7 +535,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         //- Set deltaT to that specified and increment time via operator++()
         virtual Time& operator+=(const dimensionedScalar&);

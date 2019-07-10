@@ -85,7 +85,7 @@ class rigidBodyMeshMotionSolver
     };
 
 
-    // Private data
+    // Private Data
 
         //- List of the bodyMeshes containing the patches and point motion
         //  weighting for each body
@@ -111,17 +111,8 @@ class rigidBodyMeshMotionSolver
 
         displacementMotionSolver& meshSolver_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        rigidBodyMeshMotionSolver
-        (
-            const rigidBodyMeshMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotionSolver&);
+        //- To avoid warning from clang
+        using RBD::rigidBodyMotion::write;
 
 
 public:
@@ -137,6 +128,12 @@ public:
         (
             const polyMesh&,
             const dictionary& dict
+        );
+
+        //- Disallow default bitwise copy construction
+        rigidBodyMeshMotionSolver
+        (
+            const rigidBodyMeshMotionSolver&
         );
 
 
@@ -157,6 +154,15 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+        //- Write motion state information for restart
+        virtual bool write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyMeshMotionSolver&) = delete;
 };
 
 

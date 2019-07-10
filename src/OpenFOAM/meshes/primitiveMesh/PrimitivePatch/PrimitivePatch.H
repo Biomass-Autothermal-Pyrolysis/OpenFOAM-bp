@@ -87,7 +87,7 @@ class PrimitivePatch
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef FaceList FaceListType;
 
@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to global list of points
         PointField points_;
@@ -243,11 +243,18 @@ public:
             const Field<PointType>& points
         );
 
-        //- Construct from components
+        //- Move constructor from components
         PrimitivePatch
         (
-            const Xfer<FaceList>& faces,
-            const Xfer<List<PointType>>& points
+            FaceList&& faces,
+            Field<PointType>&& points
+        );
+
+        //- Move constructor from components
+        PrimitivePatch
+        (
+            FaceList&& faces,
+            List<PointType>&& points
         );
 
         //- Construct from components, reuse storage
@@ -258,10 +265,16 @@ public:
             const bool reuse
         );
 
-        //- Construct as copy
+        //- Copy constructor
         PrimitivePatch
         (
             const PrimitivePatch<FaceList, PointField>&
+        );
+
+        //- Move constructor
+        PrimitivePatch
+        (
+            PrimitivePatch<FaceList, PointField>&&
         );
 
         //- Construct and return a clone
@@ -497,12 +510,18 @@ public:
             virtual void movePoints(const Field<PointType>&);
 
 
-    // Member operators
+    // Member Operators
 
-        //- Assignment
+        //- Assignment operator
         void operator=
         (
             const PrimitivePatch<FaceList, PointField>&
+        );
+
+        //- Move assignment operator
+        void operator=
+        (
+            PrimitivePatch<FaceList, PointField>&&
         );
 };
 

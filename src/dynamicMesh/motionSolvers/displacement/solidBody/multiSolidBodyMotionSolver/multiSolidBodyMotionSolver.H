@@ -52,7 +52,7 @@ class multiSolidBodyMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         PtrList<solidBodyMotionFunction> SBMFs_;
@@ -62,15 +62,6 @@ class multiSolidBodyMotionSolver
 
         //- Points to move per cellZone
         labelListList pointIDs_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multiSolidBodyMotionSolver&);
 
 
 public:
@@ -88,6 +79,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&) = delete;
+
 
     //- Destructor
     ~multiSolidBodyMotionSolver();
@@ -101,6 +95,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiSolidBodyMotionSolver&) = delete;
 };
 
 

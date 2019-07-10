@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ public:
     virtual ~heThermo();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the compostion of the mixture
         virtual typename MixtureType::basicMixtureType&
@@ -268,11 +268,11 @@ public:
 
         // Fields derived from transport state variables
 
-            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+            //- Thermal diffusivity for temperature of mixture [W/m/K]
             virtual tmp<volScalarField> kappa() const;
 
             //- Thermal diffusivity for temperature of mixture
-            //  for patch [J/m/s/K]
+            //  for patch [W/m/K]
             virtual tmp<scalarField> kappa
             (
                 const label patchi
@@ -285,14 +285,14 @@ public:
             virtual tmp<scalarField> alphahe(const label patchi) const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [J/m/s/K]
+            //  of mixture [W/m/K]
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField&
             ) const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,

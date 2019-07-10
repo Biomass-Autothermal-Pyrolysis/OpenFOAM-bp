@@ -55,7 +55,7 @@ class mapPolyMesh;
 
 class motionSolver
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -148,6 +148,9 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&) = 0;
+
+        //- Optionally write motion state information for restart
+        virtual bool write() const;
 };
 
 

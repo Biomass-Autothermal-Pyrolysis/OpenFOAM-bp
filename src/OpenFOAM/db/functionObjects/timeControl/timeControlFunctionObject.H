@@ -59,7 +59,7 @@ class timeControl
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the time database
         const Time& time_;
@@ -99,12 +99,6 @@ class timeControl
         //- Returns true if within time bounds
         bool active() const;
 
-        //- Disallow default bitwise copy construct
-        timeControl(const timeControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const timeControl&);
-
 
 public:
 
@@ -121,6 +115,9 @@ public:
             const Time&,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        timeControl(const timeControl&) = delete;
 
 
     // Member Functions
@@ -169,6 +166,12 @@ public:
 
             //- Update for changes of mesh
             virtual void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const timeControl&) = delete;
 };
 
 

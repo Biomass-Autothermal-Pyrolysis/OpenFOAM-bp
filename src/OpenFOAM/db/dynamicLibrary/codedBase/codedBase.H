@@ -53,7 +53,7 @@ class dlLibraryTable;
 
 class codedBase
 {
-    // Private data
+    // Private Data
 
         //- Previously loaded library
         mutable fileName oldLibPath_;
@@ -81,12 +81,6 @@ class codedBase
 
         //- Create library based on the dynamicCodeContext
         void createLibrary(dynamicCode&, const dynamicCodeContext&) const;
-
-        //- Disallow default bitwise copy construct
-        codedBase(const codedBase&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const codedBase&);
 
 
 protected:
@@ -124,9 +118,18 @@ public:
         //- Construct null
         codedBase();
 
+        //- Disallow default bitwise copy construction
+        codedBase(const codedBase&) = delete;
+
 
     //- Destructor
     virtual ~codedBase();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codedBase&) = delete;
 };
 
 

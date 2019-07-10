@@ -54,7 +54,7 @@ interstitialInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    inletVelocity_(ptf.inletVelocity_, mapper),
+    inletVelocity_(mapper(ptf.inletVelocity_)),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -106,7 +106,7 @@ void Foam::interstitialInletVelocityFvPatchVectorField::autoMap
 )
 {
     fixedValueFvPatchVectorField::autoMap(m);
-    inletVelocity_.autoMap(m);
+    m(inletVelocity_, inletVelocity_);
 }
 
 

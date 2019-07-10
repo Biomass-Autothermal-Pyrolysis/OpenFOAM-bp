@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,8 +40,8 @@ Description
         where
         \vartable
             \phi_{Yi}  | flux of the permeable species [kg/s]
-            c          | transfer coefficient [kg/m2/s/<input-dimensions>]
-            A          | patch face area [m2]
+            c          | transfer coefficient [kg/m^2/s/<input-dimensions>]
+            A          | patch face area [m^2]
             \psi_i     | input variable on the patch []
             \psi_{i,n} | input variable on the neighbour patch []
         \endvartable
@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Transfer coefficient
         const scalar c_;
@@ -166,7 +166,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         semiPermeableBaffleMassFractionFvPatchScalarField
         (
             const semiPermeableBaffleMassFractionFvPatchScalarField&
@@ -181,7 +181,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         semiPermeableBaffleMassFractionFvPatchScalarField
         (
             const semiPermeableBaffleMassFractionFvPatchScalarField&,
@@ -205,7 +205,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

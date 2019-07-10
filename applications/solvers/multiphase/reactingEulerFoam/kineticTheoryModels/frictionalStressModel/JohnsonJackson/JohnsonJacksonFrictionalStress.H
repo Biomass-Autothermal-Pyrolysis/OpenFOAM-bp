@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class JohnsonJackson
 :
     public frictionalStressModel
 {
-    // Private data
+    // Private Data
 
         dictionary coeffDict_;
 
@@ -92,7 +92,7 @@ public:
     virtual ~JohnsonJackson();
 
 
-    // Member functions
+    // Member Functions
 
         virtual tmp<volScalarField> frictionalPressure
         (

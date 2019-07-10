@@ -138,16 +138,9 @@ class codeStream
         );
 
 
-        //- Disallow default bitwise copy construct
-        codeStream(const codeStream&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const codeStream&);
-
-
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;
@@ -160,6 +153,12 @@ public:
 
     //- Runtime type information
     ClassName("codeStream");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construction
+        codeStream(const codeStream&) = delete;
 
 
     // Member Functions
@@ -175,6 +174,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codeStream&) = delete;
 };
 
 

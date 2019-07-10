@@ -83,7 +83,7 @@ class FixedList
         "Size must be positive (non-zero) and also fit as a signed value"
     );
 
-    // Private data
+    // Private Data
 
         //- Vector of values of type T of size Size.
         T v_[Size];
@@ -137,9 +137,6 @@ public:
 
         //- Construct from SLList
         explicit inline FixedList(const SLList<T>&);
-
-        //- Copy constructor
-        inline FixedList(const FixedList<T, Size>&);
 
         //- Construct from Istream
         FixedList(Istream&);
@@ -211,7 +208,7 @@ public:
             void transfer(const FixedList<T, Size>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Return element of FixedList
         inline T& operator[](const label);
@@ -354,7 +351,7 @@ public:
         bool operator>=(const FixedList<T, Size>&) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read List from Istream, discarding contents of existing List
         friend Istream& operator>> <T, Size>

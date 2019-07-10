@@ -54,7 +54,7 @@ class sixDoFRigidBodyMotionSolver
 :
     public displacementMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Six DoF motion object
         sixDoFRigidBodyMotion motion_;
@@ -90,18 +90,6 @@ class sixDoFRigidBodyMotionSolver
         label curTimeIndex_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        sixDoFRigidBodyMotionSolver
-        (
-            const sixDoFRigidBodyMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyMotionSolver&);
-
-
 public:
 
     //- Runtime type information
@@ -115,6 +103,12 @@ public:
         (
             const polyMesh&,
             const dictionary& dict
+        );
+
+        //- Disallow default bitwise copy construction
+        sixDoFRigidBodyMotionSolver
+        (
+            const sixDoFRigidBodyMotionSolver&
         );
 
 
@@ -132,6 +126,15 @@ public:
 
         //- Solve for motion
         virtual void solve();
+
+        //- Write motion state information for restart
+        virtual bool write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sixDoFRigidBodyMotionSolver&) = delete;
 };
 
 

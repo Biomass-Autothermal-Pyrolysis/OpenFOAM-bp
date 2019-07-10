@@ -1,8 +1,13 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+<<<<<<< HEAD:applications/solvers/multiphase/reactingEulerFoam/kineticTheoryModels/kineticTheoryModel/kineticTheoryModel.H
    \\    /   O peration     |
     \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+=======
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+>>>>>>> 3431c1d21e2b51a4533243ab4a5f3479adae96b2:applications/solvers/multiphase/reactingEulerFoam/reactingTwoPhaseEulerFoam/twoPhaseCompressibleTurbulenceModels/kineticTheoryModels/kineticTheoryModel/kineticTheoryModel.H
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +80,7 @@ class kineticTheoryModel
     >,
     public tmp<kineticTheoryModel>::refCount
 {
-    // Private data
+    // Private Data
 
             typedef
                 HashTable
@@ -126,12 +131,6 @@ class kineticTheoryModel
         void correctNut()
         {}
 
-        //- Disallow default bitwise copy construct
-        kineticTheoryModel(const kineticTheoryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const kineticTheoryModel&);
-
         //- Lookup or construct kineticTheorySystem
         kineticTheorySystem& lookupOrConstruct(const fvMesh& mesh, const char*) const;
 
@@ -156,6 +155,9 @@ public:
             const word& propertiesName = turbulenceModel::propertiesName,
             const word& type = typeName
         );
+
+        //- Disallow default bitwise copy construction
+        kineticTheoryModel(const kineticTheoryModel&) = delete;
 
 
     //- Destructor
@@ -207,6 +209,11 @@ public:
 
         //- Return non-const reference to granular temperature field
         volScalarField& Theta();
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kineticTheoryModel&) = delete;
 };
 
 

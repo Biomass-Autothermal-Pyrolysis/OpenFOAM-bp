@@ -196,9 +196,9 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
     dimensionedVector g("g", dimAcceleration, Zero);
 
-    if (t.foundObject<uniformDimensionedVectorField>("g"))
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
-        g = t.lookupObject<uniformDimensionedVectorField>("g");
+        g = mesh().lookupObject<uniformDimensionedVectorField>("g");
     }
     else if (coeffDict().found("g"))
     {
@@ -256,6 +256,36 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     (
         pointDisplacement_.mesh()
     ).constrainDisplacement(pointDisplacement_);
+}
+
+
+bool Foam::sixDoFRigidBodyMotionSolver::write() const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "sixDoFRigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    motion_.state().write(dict);
+
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && displacementMotionSolver::write();
 }
 
 

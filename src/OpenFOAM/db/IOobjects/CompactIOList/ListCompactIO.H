@@ -110,12 +110,20 @@ public:
         //- Construct from Istream
         ListCompactIO(Istream&);
 
+        //- Move constructor
+        ListCompactIO(ListCompactIO<T, BaseType>&&);
 
-    // Member operators
+        //- Move constructor from List
+        ListCompactIO(List<T>&&);
+
+
+    // Member Operators
 
         void operator=(const ListCompactIO<T, BaseType>&);
+        void operator=(ListCompactIO<T, BaseType>&&);
 
         void operator=(const List<T>&);
+        void operator=(List<T>&&);
 
 
     // IOstream functions
@@ -127,7 +135,7 @@ public:
         );
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read List from Istream, discarding contents of existing List.
         friend Istream& operator>> <T, BaseType>

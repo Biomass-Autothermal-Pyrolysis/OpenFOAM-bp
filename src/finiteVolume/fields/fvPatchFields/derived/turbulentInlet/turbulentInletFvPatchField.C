@@ -84,7 +84,7 @@ Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
     ranGen_(label(0)),
     fluctuationScale_(ptf.fluctuationScale_),
-    referenceField_(ptf.referenceField_, mapper),
+    referenceField_(mapper(ptf.referenceField_)),
     alpha_(ptf.alpha_),
     curTimeIndex_(-1)
 {}
@@ -130,7 +130,7 @@ void Foam::turbulentInletFvPatchField<Type>::autoMap
 )
 {
     fixedValueFvPatchField<Type>::autoMap(m);
-    referenceField_.autoMap(m);
+    m(referenceField_, referenceField_);
 }
 
 

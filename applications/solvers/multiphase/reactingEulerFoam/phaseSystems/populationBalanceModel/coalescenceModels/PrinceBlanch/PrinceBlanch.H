@@ -83,21 +83,21 @@ Description
     is currently neglected.
 
     \vartable
-        \theta_{ij}^{T}   |  Turbulent collision rate [m3/s]
-        \theta_{ij}^{B}   |  Buoyancy-driven collision rate [m3/s]
-        \theta_{ij}^{LS}  |  Laminar shear collision rate [m3/s]
-        \lambda_{ij}      |  Coalescence efficiency [-]
-        r_{ij}            |  Equivalent radius [m]
-        \rho_c            |  Density of continuous phase [kg/m3]
-        \sigma            |  Surface tension [N/m]
-        h_0               |  Initial film thickness [m]
-        h_f               |  Critical film thickness [m]
-        \epsilon_c        |  Continuous phase turbulent dissipation rate [m2/s3]
-        d_i               |  Diameter of bubble i [m]
-        d_j               |  Diameter of bubble j [m]
-        u_{ri}            |  Rise velocity of bubble i [m/s]
-        S_{ij}            |  Collision cross sectional area [m2]
-        g                 |  Gravitational constant [m/s2]
+        \theta_{ij}^{T} |  Turbulent collision rate [m^3/s]
+        \theta_{ij}^{B} |  Buoyancy-driven collision rate [m^3/s]
+        \theta_{ij}^{LS}|  Laminar shear collision rate [m^3/s]
+        \lambda_{ij}    |  Coalescence efficiency [-]
+        r_{ij}          |  Equivalent radius [m]
+        \rho_c          |  Density of continuous phase [kg/m^3]
+        \sigma          |  Surface tension [N/m]
+        h_0             |  Initial film thickness [m]
+        h_f             |  Critical film thickness [m]
+        \epsilon_c      |  Continuous phase turbulent dissipation rate [m^2/s^3]
+        d_i             |  Diameter of bubble i [m]
+        d_j             |  Diameter of bubble j [m]
+        u_{ri}          |  Rise velocity of bubble i [m/s]
+        S_{ij}          |  Collision cross sectional area [m^2]
+        g               |  Gravitational constant [m/s^2]
     \endvartable
 
     Reference:
@@ -145,7 +145,7 @@ class PrinceBlanch
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Optional coefficient C1, defaults to 0.089
         dimensionedScalar C1_;

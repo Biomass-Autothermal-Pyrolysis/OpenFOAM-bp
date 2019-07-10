@@ -46,7 +46,7 @@ namespace Foam
 template<class GeometricField>
 class subCycleField
 {
-    // Private data
+    // Private Data
 
         //- Reference to the field being sub-cycled
         GeometricField& gf_;
@@ -114,7 +114,7 @@ public:
 template<class GeometricField>
 class subCycleFields
 {
-    // Private data
+    // Private Data
 
         //- List of pointers to the fields being sub-cycled
         List<GeometricField*> gfPtrs_;
@@ -211,14 +211,6 @@ class subCycle
     public SubCycleField<GeometricField>,
     public subCycleTime
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        subCycle(const subCycle<GeometricField>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const subCycle<GeometricField>&);
-
 
 public:
 
@@ -238,6 +230,9 @@ public:
             this->updateTimeIndex();
         }
 
+        //- Disallow default bitwise copy construction
+        subCycle(const subCycle<GeometricField>&) = delete;
+
 
     //- Destructor
     //  End the subCycleTime, which restores the time state
@@ -245,6 +240,12 @@ public:
     {
         endSubCycle();
     }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const subCycle<GeometricField>&) = delete;
 };
 
 

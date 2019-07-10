@@ -28,7 +28,7 @@ Description
     Model of Luo (1993). The coalescence rate is calculated by
 
     \f[
-       &\frac{\pi}{4} (d_i + d_j)^2 u_{ij}
+        \frac{\pi}{4} (d_i + d_j)^2 u_{ij}
         \mathrm{exp}
         \left[
           - C_1
@@ -58,13 +58,13 @@ Description
         d_j         |  Diameter of bubble j [m]
         u_{ij}      |  Mean approach velocity [m/s]
         \xi_{ij}    |  Bubble size ratio [-]
-        \rho_d      |  Density of dispersed phase [kg/m3]
-        \rho_c      |  Density of continuous phase [kg/m3]
+        \rho_d      |  Density of dispersed phase [kg/m^3]
+        \rho_c      |  Density of continuous phase [kg/m^3]
         \sigma      |  Surface tension [N/m]
         C_{vm}      |  Virtual mass coefficient [-]
         C_1         |  Coefficient [-]
         \beta       |  Coefficient [-]
-        \epsilon_c  |  Continuous phase turbulent dissipation rate [m2/s3]
+        \epsilon_c  |  Continuous phase turbulent dissipation rate [m^2/s^3]
     \endvartable
 
     Reference:
@@ -109,7 +109,7 @@ class Luo
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Coefficient beta, defaults to 2.0
         dimensionedScalar beta_;

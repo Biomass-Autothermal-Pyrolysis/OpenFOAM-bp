@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class functionObjectList
 :
     private PtrList<functionObject>
 {
-    // Private data
+    // Private Data
 
         //- A list of SHA1 digests for the function object dictionaries
         List<SHA1Digest> digests_;
@@ -95,16 +95,10 @@ class functionObjectList
         //  configuration files, add to the given map and recurse
         static void listDir(const fileName& dir, HashSet<word>& foMap);
 
-        //- Disallow default bitwise copy construct
-        functionObjectList(const functionObjectList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionObjectList&);
-
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Default relative path to the directory structure
         //  containing the functionObject dictionary files
@@ -135,6 +129,9 @@ public:
             const dictionary& parentDict,
             const bool execution=true
         );
+
+        //- Disallow default bitwise copy construction
+        functionObjectList(const functionObjectList&) = delete;
 
         //- Construct and return a functionObjectList for an application.
         //  If the "dict" argument is specified the functionObjectList is
@@ -288,6 +285,12 @@ public:
 
         //- Update for changes of mesh
         void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const functionObjectList&) = delete;
 };
 
 

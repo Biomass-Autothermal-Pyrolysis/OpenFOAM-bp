@@ -79,7 +79,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         static int yyBufSize;
         label lineNo_;
@@ -281,11 +281,11 @@ private:
             const fileName& transportFileName
         );
 
-        //- Disallow default bitwise copy construct
-        chemkinReader(const chemkinReader&);
+        //- Disallow default bitwise copy construction
+        chemkinReader(const chemkinReader&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const chemkinReader&);
+        void operator=(const chemkinReader&) = delete;
 
 
 public:
@@ -315,7 +315,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- List of elements
         const wordList& elementNames() const

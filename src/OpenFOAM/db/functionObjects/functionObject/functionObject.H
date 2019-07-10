@@ -139,19 +139,10 @@ class mapPolyMesh;
 
 class functionObject
 {
-    // Private data
+    // Private Data
 
         //- Name
         const word name_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        functionObject(const functionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionObject&);
 
 
 public:
@@ -191,6 +182,9 @@ public:
             NotImplemented;
             return autoPtr<functionObject>(nullptr);
         }
+
+        //- Disallow default bitwise copy construction
+        functionObject(const functionObject&) = delete;
 
 
     // Selectors
@@ -245,6 +239,12 @@ public:
 
         //- Update for changes of mesh
         virtual void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const functionObject&) = delete;
 };
 
 

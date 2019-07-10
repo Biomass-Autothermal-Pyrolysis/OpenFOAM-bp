@@ -68,7 +68,7 @@ class viewFactor
 :
     public radiationModel
 {
-    // Private data
+    // Private Data
 
         //- Agglomeration List
         labelListIOList finalAgglom_;
@@ -79,7 +79,7 @@ class viewFactor
         //- Coarse mesh
         singleCellFvMesh coarseMesh_;
 
-        //- Net radiative heat flux [W/m2]
+        //- Net radiative heat flux [W/m^2]
         volScalarField qr_;
 
         //- View factor matrix
@@ -122,12 +122,6 @@ class viewFactor
             scalarSquareMatrix& matrix
         );
 
-        //- Disallow default bitwise copy construct
-        viewFactor(const viewFactor&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const viewFactor&);
-
 
 public:
 
@@ -143,12 +137,15 @@ public:
         //- Construct from components
         viewFactor(const dictionary& dict, const volScalarField& T);
 
+        //- Disallow default bitwise copy construction
+        viewFactor(const viewFactor&) = delete;
+
 
     //- Destructor
     virtual ~viewFactor();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -169,6 +166,12 @@ public:
 
         //- Const access to total radiative heat flux field
         inline const volScalarField& qr() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const viewFactor&) = delete;
 };
 
 

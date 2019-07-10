@@ -51,7 +51,7 @@ class dynamicFvMesh
 :
     public fvMesh
 {
-    // Private data
+    // Private Data
 
         //- The dynamicMeshDict
         dictionary dynamicMeshDict_;
@@ -61,12 +61,6 @@ class dynamicFvMesh
 
         //- Return the dynamicMeshDict IOobject
         static IOobject dynamicMeshDictIOobject(const IOobject& io);
-
-        //- Disallow default bitwise copy construct
-        dynamicFvMesh(const dynamicFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicFvMesh&);
 
 
 public:
@@ -91,7 +85,7 @@ public:
     //  following mesh motion
     class velocityMotionCorrection
     {
-        // Private data
+        // Private Data
 
             const dynamicFvMesh& mesh_;
 
@@ -124,10 +118,10 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& allOwner,
-            const Xfer<labelList>& allNeighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& allOwner,
+            labelList&& allNeighbour,
             const bool syncPar = true
         );
 
@@ -136,11 +130,14 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true
         );
+
+        //- Disallow default bitwise copy construction
+        dynamicFvMesh(const dynamicFvMesh&) = delete;
 
 
     // Selectors
@@ -171,6 +168,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicFvMesh&) = delete;
 };
 
 

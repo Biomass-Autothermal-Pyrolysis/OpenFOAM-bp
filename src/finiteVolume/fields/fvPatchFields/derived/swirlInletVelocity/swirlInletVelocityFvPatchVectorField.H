@@ -84,7 +84,7 @@ class swirlInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Origin of the rotation
         const vector origin_;
@@ -136,7 +136,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         swirlInletVelocityFvPatchVectorField
         (
             const swirlInletVelocityFvPatchVectorField&
@@ -151,7 +151,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         swirlInletVelocityFvPatchVectorField
         (
             const swirlInletVelocityFvPatchVectorField&,
@@ -171,7 +171,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,7 +158,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- name of the other phase (vapor/liquid phase)
         word otherPhaseName_;
@@ -235,7 +235,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&
@@ -250,7 +250,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&,
@@ -270,7 +270,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         using alphatPhaseChangeWallFunctionFvPatchScalarField::dmdt;
 
@@ -289,13 +289,13 @@ public:
             return dDep_;
         }
 
-        //- Return the quenching surface heat flux [W/m2]
+        //- Return the quenching surface heat flux [W/m^2]
         const scalarField& qq() const
         {
             return qq_;
         }
 
-        //- Return the evaporation surface heat flux [W/m2]
+        //- Return the evaporation surface heat flux [W/m^2]
         tmp<scalarField> qe() const
         {
             return mDotL_/AbyV_;

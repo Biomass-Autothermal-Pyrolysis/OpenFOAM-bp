@@ -245,10 +245,11 @@ void Foam::rigidBodyMeshMotion::solve()
 
     const scalar ramp = ramp_->value(t.value());
 
-    if (t.foundObject<uniformDimensionedVectorField>("g"))
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
         g() =
-            ramp*t.lookupObject<uniformDimensionedVectorField>("g").value();
+            ramp
+           *mesh().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -333,6 +334,36 @@ void Foam::rigidBodyMeshMotion::solve()
     (
         pointDisplacement_.mesh()
     ).constrainDisplacement(pointDisplacement_);
+}
+
+
+bool Foam::rigidBodyMeshMotion::write() const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "rigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    state().write(dict);
+
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && displacementMotionSolver::write();
 }
 
 

@@ -189,12 +189,6 @@ class kineticTheorySystem
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        kineticTheorySystem(const kineticTheorySystem& fluid);
-
-        //- Disallow default bitwise assignment
-        void operator=(const kineticTheorySystem&);
-
         //- Compute the packing limit for phase1 and phase2
         scalar calcAlphaMax(const label, const label, const scalarList&) const;
 
@@ -209,6 +203,9 @@ public:
 
     //- Destructor
     ~kineticTheorySystem();
+
+    //- Disallow default bitwise copy construct
+    kineticTheorySystem(const kineticTheorySystem&) = delete;
 
 
     // Member Functions
@@ -344,6 +341,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kineticTheorySystem&) = delete;
 };
 
 

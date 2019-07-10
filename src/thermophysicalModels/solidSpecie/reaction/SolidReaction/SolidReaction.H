@@ -61,10 +61,7 @@ class SolidReaction
 :
     public Reaction<ReactionThermo>
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- List of gas species present in reaction system
         speciesTable pyrolisisGases_;
@@ -87,9 +84,6 @@ private:
 
         //- Return string representation of the right of the reaction
         void solidReactionStrRight(OStringStream&) const;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SolidReaction&);
 
 
 public:
@@ -148,6 +142,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SolidReaction&) = delete;
 
 
     // Ostream Operator

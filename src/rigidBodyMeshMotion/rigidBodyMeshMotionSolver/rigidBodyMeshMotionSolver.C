@@ -193,10 +193,10 @@ void Foam::rigidBodyMeshMotionSolver::solve()
         curTimeIndex_ = t.timeIndex();
     }
 
-    if (t.foundObject<uniformDimensionedVectorField>("g"))
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
         g() =
-            t.lookupObject<uniformDimensionedVectorField>("g").value();
+            mesh().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -289,6 +289,36 @@ void Foam::rigidBodyMeshMotionSolver::movePoints(const pointField& points)
 void Foam::rigidBodyMeshMotionSolver::updateMesh(const mapPolyMesh& mpm)
 {
     meshSolverPtr_->updateMesh(mpm);
+}
+
+
+bool Foam::rigidBodyMeshMotionSolver::write() const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "rigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    state().write(dict);
+
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && motionSolver::write();
 }
 
 

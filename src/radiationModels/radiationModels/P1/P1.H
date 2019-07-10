@@ -59,12 +59,12 @@ class P1
 :
     public radiationModel
 {
-    // Private data
+    // Private Data
 
-        //- Incident radiation / [W/m2]
+        //- Incident radiation / [W/m^2]
         volScalarField G_;
 
-        //- Total radiative heat flux [W/m2]
+        //- Total radiative heat flux [W/m^2]
         volScalarField qr_;
 
         //- Absorption coefficient
@@ -75,15 +75,6 @@ class P1
 
         //- Emission contribution
         volScalarField E_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        P1(const P1&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const P1&);
 
 
 public:
@@ -100,12 +91,15 @@ public:
         //- Construct from components
         P1(const dictionary& dict, const volScalarField& T);
 
+        //- Disallow default bitwise copy construction
+        P1(const P1&) = delete;
+
 
     //- Destructor
     virtual ~P1();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -123,6 +117,12 @@ public:
 
             //- Source term component (constant)
             virtual tmp<volScalarField::Internal> Ru() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const P1&) = delete;
 };
 
 

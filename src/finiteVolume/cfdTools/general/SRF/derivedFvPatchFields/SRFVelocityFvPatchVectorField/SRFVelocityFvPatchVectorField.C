@@ -53,7 +53,7 @@ Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     relative_(ptf.relative_),
-    inletValue_(ptf.inletValue_, mapper)
+    inletValue_(mapper(ptf.inletValue_))
 {}
 
 
@@ -100,8 +100,8 @@ void Foam::SRFVelocityFvPatchVectorField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    vectorField::autoMap(m);
-    inletValue_.autoMap(m);
+    m(*this, *this);
+    m(inletValue_, inletValue_);
 }
 
 

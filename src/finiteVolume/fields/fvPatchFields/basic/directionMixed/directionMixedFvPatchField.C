@@ -52,9 +52,9 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    refGrad_(ptf.refGrad_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
+    refValue_(mapper(ptf.refValue_)),
+    refGrad_(mapper(ptf.refGrad_)),
+    valueFraction_(mapper(ptf.valueFraction_))
 {
     if (notNull(iF) && mapper.hasUnmapped())
     {
@@ -108,9 +108,9 @@ void Foam::directionMixedFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    refValue_.autoMap(m);
-    refGrad_.autoMap(m);
-    valueFraction_.autoMap(m);
+    m(refValue_, refValue_);
+    m(refGrad_, refGrad_);
+    m(valueFraction_, valueFraction_);
 }
 
 

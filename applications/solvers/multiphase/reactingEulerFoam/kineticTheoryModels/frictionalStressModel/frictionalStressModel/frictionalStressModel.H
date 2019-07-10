@@ -1,8 +1,8 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,15 +52,6 @@ namespace kineticTheoryModels
 
 class frictionalStressModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        frictionalStressModel(const frictionalStressModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const frictionalStressModel&);
-
-
 protected:
 
     // Protected data
@@ -94,6 +85,9 @@ public:
         (
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        frictionalStressModel(const frictionalStressModel&) = delete;
 
 
     // Selectors
@@ -132,6 +126,12 @@ public:
         ) const = 0;
 
         virtual bool read() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const frictionalStressModel&) = delete;
 };
 
 

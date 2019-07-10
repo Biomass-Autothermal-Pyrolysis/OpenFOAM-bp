@@ -79,8 +79,11 @@ public:
         //- Construct from IOobject and a List
         CompactIOList(const IOobject&, const List<T>&);
 
-        //- Construct by transferring the List contents
-        CompactIOList(const IOobject&, const Xfer<List<T>>&);
+        //- Move construct by transferring the List contents
+        CompactIOList(const IOobject&, List<T>&&);
+
+        //- Move constructor
+        CompactIOList(CompactIOList<T, BaseType>&&);
 
 
     // Destructor
@@ -88,22 +91,26 @@ public:
         virtual ~CompactIOList();
 
 
-    // Member functions
+    // Member Functions
 
         virtual bool writeObject
         (
             IOstream::streamFormat,
             IOstream::versionNumber,
             IOstream::compressionType,
-            const bool valid
+            const bool write
         ) const;
 
         virtual bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const CompactIOList<T, BaseType>&);
+        void operator=(CompactIOList<T, BaseType>&&);
+
+        void operator=(const List<T>&);
+        void operator=(List<T>&&);
 };
 
 

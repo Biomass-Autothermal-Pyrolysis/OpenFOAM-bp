@@ -62,7 +62,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the owner fvDOM object
         const fvDOM& dom_;
@@ -76,7 +76,7 @@ private:
         //- Black body
         const blackBodyEmission& blackBody_;
 
-        //- Total radiative intensity / [W/m2]
+        //- Total radiative intensity / [W/m^2]
         volScalarField I_;
 
         //- Total radiative heat flux on boundary
@@ -116,15 +116,6 @@ private:
         label myRayId_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        radiativeIntensityRay(const radiativeIntensityRay&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const radiativeIntensityRay&);
-
-
 public:
 
     // Constructors
@@ -144,12 +135,15 @@ public:
             const label rayId
         );
 
+        //- Disallow default bitwise copy construction
+        radiativeIntensityRay(const radiativeIntensityRay&) = delete;
+
 
     //- Destructor
     ~radiativeIntensityRay();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -214,6 +208,11 @@ public:
             //- Return the radiative intensity for a given wavelength
             inline const volScalarField& ILambda(const label lambdaI) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radiativeIntensityRay&) = delete;
 };
 
 
