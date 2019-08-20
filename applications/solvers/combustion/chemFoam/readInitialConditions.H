@@ -95,6 +95,7 @@
     Rspecific[0] = R0;
 
     scalar integratedHeat = 0.0;
+    //scalar totalIntHeat = 0.0;
 
     Info << constProp << " will be held constant." << nl
         << " p   = " << p[0] << " [Pa]" << nl
