@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,12 +38,18 @@ void Foam::data::setSolverPerformance
 {
     dictionary& dict = const_cast<dictionary&>(solverPerformanceDict());
 
-    List<SolverPerformance<Type>> perfs;
+    // Use a DynamicList to improve performance of the append
+    DynamicList<SolverPerformance<Type>> perfs;
 
-    if (prevTimeIndex_ != this->time().timeIndex())
+    const label timeIndex =
+        this->time().subCycling()
+      ? this->time().prevTimeState().timeIndex()
+      : this->time().timeIndex();
+
+    if (prevTimeIndex_ != timeIndex)
     {
         // Reset solver performance between iterations
-        prevTimeIndex_ = this->time().timeIndex();
+        prevTimeIndex_ = timeIndex;
         dict.clear();
     }
     else
@@ -52,7 +58,7 @@ void Foam::data::setSolverPerformance
     }
 
     // Append to list
-    perfs.setSize(perfs.size()+1, sp);
+    perfs.append(sp);
 
     dict.set(name, perfs);
 }

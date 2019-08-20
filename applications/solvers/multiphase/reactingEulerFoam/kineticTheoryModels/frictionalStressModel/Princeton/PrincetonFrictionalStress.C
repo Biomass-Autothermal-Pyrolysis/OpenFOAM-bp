@@ -170,37 +170,34 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
     );
     volScalarField& nuf = tnu.ref();
     volScalarField divU(fvc::div(U));
-    tmp<volTensorField> S(D - 1.0/3.0*fvc::grad(U));
+    tmp<volTensorField> S(D - 1.0/3.0*divU*tensor::I);
     tmp<volScalarField> Sdd(S && S);
     volScalarField n
     (
-        max
-        (
-            sqrt(3.0)/(2.0*sin(phi_))*pos(divU)
-          + 1.03*neg(divU),
-            1e-6
-        )
+        sqrt(3.0)/2.0*sin(phi_)*pos(divU)
+      + 1.03*neg(divU)
     );
 
     tmp<volScalarField> PfByPc
     (
         pow
         (
-            1.0
-          - min
+            max
             (
-                divU
+                1.0
+              - divU
                /max
                 (
                     n*sqrt(2.0)*sin(phi_)*sqrt(Sdd() + Theta/sqr(da())),
                     dimensionedScalar("small", divU.dimensions(), small)
                 ),
-                1.0
+                1e-6
             ),
             n - 1
         )
        *phase/max(alphap, phase.residualAlpha())
     );
+    PfByPc.ref().max(1e-10);
     tmp<volScalarField> Pf(PfByPc()*Pc);
 
     forAll(D, celli)
@@ -209,7 +206,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
         {
             nuf[celli] =
                 sqrt(2.0)*Pf()[celli]*sin(phi_.value())
-               /(Sdd()[celli] + Theta[celli]/sqr(da()[celli]))
+               /sqrt(Sdd()[celli] + Theta[celli]/sqr(da()[celli]))
                *(
                     n[celli]
                   - (n[celli] - 1.0)
@@ -228,11 +225,9 @@ Foam::kineticTheoryModels::frictionalStressModels::Princeton::nu
         {
             nufBf[patchi] =
             (
-                Pc.boundaryField()[patchi]*sin(phi_.value())
-                /(
-                    mag(U.boundaryField()[patchi].snGrad())
-                  + SMALL
-                )
+                0.5
+               *Pc.boundaryField()[patchi]
+               *sin(phi_.value())
             );
         }
     }
