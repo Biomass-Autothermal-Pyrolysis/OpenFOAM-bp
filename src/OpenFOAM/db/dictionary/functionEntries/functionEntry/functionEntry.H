@@ -67,8 +67,26 @@ class functionEntry
 {
     // Private Member Functions
 
-        //- Read line as string token
-        static token readLine(const word& key, Istream& is);
+        //- Read line as word token
+        static word readLine(Istream& is);
+
+
+protected:
+
+        //- Insert the given string in a sub-dict context
+        static bool insert
+        (
+            dictionary& parentDict,
+            const string&
+        );
+
+        //- Insert the given string in a primitiveEntry context
+        static bool insert
+        (
+            const dictionary& parentDict,
+            primitiveEntry& thisEntry,
+            const string&
+        );
 
 
 public:
@@ -78,8 +96,10 @@ public:
         //- Construct from keyword, parent dictionary and Istream
         functionEntry(const word&, const dictionary&, Istream&);
 
-        //- Disallow default bitwise copy construction
-        functionEntry(const functionEntry&) = delete;
+        autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new functionEntry(*this));
+        }
 
 
     // Member Function Selectors

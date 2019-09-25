@@ -39,10 +39,9 @@ SourceFiles
 #define StandardChemistryModel_H
 
 #include "BasicChemistryModel.H"
-#include "Reaction.H"
+#include "ReactionList.H"
 #include "ODESystem.H"
 #include "volFields.H"
-#include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,11 +79,11 @@ protected:
         //- Reference to the field of specie mass fractions
         PtrList<volScalarField>& Y_;
 
-        //- Reactions
-        const PtrList<Reaction<ThermoType>>& reactions_;
-
         //- Thermodynamic data of the species
         const PtrList<ThermoType>& specieThermo_;
+
+        //- Reactions
+        const ReactionList<ThermoType> reactions_;
 
         //- Number of species
         label nSpecie_;
@@ -154,9 +153,10 @@ public:
         //- dc/dt = omega, rate of change in concentration, for each species
         virtual void omega
         (
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             scalarField& dcdt
         ) const;
 
@@ -166,9 +166,10 @@ public:
         virtual scalar omegaI
         (
             label iReaction,
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             scalar& pf,
             scalar& cf,
             label& lRef,
@@ -227,6 +228,7 @@ public:
             (
                 const scalar t,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt
             ) const;
 
@@ -234,15 +236,17 @@ public:
             (
                 const scalar t,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt,
                 scalarSquareMatrix& J
             ) const;
 
             virtual void solve
             (
-                scalarField &c,
-                scalar& T,
                 scalar& p,
+                scalar& T,
+                scalarField& c,
+                const label li,
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;

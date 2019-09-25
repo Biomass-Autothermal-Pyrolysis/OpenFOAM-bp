@@ -56,8 +56,6 @@ Usage
         \f]
 
 Note
-    - Heat of formation is inputted in [J/kg], but internally uses [J/kmol]
-    - Standard entropy is inputted in [J/kg/K], but internally uses [J/kmol/K]
     - Specific heat at constant pressure polynomial coefficients evaluate to an
       expression in [J/kg/K].
 
@@ -132,14 +130,15 @@ class hPolynomialThermo
         //- Standard entropy
         scalar Sf_;
 
-        //- Specific heat at constant pressure polynomial coeffs
+        //- Specific heat at constant pressure polynomial coeffs [J/kg/K/K^i]
         Polynomial<PolySize> CpCoeffs_;
 
-        //- Enthalpy polynomial coeffs - derived from cp [J/kg]
-        //  NOTE: relative to Tstd
+        //- Enthalpy polynomial coeffs [J/kg/K^i]
+        //  Derived from Cp coeffs. Relative to Tstd.
         typename Polynomial<PolySize>::intPolyType hCoeffs_;
 
-        //- Entropy - derived from Cp [J/kg/K] - relative to Tstd
+        //- Entropy polynomial coeffs [J/kg/K/K^i]
+        //  Derived from Cp coeffs. Relative to Tstd.
         Polynomial<PolySize> sCoeffs_;
 
 
@@ -185,7 +184,7 @@ public:
             //- Heat capacity at constant pressure [J/kg/K]
             inline scalar Cp(const scalar p, const scalar T) const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
@@ -196,6 +195,9 @@ public:
 
             //- Entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
+
+            //- Gibbs free energy of the mixture in the standard state [J/kg]
+            inline scalar Gstd(const scalar T) const;
 
             #include "HtoEthermo.H"
 

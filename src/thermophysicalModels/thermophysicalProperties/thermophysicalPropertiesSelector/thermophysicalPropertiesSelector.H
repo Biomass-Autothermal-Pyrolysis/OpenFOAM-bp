@@ -107,7 +107,7 @@ public:
             //- Liquid density [kg/m^3]
             inline scalar rho(scalar p, scalar T) const;
 
-            //- Liquid compressibility rho/p [s^2/m^2]
+            //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             inline scalar psi(scalar p, scalar T) const;
 
@@ -128,7 +128,7 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
             //- Heat capacity at constant volume [J/kg/K]

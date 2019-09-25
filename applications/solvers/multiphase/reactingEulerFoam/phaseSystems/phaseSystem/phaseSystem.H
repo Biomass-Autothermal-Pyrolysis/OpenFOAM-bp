@@ -79,7 +79,7 @@ public:
 
         typedef HashPtrTable<fvScalarMatrix> heatTransferTable;
 
-        typedef HashPtrTable<fvScalarMatrix> massTransferTable;
+        typedef HashPtrTable<fvScalarMatrix> specieTransferTable;
 
         typedef PtrListDictionary<phaseModel> phaseModelList;
 
@@ -88,6 +88,20 @@ public:
         typedef
             HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
             phasePairTable;
+
+        typedef
+            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            dmdtTable;
+
+        typedef
+            HashPtrTable
+            <
+                HashPtrTable<volScalarField>,
+                phasePairKey,
+                phasePairKey::hash
+            >
+            dmidtTable;
+
 
 
 protected:
@@ -209,7 +223,8 @@ protected:
                 autoPtr<modelType>,
                 phasePairKey,
                 phasePairKey::hash
-            >& models
+            >& models,
+            const bool correctFixedFluxBCs = true
         );
 
         //- Generate pairs and blended sub-model tables
@@ -239,50 +254,6 @@ protected:
             >& models,
             const bool correctFixedFluxBCs = true
         );
-
-        //- Add the field to a phase-indexed list, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            tmp<GeoField> field,
-            PtrList<GeoField>& fieldList
-        ) const;
-
-        //- Add the field to a phase-indexed list, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            const GeoField& field,
-            PtrList<GeoField>& fieldList
-        ) const;
-
-        //- Add the field to a phase-indexed table, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            tmp<GeoField> field,
-            HashPtrTable<GeoField>& fieldTable
-        ) const;
-
-        //- Add the field to a phase-indexed table, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            const GeoField& field,
-            HashPtrTable<GeoField>& fieldTable
-        ) const;
 
 
 public:
@@ -445,8 +416,12 @@ public:
             //- Return the surface tension coefficient for a pair
             tmp<volScalarField> sigma(const phasePairKey& key) const;
 
-            //- Return the mass transfer rate for a pair
-            virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
+            //- Return the surface tension coefficient for a pair on a patch
+            tmp<scalarField> sigma
+            (
+                const phasePairKey& key,
+                label patchi
+            ) const;
 
             //- Return the mass transfer rates for each phase
             virtual PtrList<volScalarField> dmdts() const;
@@ -522,8 +497,8 @@ public:
             //- Return the heat transfer matrices
             virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
 
-            //- Return the mass transfer matrices
-            virtual autoPtr<massTransferTable> massTransfer() const = 0;
+            //- Return the specie transfer matrices
+            virtual autoPtr<specieTransferTable> specieTransfer() const = 0;
 
 
         // Evolution

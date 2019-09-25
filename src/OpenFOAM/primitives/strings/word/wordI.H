@@ -119,6 +119,8 @@ inline bool Foam::word::valid(char c)
         !isspace(c)
      && c != '"'   // string quote
      && c != '\''  // string quote
+     && c != '/'   // path separator
+     && c != '$'   // variable indicator
      && c != ';'   // end statement
      && c != '{'   // beg subdict
      && c != '}'   // end subdict

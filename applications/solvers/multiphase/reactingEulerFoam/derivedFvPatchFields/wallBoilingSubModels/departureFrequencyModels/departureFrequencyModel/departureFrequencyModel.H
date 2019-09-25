@@ -101,6 +101,9 @@ public:
             const phaseModel& liquid,
             const phaseModel& vapor,
             const label patchi,
+            const scalarField& Tl,
+            const scalarField& Tsatw,
+            const scalarField& L,
             const scalarField& dDep
         ) const = 0;
 

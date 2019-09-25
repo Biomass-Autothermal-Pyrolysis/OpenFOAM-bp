@@ -27,23 +27,82 @@ License
 #include "phaseTransferModel.H"
 #include "fvmSup.H"
 
-// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::rDmdt
+void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmdtY
 (
-    const phasePairKey& key
+    const phaseSystem::dmdtTable& dmdts,
+    phaseSystem::specieTransferTable& eqns
 ) const
 {
-    if (!rDmdt_.found(key))
+    forAllConstIter(phaseSystem::dmdtTable, dmdts, dmdtIter)
     {
-        return phaseSystem::dmdt(key);
+        const phasePairKey& key = dmdtIter.key();
+        const phasePair& pair(this->phasePairs_[key]);
+
+        const volScalarField dmdt(Pair<word>::compare(pair, key)**dmdtIter());
+        const volScalarField dmdt12(negPart(dmdt));
+        const volScalarField dmdt21(posPart(dmdt));
+
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+
+        // Note that the phase YiEqn does not contain a continuity error term,
+        // so the transfers below are complete.
+
+        forAll(phase1.Y(), Yi1)
+        {
+            const volScalarField& Y1 = phase1.Y()[Yi1];
+            const volScalarField& Y2 = phase2.Y(Y1.member());
+
+            *eqns[Y1.name()] += dmdt21*Y2 + fvm::Sp(dmdt12, Y1);
+            *eqns[Y2.name()] -= dmdt12*Y1 + fvm::Sp(dmdt21, Y2);
+        }
     }
+}
 
-    const scalar rDmdtSign(Pair<word>::compare(rDmdt_.find(key).key(), key));
 
-    return rDmdtSign**rDmdt_[key];
+template<class BasePhaseSystem>
+void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmidtY
+(
+    const phaseSystem::dmidtTable& dmidts,
+    phaseSystem::specieTransferTable& eqns
+) const
+{
+    forAllConstIter(phaseSystem::dmidtTable, dmidts, dmidtIter)
+    {
+        const phasePairKey& key = dmidtIter.key();
+        const phasePair& pair(this->phasePairs_[key]);
+
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+
+        // Note that the phase YiEqn does not contain a continuity error term,
+        // so the transfers below are complete.
+
+        forAllConstIter(HashPtrTable<volScalarField>, *dmidtIter(), dmidtJter)
+        {
+            const word& member = dmidtJter.key();
+
+            const volScalarField dmidt
+            (
+                Pair<word>::compare(pair, key)**dmidtJter()
+            );
+
+            if (!phase1.pure())
+            {
+                const volScalarField& Y1 = phase1.Y(member);
+                *eqns[Y1.name()] += dmidt;
+            }
+
+            if (!phase2.pure())
+            {
+                const volScalarField& Y2 = phase2.Y(member);
+                *eqns[Y2.name()] -= dmidt;
+            }
+        }
+    }
 }
 
 
@@ -71,10 +130,12 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
         phaseTransferModelIter
     )
     {
+        const phasePair& pair = this->phasePairs_[phaseTransferModelIter.key()];
+
         this->rDmdt_.insert
         (
             phaseTransferModelIter.key(),
-            phaseSystem::dmdt(phaseTransferModelIter.key()).ptr()
+            zeroVolField<scalar>(pair, "rDmdt", dimDensity/dimTime).ptr()
         );
     }
 }
@@ -91,29 +152,18 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdt
-(
-    const phasePairKey& key
-) const
-{
-    return BasePhaseSystem::dmdt(key) + this->rDmdt(key);
-}
-
-
-template<class BasePhaseSystem>
 Foam::PtrList<Foam::volScalarField>
 Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    forAllConstIter(rDmdtTable, rDmdt_, rDmdtIter)
+    forAllConstIter(phaseSystem::dmdtTable, rDmdt_, rDmdtIter)
     {
         const phasePair& pair = this->phasePairs_[rDmdtIter.key()];
         const volScalarField& rDmdt = *rDmdtIter();
 
-        this->addField(pair.phase1(), "dmdt", rDmdt, dmdts);
-        this->addField(pair.phase2(), "dmdt", - rDmdt, dmdts);
+        addField(pair.phase1(), "dmdt", rDmdt, dmdts);
+        addField(pair.phase2(), "dmdt", - rDmdt, dmdts);
     }
 
     return dmdts;
@@ -121,17 +171,62 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::dmdts() const
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
-Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
 {
-    // Create a mass transfer matrix for each species of each phase
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr
+    autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
+        BasePhaseSystem::momentumTransfer();
+
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtU(rDmdt_, eqns);
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::momentumTransferf()
+{
+    autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
+        BasePhaseSystem::momentumTransferf();
+
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtU(rDmdt_, eqns);
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
+{
+    autoPtr<phaseSystem::heatTransferTable> eqnsPtr =
+        BasePhaseSystem::heatTransfer();
+
+    phaseSystem::heatTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtHe(rDmdt_, eqns);
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::specieTransferTable>
+Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::specieTransfer() const
+{
+    autoPtr<phaseSystem::specieTransferTable> eqnsPtr
     (
-        new phaseSystem::massTransferTable()
+        new phaseSystem::specieTransferTable()
     );
 
-    phaseSystem::massTransferTable& eqns = eqnsPtr();
+    phaseSystem::specieTransferTable& eqns = eqnsPtr();
 
+    // Create a mass transfer matrix for each species of each phase
     forAll(this->phaseModels_, phasei)
     {
         const phaseModel& phase = this->phaseModels_[phasei];
@@ -148,50 +243,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
         }
     }
 
-    // Mass transfer across the interface
-    forAllConstIter
-    (
-        phaseTransferModelTable,
-        phaseTransferModels_,
-        phaseTransferModelIter
-    )
-    {
-        const phasePair& pair(this->phasePairs_[phaseTransferModelIter.key()]);
-
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
-
-        // Note that the phase YiEqn does not contain a continuity error term,
-        // so these additions represent the entire mass transfer
-
-        const volScalarField dmdt(this->rDmdt(pair));
-        const volScalarField dmdt12(negPart(dmdt));
-        const volScalarField dmdt21(posPart(dmdt));
-
-        const PtrList<volScalarField>& Yi = phase.Y();
-
-        forAll(Yi, i)
-        {
-            const word name
-            (
-                IOobject::groupName(Yi[i].member(), phase.name())
-            );
-
-            const word otherName
-            (
-                IOobject::groupName(Yi[i].member(), otherPhase.name())
-            );
-
-            *eqns[name] +=
-                dmdt21*eqns[otherName]->psi()
-              + fvm::Sp(dmdt12, eqns[name]->psi());
-
-            *eqns[otherName] -=
-                dmdt12*eqns[name]->psi()
-              + fvm::Sp(dmdt21, eqns[otherName]->psi());
-        }
-
-    }
+    this->addDmdtY(rDmdt_, eqns);
 
     return eqnsPtr;
 }

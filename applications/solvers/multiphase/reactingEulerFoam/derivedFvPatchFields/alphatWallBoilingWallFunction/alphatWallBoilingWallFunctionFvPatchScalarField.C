@@ -76,7 +76,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField(p, iF),
     otherPhaseName_("vapor"),
     phaseType_(liquidPhase),
-    relax_(0.5),
+    relax_(0.1),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
     dDep_(p.size(), 1e-5),
@@ -106,7 +106,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField(p, iF, dict),
     otherPhaseName_(dict.lookup("otherPhase")),
     phaseType_(phaseTypeNames_.read(dict.lookup("phaseType"))),
-    relax_(dict.lookupOrDefault<scalar>("relax", 0.5)),
+    relax_(dict.lookupOrDefault<scalar>("relax", 0.1)),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
     dDep_(p.size(), 1e-5),
@@ -509,7 +509,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             // Convective thermal diffusivity
             alphatConv_ = calcAlphat(alphatConv_);
 
-            for (label i=0; i<10; i++)
+            label maxIter(10);
+            for (label i=0; i<maxIter; i++)
             {
                 // Liquid temperature at y+=250 is estimated from logarithmic
                 // thermal wall function (Koncar, Krepper & Egorov, 2005)
@@ -532,20 +533,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     )
                 );
 
-                // Nucleation site density:
-                const scalarField N
-                (
-                    nucleationSiteModel_->N
-                    (
-                        liquid,
-                        vapor,
-                        patchi,
-                        Tl,
-                        Tsatw,
-                        L
-                    )
-                );
-
                 // Bubble departure diameter:
                 dDep_ = departureDiamModel_->dDeparture
                 (
@@ -565,7 +552,26 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                         liquid,
                         vapor,
                         patchi,
+                        Tl,
+                        Tsatw,
+                        L,
                         dDep_
+                    )
+                );
+
+                // Nucleation site density:
+                const scalarField N
+                (
+                    nucleationSiteModel_->N
+                    (
+                        liquid,
+                        vapor,
+                        patchi,
+                        Tl,
+                        Tsatw,
+                        L,
+                        dDep_,
+                        fDep
                     )
                 );
 
@@ -599,11 +605,15 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 // Quenching heat transfer coefficient
                 const scalarField hQ
                 (
-                    2*(alphaw*Cpw)*fDep*sqrt((0.8/fDep)/(pi*alphaw/rhoLiquidw))
+                    2*(alphaw*Cpw)*fDep
+                   *sqrt
+                    (
+                        (0.8/max(fDep, small))/(pi*alphaw/rhoLiquidw)
+                    )
                 );
 
                 // Quenching heat flux
-                qq_ = (A2*hQ*max(Tw - Tl, scalar(0)));
+                qq_ = (1 - relax_)*qq_ + relax_*(A2*hQ*max(Tw - Tl, scalar(0)));
 
                 // Effective thermal diffusivity that corresponds to the
                 // calculated convective, quenching and evaporative heat fluxes
@@ -671,6 +681,13 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     }
                     break;
                 }
+                else if (i == (maxIter - 1))
+                {
+                    Info<< "Maximum number of wall boiling wall function "
+                        << "iterations (" << maxIter << ") reached." << endl
+                        << "Maximum change in wall temperature on last "
+                        << "iteration: " << maxErr << endl;
+                }
 
             }
             break;
@@ -699,7 +716,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
     {
         case vaporPhase:
         {
-            os.writeKeyword("partitioningModel") << nl;
+            writeKeyword(os, "partitioningModel") << nl;
             os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
             partitioningModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
@@ -707,22 +724,22 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
         }
         case liquidPhase:
         {
-            os.writeKeyword("partitioningModel") << nl;
+            writeKeyword(os, "partitioningModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             partitioningModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
 
-            os.writeKeyword("nucleationSiteModel") << nl;
+            writeKeyword(os, "nucleationSiteModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             nucleationSiteModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
 
-            os.writeKeyword("departureDiamModel") << nl;
+            writeKeyword(os, "departureDiamModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             departureDiamModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
 
-            os.writeKeyword("departureFreqModel") << nl;
+            writeKeyword(os, "departureFreqModel") << nl;
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             departureFreqModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;

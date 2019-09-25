@@ -28,6 +28,9 @@ Description
     Incompressible, polynomial form of equation of state, using a polynomial
     function for density.
 
+    Coefficient mixing is very inaccurate and not supported,
+    so this equation of state is not applicable to mixtures.
+
 Usage
     \table
         Property     | Description
@@ -47,9 +50,6 @@ Usage
         \f[
             \rho = 1000 - 0.05 T + 0.003 T^2
         \f]
-
-Note
-    Input in [kg/m^3], but internally uses [kg/m3/kmol].
 
 SourceFiles
     icoPolynomialI.H
@@ -116,7 +116,7 @@ class icoPolynomial
 {
     // Private Data
 
-        //- Density polynomial coefficients
+        //- Density polynomial coefficients [kg/m^3/K^i]
         Polynomial<PolySize> rhoCoeffs_;
 
 
@@ -179,7 +179,7 @@ public:
             //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
-            //- Return compressibility rho/p [s^2/m^2]
+            //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return compression factor []

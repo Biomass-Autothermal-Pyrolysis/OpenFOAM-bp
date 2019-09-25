@@ -64,57 +64,43 @@ int main(int argc, char *argv[])
     bool newFormat = args.optionFound("newFormat");
 
     speciesTable species;
-
     chemkinReader cr(species, args[1], args[3], args[2], newFormat);
+    const HashPtrTable<gasHThermoPhysics>& speciesThermo = cr.speciesThermo();
 
-    OFstream reactionsFile(args[4]);
-    writeEntry(reactionsFile, "elements", cr.elementNames());
-    reactionsFile << nl;
-    writeEntry(reactionsFile, "species", cr.species());
-    reactionsFile << nl;
-    cr.reactions().write(reactionsFile);
+    dictionary thermoDict;
+    thermoDict.add("species", cr.species());
+
+    // Add the species thermo formatted entries
+    {
+        OStringStream os;
+        speciesThermo.write(os);
+        dictionary speciesThermoDict(IStringStream(os.str())());
+        thermoDict.merge(speciesThermoDict);
+    }
 
     // Temporary hack to splice the specie composition data into the thermo file
     // pending complete integration into the thermodynamics structure
 
-    OStringStream os;
-    cr.speciesThermo().write(os);
-    dictionary thermoDict(IStringStream(os.str())());
-
-    wordList speciesList(thermoDict.toc());
-
     // Add elements
-    forAll(speciesList, si)
+    forAllConstIter(HashPtrTable<gasHThermoPhysics>, speciesThermo, iter)
     {
+        const word specieName(iter.key());
+
         dictionary elementsDict("elements");
-        forAll(cr.specieComposition()[speciesList[si]], ei)
+        forAll(cr.specieComposition()[specieName], ei)
         {
             elementsDict.add
             (
-                cr.specieComposition()[speciesList[si]][ei].name(),
-                cr.specieComposition()[speciesList[si]][ei].nAtoms()
+                cr.specieComposition()[specieName][ei].name(),
+                cr.specieComposition()[specieName][ei].nAtoms()
             );
         }
 
-        thermoDict.subDict(speciesList[si]).add("elements", elementsDict);
+        thermoDict.subDict(specieName).add("elements", elementsDict);
     }
 
     thermoDict.write(OFstream(args[5])(), false);
-
-    reactionsFile << nl;
-
-    writeEntry
-    (
-        reactionsFile,
-        "Tlow",
-        Reaction<gasHThermoPhysics>::TlowDefault
-    );
-    writeEntry
-    (
-        reactionsFile,
-        "Thigh",
-        Reaction<gasHThermoPhysics>::ThighDefault
-    );
+    cr.reactions().write(OFstream(args[4])());
 
     Info<< "End\n" << endl;
 

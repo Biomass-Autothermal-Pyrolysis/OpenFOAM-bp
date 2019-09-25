@@ -124,7 +124,7 @@ public:
             //- Liquid density [kg/m^3]
             virtual scalar rho(scalar p, scalar T) const = 0;
 
-            //- Liquid compressibility rho/p [s^2/m^2]
+            //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             virtual scalar psi(scalar p, scalar T) const = 0;
 
@@ -145,7 +145,7 @@ public:
             //- Chemical enthalpy [J/kg]
             virtual scalar Hc() const = 0;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             virtual scalar Ha(const scalar p, const scalar T) const = 0;
 
             // Entropy [J/kg/K]

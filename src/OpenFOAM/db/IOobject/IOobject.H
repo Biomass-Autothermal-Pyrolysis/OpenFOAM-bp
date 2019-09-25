@@ -95,6 +95,9 @@ class IOobject
 
 public:
 
+    //- Keyword for the FoamFile header sub-dictionary
+    static constexpr const char* foamFile = "FoamFile";
+
     // Public data types
 
         //- Enumeration defining the valid states of an IOobject

@@ -38,37 +38,20 @@ void Foam::primitiveEntry::append
     Istream& is
 )
 {
-    if (currToken.isWord())
+    if (disableFunctionEntries)
     {
-        const word& w = currToken.wordToken();
-
-        if
-        (
-            disableFunctionEntries
-         || w.size() == 1
-         || (
-                !(w[0] == '$' && expandVariable(w, dict))
-             && !(w[0] == '#' && expandFunction(w, dict, is))
-            )
-        )
+        newElmt(tokenIndex()++) = currToken;
+    }
+    else if (currToken.isFunctionName())
+    {
+        if (!expandFunction(currToken.functionNameToken(), dict, is))
         {
             newElmt(tokenIndex()++) = currToken;
         }
     }
     else if (currToken.isVariable())
     {
-        const string& w = currToken.stringToken();
-
-        if
-        (
-            disableFunctionEntries
-         || w.size() <= 3
-         || !(
-                w[0] == '$'
-             && w[1] == token::BEGIN_BLOCK
-             && expandVariable(w, dict)
-            )
-        )
+        if (!expandVariable(currToken.variableToken(), dict))
         {
             newElmt(tokenIndex()++) = currToken;
         }
@@ -82,13 +65,13 @@ void Foam::primitiveEntry::append
 
 bool Foam::primitiveEntry::expandFunction
 (
-    const word& keyword,
+    const functionName& hashFn,
     const dictionary& parentDict,
     Istream& is
 )
 {
-    word functionName = keyword(1, keyword.size()-1);
-    return functionEntry::execute(functionName, parentDict, *this, is);
+    const word fn = hashFn(1, hashFn.size() - 1);
+    return functionEntry::execute(fn, parentDict, *this, is);
 }
 
 
@@ -232,24 +215,14 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
 
 void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
 {
-    if (!contentsOnly)
+    if (!contentsOnly && keyword().size())
     {
-        os.writeKeyword(keyword());
+        writeKeyword(os, keyword());
     }
 
     for (label i=0; i<size(); ++i)
     {
-        const token& t = operator[](i);
-        if (t.type() == token::VERBATIMSTRING)
-        {
-            // Bypass token output operator to avoid losing verbatimness.
-            // Handle in Ostreams themselves
-            os.write(t);
-        }
-        else
-        {
-            os  << t;
-        }
+        os << operator[](i);;
 
         if (i < size()-1)
         {

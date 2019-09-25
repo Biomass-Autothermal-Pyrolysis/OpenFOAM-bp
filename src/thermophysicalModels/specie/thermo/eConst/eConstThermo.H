@@ -88,12 +88,10 @@ class eConstThermo
 {
     // Private Data
 
-        //- Heat capacity at constant volume
-        //  Note: input in [J/kg/K], but internally uses [J/kmol/K]
+        //- Heat capacity at constant volume [J/kg/K]
         scalar Cv_;
 
-        //- Heat of formation
-        //  Note: input in [J/kg], but internally uses [J/kmol]
+        //- Heat of formation [J/kg]
         scalar Hf_;
 
 
@@ -153,6 +151,9 @@ public:
 
             //- Entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
+
+            //- Gibbs free energy of the mixture in the standard state [J/kg]
+            inline scalar Gstd(const scalar T) const;
 
             #include "EtoHthermo.H"
 

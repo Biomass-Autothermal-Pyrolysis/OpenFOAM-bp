@@ -48,7 +48,7 @@ namespace Foam
 {
 
 class interfaceCompositionModel;
-class massTransferModel;
+class diffusiveMassTransferModel;
 
 /*---------------------------------------------------------------------------*\
                  Class InterfaceCompositionPhaseChangePhaseSystem Declaration
@@ -59,37 +59,26 @@ class InterfaceCompositionPhaseChangePhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
+private:
 
-    // Protected typedefs
+    // Private typedefs
 
         typedef HashTable
         <
-            autoPtr<interfaceCompositionModel>,
+            Pair<autoPtr<interfaceCompositionModel>>,
             phasePairKey,
             phasePairKey::hash
         > interfaceCompositionModelTable;
 
         typedef HashTable
         <
-            Pair<autoPtr<BlendedInterfacialModel<massTransferModel>>>,
+            Pair<autoPtr<BlendedInterfacialModel<diffusiveMassTransferModel>>>,
             phasePairKey,
             phasePairKey::hash
-        > massTransferModelTable;
-
-        typedef HashPtrTable
-        <
-            HashPtrTable<volScalarField>,
-            phasePairKey,
-            phasePairKey::hash
-        >
-        iDmdtSuSpTable;
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            iDmdtTable;
+        > diffusiveMassTransferModelTable;
 
 
-    // Protected data
+    // Private data
 
         // Sub Models
 
@@ -97,22 +86,25 @@ protected:
             const label nInterfaceCorrectors_;
 
             //- Mass transfer models
-            massTransferModelTable massTransferModels_;
+            diffusiveMassTransferModelTable diffusiveMassTransferModels_;
 
             //- Interface composition models
             interfaceCompositionModelTable interfaceCompositionModels_;
 
             //- The explicit part of the interfacial mass transfer rates
-            iDmdtSuSpTable iDmdtSu_;
+            phaseSystem::dmidtTable iDmdtSu_;
 
             //- The implicit part of the interfacial mass transfer rates
-            iDmdtSuSpTable iDmdtSp_;
+            phaseSystem::dmidtTable iDmdtSp_;
 
 
-    // Protected member functions
+    // Private member functions
 
-        //- Return the interfacial mass transfer rate for a pair for a pair
-        virtual tmp<volScalarField> iDmdt(const phasePairKey& key) const;
+        //- Return the bulk mass transfers across each interface
+        autoPtr<phaseSystem::dmdtTable> iDmdts() const;
+
+        //- Return the species mass transfers across each interface
+        autoPtr<phaseSystem::dmidtTable> iDmidts() const;
 
 
 public:
@@ -129,14 +121,24 @@ public:
 
     // Member Functions
 
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
-
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
+
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
+
+        //- Correct the fluid properties other than those listed below
+        virtual void correct();
 
         //- Correct the interface temperatures
         virtual void correctInterfaceThermo();

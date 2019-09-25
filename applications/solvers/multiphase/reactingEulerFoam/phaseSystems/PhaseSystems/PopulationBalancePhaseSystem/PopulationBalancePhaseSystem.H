@@ -57,24 +57,18 @@ class PopulationBalancePhaseSystem
 {
 protected:
 
-    // Protected typedefs
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            pDmdtTable;
-
-
     // Protected data
 
-        //- populationBalanceModels
+        //- Population balances
         PtrList<diameterModels::populationBalanceModel> populationBalances_;
 
-        //- Interfacial Mass transfer rate
-        pDmdtTable pDmdt_;
+        //- Mass transfer rates
+        phaseSystem::dmdtTable pDmdt_;
 
 
     // Protected member functions
 
-        //- Return the population balance mass transfer rate
+        //- Return the population balance induced mass transfer rate
         virtual tmp<volScalarField> pDmdt(const phasePairKey& key) const;
 
 
@@ -92,14 +86,21 @@ public:
 
     // Member Functions
 
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
-
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
+
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
 
         //- Read base phaseProperties dictionary
         virtual bool read();

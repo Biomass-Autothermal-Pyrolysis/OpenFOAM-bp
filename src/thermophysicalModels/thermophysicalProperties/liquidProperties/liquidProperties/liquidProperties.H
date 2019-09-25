@@ -161,7 +161,7 @@ public:
 
         // Physical constants which define the specie
 
-            //- No of moles of this species in mixture
+            //- Mass fraction of this specie in mixture
             //  Note Mixing of liquidProperties is not currently supported
             //  so Y = 1
             inline scalar Y() const;
@@ -202,7 +202,7 @@ public:
 
         // Fundamental equation of state properties
 
-            //- Liquid compressibility rho/p [s^2/m^2]
+            //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             inline scalar psi(scalar p, scalar T) const;
 
@@ -220,7 +220,7 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
             // Entropy [J/kg/K]
