@@ -101,10 +101,10 @@ Foam::kineticTheoryModels::conductivityModels::Princeton::kappa
         label index2(kt_.phaseIndexes()[phasei]);
         const phaseModel& phase2 = kt_.fluid().phases()[index2];
         phasePairKey key(phase.name(), phase2.name(), false);
-        scalar eij(kt_.es()[key]);
+//         scalar eij(kt_.es()[key]);
         tmp<volScalarField> gs0ij(kt_.gs0(phase, phase2));
 
-        alphag0 += gs0ij*phase2*(1.0 + eij);
+        alphag0 += gs0ij()*phase2;
     }
 
     tmp<volScalarField> kappa
@@ -133,8 +133,8 @@ Foam::kineticTheoryModels::conductivityModels::Princeton::kappa
         const phasePair& pair(phasePairIter());
         if
         (
-            pair.phase1().name() == phase.name()
-         || pair.phase2().name() == phase.name()
+            pair.contains(phase)
+         && !kt_.found(pair.otherPhase(phase).name())
         )
         {
             if

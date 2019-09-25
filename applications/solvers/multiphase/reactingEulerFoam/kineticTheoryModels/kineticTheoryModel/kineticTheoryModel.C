@@ -339,13 +339,41 @@ void Foam::RASModels::kineticTheoryModel::correct()
             rho*(2.0*nut_*D + (lambda_ - (2.0/3.0)*nut_)*tr(D)*I)
         );
 
+        volScalarField alphag0
+        (
+            IOobject
+            (
+                "alphag0",
+                U.time().timeName(),
+                U.mesh()
+            ),
+            U.mesh(),
+            dimensionedScalar("0", dimless, 0.0)
+        );
+
+        if (kineticTheorySystem_.phaseIndexes().size() == 1)
+        {
+            alphag0 == 1.0;
+        }
+        else
+        {
+            forAll(kineticTheorySystem_.phaseIndexes(), phasei)
+            {
+                label index2(kineticTheorySystem_.phaseIndexes()[phasei]);
+                const phaseModel& phase2 = phase_.fluid().phases()[index2];
+                phasePairKey key(phase_.name(), phase2.name(), false);
+
+                alphag0 += kineticTheorySystem_.gs0(phase_, phase2)*phase2;
+            }
+        }
+
         // Dissipation (Eq. 3.24, p.50)
         volScalarField gammaCoeff
         (
             "gammaCoeff",
             12.0*(1.0 - sqr(e))
            *max(sqr(alpha), residualAlpha_)
-           *rho*gs0*(1.0/da)*ThetaSqrt/sqrtPi
+           *rho*gs0*(alphag0/da)*ThetaSqrt/sqrtPi
         );
 
         volScalarField J1
@@ -386,9 +414,11 @@ void Foam::RASModels::kineticTheoryModel::correct()
         )
         {
             const phasePair& pair(phasePairIter());
-            bool p1Found = kineticTheorySystem_.found(pair.phase1().name());
-            bool p2Found = kineticTheorySystem_.found(pair.phase2().name());
-            if ((p1Found && !p2Found) || (!p1Found && p2Found))
+            if
+            (
+                pair.contains(phase_)
+             && !kineticTheorySystem_.found(pair.otherPhase(phase_).name())
+            )
             {
                 if
                 (
