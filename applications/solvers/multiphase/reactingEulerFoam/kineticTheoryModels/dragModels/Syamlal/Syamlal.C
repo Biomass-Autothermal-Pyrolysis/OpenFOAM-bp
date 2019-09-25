@@ -57,7 +57,7 @@ Foam::dragModels::Syamlal::Syamlal
             "C1",
             dict,
             dimensionSet(0, -2, 1, 0, 0, 0, 0),
-            0.3
+            0.0
         )
     ),
     kineticTheorySystem_
