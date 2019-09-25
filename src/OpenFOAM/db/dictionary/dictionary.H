@@ -125,7 +125,7 @@ public:
         {
             const word scopedName = name_.name();
 
-            string::size_type i = scopedName.rfind('.');
+            string::size_type i = scopedName.rfind('/');
 
             if (i == scopedName.npos)
             {
@@ -183,7 +183,25 @@ class dictionary
    // Private Member Functions
 
         //- Find and return an entry data stream pointer if present
-        //  otherwise return nullptr. Allows scoping using '.'
+        //  otherwise return nullptr.  Supports scoping using '.'
+        const entry* lookupDotScopedSubEntryPtr
+        (
+            const word&,
+            bool recursive,
+            bool patternMatch
+        ) const;
+
+        //- Find and return an entry data stream pointer if present
+        //  otherwise return nullptr.  Supports scoping using '/'
+        const entry* lookupSlashScopedSubEntryPtr
+        (
+            const word&,
+            bool recursive,
+            bool patternMatch
+        ) const;
+
+        //- Find and return an entry data stream pointer if present
+        //  otherwise return nullptr.  Supports scoping using '/' or '.'
         const entry* lookupScopedSubEntryPtr
         (
             const word&,
@@ -413,8 +431,8 @@ public:
             ) const;
 
             //- Find and return an entry data stream pointer if present
-            //  otherwise return nullptr. Allows scoping using '.'.
-            //  Special handling for ':' at start of keyword and '..'.
+            //  otherwise return nullptr. Allows scoping using '/' with
+            //  special handling for '!' and '..'.
             const entry* lookupScopedEntryPtr
             (
                 const word&,

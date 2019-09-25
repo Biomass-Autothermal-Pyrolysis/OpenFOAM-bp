@@ -386,11 +386,9 @@ void Foam::RASModels::kineticTheoryModel::correct()
         )
         {
             const phasePair& pair(phasePairIter());
-            if
-            (
-                pair.phase1().name() == phase_.name()
-             || pair.phase2().name() == phase_.name()
-            )
+            bool p1Found = kineticTheorySystem_.found(pair.phase1().name());
+            bool p2Found = kineticTheorySystem_.found(pair.phase2().name());
+            if ((p1Found && !p2Found) || (!p1Found && p2Found))
             {
                 if
                 (

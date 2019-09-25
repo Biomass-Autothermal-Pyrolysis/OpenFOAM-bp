@@ -666,6 +666,10 @@ void Foam::kineticTheorySystem::correct()
         alphap_,
         alphaMax_
     );
+    if (alphap_.time().outputTime())
+    {
+        Pfr_.write();
+    }
 
     PfrPrime_ = frictionalStressModel_->frictionalPressurePrime
     (
