@@ -73,7 +73,7 @@ class displacementLinearMotionMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Axis of the linear motion
         vector axis_;
@@ -86,16 +86,6 @@ class displacementLinearMotionMotionSolver
 
         //- The displacement as a function of time
         autoPtr<Function1<scalar>> displacement_;
-
-
-        //- Disallow default bitwise copy construct
-        displacementLinearMotionMotionSolver
-        (
-            const displacementLinearMotionMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLinearMotionMotionSolver&);
 
 
 public:
@@ -113,6 +103,12 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        displacementLinearMotionMotionSolver
+        (
+            const displacementLinearMotionMotionSolver&
+        );
+
 
     //- Destructor
     ~displacementLinearMotionMotionSolver();
@@ -126,6 +122,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLinearMotionMotionSolver&) = delete;
 };
 
 

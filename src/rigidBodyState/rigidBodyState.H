@@ -76,21 +76,12 @@ class rigidBodyState
     public fvMeshFunctionObject,
     public logFiles
 {
-    // Private data
+    // Private Data
 
         word angleFormat_;
 
         //- List of the names of the rigid bodies
         wordList names_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        rigidBodyState(const rigidBodyState&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyState&);
 
 
 protected:
@@ -117,6 +108,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        rigidBodyState(const rigidBodyState&) = delete;
+
 
     //- Destructor
     virtual ~rigidBodyState();
@@ -134,6 +128,12 @@ public:
 
         //- Write the rigidBodyState
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyState&) = delete;
 };
 
 

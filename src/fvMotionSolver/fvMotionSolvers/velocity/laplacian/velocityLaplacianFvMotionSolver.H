@@ -56,25 +56,13 @@ class velocityLaplacianFvMotionSolver
     public velocityMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volVectorField cellMotionU_;
 
         //- Diffusivity used to control the motion
         autoPtr<motionDiffusivity> diffusivityPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        velocityLaplacianFvMotionSolver
-        (
-            const velocityLaplacianFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const velocityLaplacianFvMotionSolver&);
 
 
 public:
@@ -90,6 +78,12 @@ public:
         (
             const polyMesh&,
             const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        velocityLaplacianFvMotionSolver
+        (
+            const velocityLaplacianFvMotionSolver&
         );
 
 
@@ -119,6 +113,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const velocityLaplacianFvMotionSolver&) = delete;
 };
 
 

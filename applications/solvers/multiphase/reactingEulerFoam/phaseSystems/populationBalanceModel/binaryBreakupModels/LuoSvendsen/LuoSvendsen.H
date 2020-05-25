@@ -87,15 +87,15 @@ Description
 
     \vartable
         \alpha_c    |  Void fraction of continuous phase [-]
-        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m2/s3]
-        d_j         |  Diameter of mother bubble j [m3]
-        v_i         |  Volume of daughter bubble i [m3]
-        v_j         |  Volume of mother bubble j [m3]
+        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m^2/s^3]
+        d_j         |  Diameter of mother bubble j [m^3]
+        v_i         |  Volume of daughter bubble i [m^3]
+        v_j         |  Volume of mother bubble j [m^3]
         \xi         |  Integration variable [-]
         \xi_{min}   |  Lower bound of integral [-]
         c_f         |  Increase coefficient of surface area [-]
         \sigma      |  Surface tension [N/m]
-        \rho_c      |  Density of continous phase [kg/m3]
+        \rho_c      |  Density of continuous phase [kg/m^3]
         \eta        |  Kolmogorov length scale [m]
         \Gamma(a,z) |  Upper incomplete gamma function
         Q(a,z)      |  Regularized upper incomplete gamma function
@@ -156,7 +156,7 @@ class LuoSvendsen
 {
 private:
 
-    // Private data
+    // Private Data
 
         //- Interpolation table of Q(a,z) for a=2/11
         autoPtr<interpolationTable<scalar>> gammaUpperReg2by11_;

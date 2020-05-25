@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -260,12 +260,6 @@ protected:
         //- Helper function to write bin data
         void writeBins();
 
-        //- Disallow default bitwise copy construct
-        forces(const forces&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const forces&);
-
 
 public:
 
@@ -291,6 +285,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        forces(const forces&) = delete;
+
 
     //- Destructor
     virtual ~forces();
@@ -315,6 +312,12 @@ public:
 
         //- Write the forces
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const forces&) = delete;
 };
 
 

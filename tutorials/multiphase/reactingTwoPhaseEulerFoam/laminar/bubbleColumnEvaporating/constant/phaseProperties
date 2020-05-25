@@ -65,7 +65,7 @@ blending
         minFullyContinuousAlpha.liquid 1;
     }
 
-    massTransfer
+    diffusiveMassTransfer
     {
         $heatTransfer;
     }
@@ -133,9 +133,9 @@ virtualMass
     }
 );
 
-interfaceComposition
+interfaceComposition.gas
 (
-    (gas in liquid)
+    (gas and liquid)
     {
         type saturated;
         species ( H2O );
@@ -145,6 +145,10 @@ interfaceComposition
             type ArdenBuck;
         }
     }
+);
+
+interfaceComposition.liquid
+(
 );
 
 heatTransfer.gas
@@ -177,7 +181,7 @@ heatTransfer.liquid
     }
 );
 
-massTransfer.gas
+diffusiveMassTransfer.gas
 (
     (gas in liquid)
     {
@@ -192,7 +196,7 @@ massTransfer.gas
     }
 );
 
-massTransfer.liquid
+diffusiveMassTransfer.liquid
 (
     (gas in liquid)
     {

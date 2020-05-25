@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -353,25 +353,28 @@ Foam::phaseSystem::sigma(const phasePairKey& key) const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdt
-(
-    const phasePairKey& key
-) const
+Foam::tmp<Foam::scalarField>
+Foam::phaseSystem::sigma(const phasePairKey& key, label patchi) const
 {
-    return volScalarField::New
-    (
-        IOobject::groupName("dmdt", phasePairs_[key]->name()),
-        this->mesh_,
-        dimensionedScalar(dimDensity/dimTime, 0)
-    );
+    if (surfaceTensionModels_.found(key))
+    {
+        return surfaceTensionModels_[key]->sigma(patchi);
+    }
+    else
+    {
+        return tmp<scalarField>
+        (
+            new scalarField(this->mesh_.boundary()[patchi].size(), 0)
+        );
+    }
 }
 
 
-Foam::Xfer<Foam::PtrList<Foam::volScalarField>> Foam::phaseSystem::dmdts() const
+Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 {
     PtrList<volScalarField> dmdts(this->phaseModels_.size());
 
-    return dmdts.xfer();
+    return dmdts;
 }
 
 

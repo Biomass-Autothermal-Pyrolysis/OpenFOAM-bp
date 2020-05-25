@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,26 @@ template
 Foam::ReversibleReaction<ReactionType, ReactionThermo, ReactionRate>::
 ReversibleReaction
 (
+    const speciesTable& species,
+    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const objectRegistry& ob,
+    const dictionary& dict
+)
+:
+    ReactionType<ReactionThermo>(species, thermoDatabase, dict),
+    k_(species, ob, dict)
+{}
+
+
+template
+<
+    template<class> class ReactionType,
+    class ReactionThermo,
+    class ReactionRate
+>
+Foam::ReversibleReaction<ReactionType, ReactionThermo, ReactionRate>::
+ReversibleReaction
+(
     const ReversibleReaction<ReactionType, ReactionThermo, ReactionRate>& rr,
     const speciesTable& species
 )
@@ -99,10 +119,11 @@ Foam::scalar Foam::ReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return k_(p, T, c);
+    return k_(p, T, c, li);
 }
 
 
@@ -122,7 +143,8 @@ Foam::scalar Foam::ReversibleReaction
     const scalar kfwd,
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return kfwd/max(this->Kc(p, T), rootSmall);
@@ -144,10 +166,11 @@ Foam::scalar Foam::ReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return kr(kf(p, T, c), p, T, c);
+    return kr(kf(p, T, c, li), p, T, c, li);
 }
 
 
@@ -166,10 +189,11 @@ Foam::scalar Foam::ReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return k_.ddT(p, T, c);
+    return k_.ddT(p, T, c, li);
 }
 
 
@@ -189,6 +213,7 @@ Foam::scalar Foam::ReversibleReaction
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     const scalar dkfdT,
     const scalar kr
 ) const
@@ -233,10 +258,11 @@ void Foam::ReversibleReaction
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
-    k_.dcidc(p, T, c, dcidc);
+    k_.dcidc(p, T, c, li, dcidc);
 }
 
 
@@ -255,10 +281,11 @@ Foam::scalar Foam::ReversibleReaction
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    return k_.dcidT(p, T, c);
+    return k_.dcidT(p, T, c, li);
 }
 
 

@@ -57,22 +57,13 @@ class setTimeStepFunctionObject
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the time database
         const Time& time_;
 
         //- Time step function/table
         autoPtr<Function1<scalar>> timeStepPtr_;
-
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        setTimeStepFunctionObject(const setTimeStepFunctionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const setTimeStepFunctionObject&);
 
 
 public:
@@ -90,6 +81,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        setTimeStepFunctionObject(const setTimeStepFunctionObject&) = delete;
 
 
     // Destructor
@@ -116,6 +110,12 @@ public:
         //  postProcess overrides the usual writeControl behaviour and
         //  forces writing always (used in post-processing mode)
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const setTimeStepFunctionObject&) = delete;
 };
 
 

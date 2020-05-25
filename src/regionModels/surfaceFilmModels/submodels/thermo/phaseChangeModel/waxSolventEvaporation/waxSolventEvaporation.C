@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,7 +230,7 @@ void waxSolventEvaporation::correctModel
                 Ysolvent*Wsolvent/((1 - Ysolvent)*Wwax + Ysolvent*Wsolvent)
             );
 
-            // Primary region density [kg/m3]
+            // Primary region density [kg/m^3]
             const scalar rhoInfc = rhoInf[celli];
 
             // Cell pressure [Pa]
@@ -274,7 +274,7 @@ void waxSolventEvaporation::correctModel
             // Reynolds number
             const scalar Re = rhoInfc*mag(dU[celli])*L_/muInfc;
 
-            // Vapour diffusivity [m2/s]
+            // Vapour diffusivity [m^2/s]
             const scalar Dab = filmThermo.D(pc, Tloc);
 
             // Schmidt number

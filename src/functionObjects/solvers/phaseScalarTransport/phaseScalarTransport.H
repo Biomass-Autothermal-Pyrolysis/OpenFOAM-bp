@@ -116,7 +116,7 @@ class phaseScalarTransport
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- Name of field to process
         const word fieldName_;
@@ -152,7 +152,7 @@ class phaseScalarTransport
         scalar alphaDt_;
 
         //- Number of corrector iterations (optional)
-        label nCorr_;
+        int nCorr_;
 
         //- Residual volume-fraction
         scalar residualAlpha_;

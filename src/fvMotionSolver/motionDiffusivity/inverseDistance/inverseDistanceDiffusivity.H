@@ -51,7 +51,7 @@ class inverseDistanceDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Patches selected to base the distance on
         //  These can contain patch names or regular expressions to search for.
@@ -62,12 +62,6 @@ class inverseDistanceDiffusivity
 
         //- Return patch-cell-centre distance field
         tmp<scalarField> y() const;
-
-        //- Disallow default bitwise copy construct
-        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseDistanceDiffusivity&);
 
 
 public:
@@ -81,12 +75,18 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseDistanceDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~inverseDistanceDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const inverseDistanceDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

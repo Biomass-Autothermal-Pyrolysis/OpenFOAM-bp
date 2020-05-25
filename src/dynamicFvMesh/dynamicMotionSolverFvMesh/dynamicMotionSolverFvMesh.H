@@ -52,7 +52,7 @@ class dynamicMotionSolverFvMesh
 :
     public dynamicFvMesh
 {
-    // Private data
+    // Private Data
 
         autoPtr<motionSolver> motionPtr_;
 
@@ -60,15 +60,6 @@ class dynamicMotionSolverFvMesh
         //  For modern solvers using Uf and correctPhi to update the flux
         //  after motion it is not necessary to specify a "velocityFields" list
         velocityMotionCorrection velocityMotionCorrection_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dynamicMotionSolverFvMesh(const dynamicMotionSolverFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicMotionSolverFvMesh&);
 
 
 public:
@@ -82,6 +73,9 @@ public:
         //- Construct from IOobject
         dynamicMotionSolverFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        dynamicMotionSolverFvMesh(const dynamicMotionSolverFvMesh&) = delete;
+
 
     //- Destructor
     ~dynamicMotionSolverFvMesh();
@@ -94,6 +88,24 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+        // Write
+
+            //- Write the underlying polyMesh and other data
+            virtual bool writeObject
+            (
+                IOstream::streamFormat fmt,
+                IOstream::versionNumber ver,
+                IOstream::compressionType cmp,
+                const bool write = true
+            ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicMotionSolverFvMesh&) = delete;
 };
 
 

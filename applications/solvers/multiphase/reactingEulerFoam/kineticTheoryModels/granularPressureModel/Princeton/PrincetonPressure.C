@@ -115,7 +115,7 @@ granularPressureCoeffPrime
             1.0
           + 4.0*eta
            *(
-               phase1*g0
+               2.0*phase1*g0
              + phase1*phase2*g0prime
             )
         );

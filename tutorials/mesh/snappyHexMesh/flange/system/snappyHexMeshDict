@@ -107,7 +107,7 @@ castellatedMeshControls
         flange
         {
             // Surface-wise min and max refinement level
-            level (2 2);
+            level (1 3);
         }
     }
 

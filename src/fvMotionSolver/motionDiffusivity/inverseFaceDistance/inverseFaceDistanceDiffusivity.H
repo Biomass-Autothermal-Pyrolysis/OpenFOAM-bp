@@ -50,19 +50,10 @@ class inverseFaceDistanceDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Patches selected to base the distance on
         wordList patchNames_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        inverseFaceDistanceDiffusivity(const inverseFaceDistanceDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseFaceDistanceDiffusivity&);
 
 
 public:
@@ -76,12 +67,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseFaceDistanceDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseFaceDistanceDiffusivity
+        (
+            const inverseFaceDistanceDiffusivity&
+        ) = delete;
+
 
     //- Destructor
     virtual ~inverseFaceDistanceDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const inverseFaceDistanceDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

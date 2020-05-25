@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,40 @@ class heThermo
     public BasicThermo,
     public MixtureType
 {
+    // Private Member Functions
+
+        //- Initialize heThermo
+        void init();
+
+        //- Return a volScalarField of the given property
+        template<class Method, class ... Args>
+        tmp<volScalarField> volScalarFieldProperty
+        (
+            const word& psiName,
+            const dimensionSet& psiDim,
+            Method psiMethod,
+            const Args& ... args
+        ) const;
+
+        //- Return a scalarField of the given property on a cell set
+        template<class Method, class ... Args>
+        tmp<scalarField> cellSetProperty
+        (
+            Method psiMethod,
+            const labelList& cells,
+            const Args& ... args
+        ) const;
+
+        //- Return a scalarField of the given property on a patch
+        template<class Method, class ... Args>
+        tmp<scalarField> patchFieldProperty
+        (
+            Method psiMethod,
+            const label patchi,
+            const Args& ... args
+        ) const;
+
+
 protected:
 
     // Protected data
@@ -66,18 +100,6 @@ protected:
 
             //- Correct the enthalpy/internal energy field boundaries
             void heBoundaryCorrection(volScalarField& he);
-
-
-private:
-
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        heThermo(const heThermo<BasicThermo, MixtureType>&);
-
-
-        //- Initialize heThermo
-        void init();
 
 
 public:
@@ -99,12 +121,15 @@ public:
             const word& phaseName
         );
 
+        //- Disallow default bitwise copy construction
+        heThermo(const heThermo<BasicThermo, MixtureType>&) = delete;
+
 
     //- Destructor
     virtual ~heThermo();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the compostion of the mixture
         virtual typename MixtureType::basicMixtureType&
@@ -181,6 +206,33 @@ public:
                 const scalarField& p,
                 const scalarField& T,
                 const label patchi
+            ) const;
+
+            //- Absolute enthalpy [J/kg/K]
+            virtual tmp<volScalarField> ha() const;
+
+            //- Absolute enthalpy
+            //  for given pressure and temperature [J/kg]
+            virtual tmp<volScalarField> ha
+            (
+                const volScalarField& p,
+                const volScalarField& T
+            ) const;
+
+            //- Absolute enthalpy for patch [J/kg/K]
+            virtual tmp<scalarField> ha
+            (
+                const scalarField& p,
+                const scalarField& T,
+                const label patchi
+            ) const;
+
+            //- Absolute enthalpy for cell-set [J/kg]
+            virtual tmp<scalarField> ha
+            (
+                const scalarField& p,
+                const scalarField& T,
+                const labelList& cells
             ) const;
 
             //- Chemical enthalpy [J/kg]
@@ -268,15 +320,11 @@ public:
 
         // Fields derived from transport state variables
 
-            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+            //- Thermal diffusivity for temperature of mixture [W/m/K]
             virtual tmp<volScalarField> kappa() const;
 
-            //- Thermal diffusivity for temperature of mixture
-            //  for patch [J/m/s/K]
-            virtual tmp<scalarField> kappa
-            (
-                const label patchi
-            ) const;
+            //- Thermal diffusivity for temperature of mixture for patch [W/m/K]
+            virtual tmp<scalarField> kappa(const label patchi) const;
 
             //- Thermal diffusivity for energy of mixture [kg/m/s]
             virtual tmp<volScalarField> alphahe() const;
@@ -285,14 +333,14 @@ public:
             virtual tmp<scalarField> alphahe(const label patchi) const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [J/m/s/K]
+            //  of mixture [W/m/K]
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField&
             ) const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,

@@ -76,7 +76,7 @@ class uniformFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<Type>> uniformValue_;
 
@@ -122,7 +122,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformFixedValueFvPatchField
         (
             const uniformFixedValueFvPatchField<Type>&
@@ -137,7 +137,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         uniformFixedValueFvPatchField
         (
             const uniformFixedValueFvPatchField<Type>&,
@@ -157,7 +157,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -140,9 +140,9 @@ Foam::atmBoundaryLayer::atmBoundaryLayer
     Cmu_(abl.Cmu_),
     Uref_(abl.Uref_),
     Zref_(abl.Zref_),
-    z0_(abl.z0_, mapper),
-    zGround_(abl.zGround_, mapper),
-    Ustar_(abl.Ustar_, mapper),
+    z0_(mapper(abl.z0_)),
+    zGround_(mapper(abl.zGround_)),
+    Ustar_(mapper(abl.Ustar_)),
     offset_(abl.offset_),
     Ulower_(abl.Ulower_),
     kLower_(abl.kLower_),
@@ -172,9 +172,9 @@ Foam::atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 
 void Foam::atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
 {
-    z0_.autoMap(m);
-    zGround_.autoMap(m);
-    Ustar_.autoMap(m);
+    m(z0_, z0_);
+    m(zGround_, zGround_);
+    m(Ustar_, Ustar_);
 }
 
 

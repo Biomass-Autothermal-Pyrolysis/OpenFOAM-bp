@@ -66,7 +66,7 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
+    temperatureCoupledBase(patch()),
     mode_(fixedHeatFlux),
     Q_(0),
     Ta_(),
@@ -192,24 +192,19 @@ externalWallHeatFluxTemperatureFvPatchScalarField
         }
         case fixedHeatFlux:
         {
-            q_.setSize(mapper.size());
-            q_.map(ptf.q_, mapper);
-
+            mapper(q_, ptf.q_);
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.setSize(mapper.size());
-            h_.map(ptf.h_, mapper);
-
+            mapper(h_, ptf.h_);
             break;
         }
     }
 
     if (qrName_ != "none")
     {
-        qrPrevious_.setSize(mapper.size());
-        qrPrevious_.map(ptf.qrPrevious_, mapper);
+        mapper(qrPrevious_, ptf.qrPrevious_);
     }
 }
 
@@ -278,13 +273,13 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
         }
         case fixedHeatFlux:
         {
-            q_.autoMap(m);
+            m(q_, q_);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.autoMap(m);
+            m(h_, h_);
 
             break;
         }
@@ -292,7 +287,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
 
     if (qrName_ != "none")
     {
-        qrPrevious_.autoMap(m);
+        m(qrPrevious_, qrPrevious_);
     }
 }
 

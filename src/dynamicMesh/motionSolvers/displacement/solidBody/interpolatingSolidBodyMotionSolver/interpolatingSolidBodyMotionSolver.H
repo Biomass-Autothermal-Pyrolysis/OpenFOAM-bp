@@ -53,7 +53,7 @@ class interpolatingSolidBodyMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
@@ -76,18 +76,6 @@ class interpolatingSolidBodyMotionSolver
         pointScalarField scale_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        interpolatingSolidBodyMotionSolver
-        (
-            const interpolatingSolidBodyMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const interpolatingSolidBodyMotionSolver&);
-
-
 public:
 
     //- Runtime type information
@@ -103,6 +91,12 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        interpolatingSolidBodyMotionSolver
+        (
+            const interpolatingSolidBodyMotionSolver&
+        );
+
 
     //- Destructor
     ~interpolatingSolidBodyMotionSolver();
@@ -116,6 +110,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const interpolatingSolidBodyMotionSolver&) = delete;
 };
 
 

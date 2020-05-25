@@ -74,4 +74,17 @@ bool Foam::dynamicMotionSolverFvMesh::update()
 }
 
 
+bool Foam::dynamicMotionSolverFvMesh::writeObject
+(
+    IOstream::streamFormat fmt,
+    IOstream::versionNumber ver,
+    IOstream::compressionType cmp,
+    const bool write
+) const
+{
+    motionPtr_->write();
+    return fvMesh::writeObject(fmt, ver, cmp, write);
+}
+
+
 // ************************************************************************* //

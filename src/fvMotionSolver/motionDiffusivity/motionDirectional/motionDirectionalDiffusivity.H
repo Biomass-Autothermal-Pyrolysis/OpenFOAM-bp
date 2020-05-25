@@ -50,18 +50,9 @@ class motionDirectionalDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         vector diffusivityVector_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        motionDirectionalDiffusivity(const motionDirectionalDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const motionDirectionalDiffusivity&);
 
 
 public:
@@ -75,12 +66,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         motionDirectionalDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        motionDirectionalDiffusivity
+        (
+            const motionDirectionalDiffusivity&
+        ) = delete;
+
 
     //- Destructor
     virtual ~motionDirectionalDiffusivity();
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const motionDirectionalDiffusivity&) = delete;
 
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const;

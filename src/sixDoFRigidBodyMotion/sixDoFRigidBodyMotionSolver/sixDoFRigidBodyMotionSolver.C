@@ -56,7 +56,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
 )
 :
     displacementMotionSolver(mesh, dict, typeName),
-    motion_
+    sixDoFRigidBodyMotion
     (
         coeffDict(),
         IOobject
@@ -158,13 +158,6 @@ Foam::sixDoFRigidBodyMotionSolver::~sixDoFRigidBodyMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::sixDoFRigidBodyMotion&
-Foam::sixDoFRigidBodyMotionSolver::motion() const
-{
-    return motion_;
-}
-
-
 Foam::tmp<Foam::pointField>
 Foam::sixDoFRigidBodyMotionSolver::curPoints() const
 {
@@ -189,16 +182,16 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     bool firstIter = false;
     if (curTimeIndex_ != t.timeIndex())
     {
-        motion_.newTime();
+        newTime();
         curTimeIndex_ = t.timeIndex();
         firstIter = true;
     }
 
     dimensionedVector g("g", dimAcceleration, Zero);
 
-    if (t.foundObject<uniformDimensionedVectorField>("g"))
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
-        g = t.lookupObject<uniformDimensionedVectorField>("g");
+        g = mesh().lookupObject<uniformDimensionedVectorField>("g");
     }
     else if (coeffDict().found("g"))
     {
@@ -210,11 +203,11 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
     if (test_)
     {
-        motion_.update
+        update
         (
             firstIter,
-            ramp*(motion_.mass()*g.value()),
-            ramp*(motion_.mass()*(motion_.momentArm() ^ g.value())),
+            ramp*(mass()*g.value()),
+            ramp*(mass()*(momentArm() ^ g.value())),
             t.deltaTValue(),
             t.deltaT0Value()
         );
@@ -227,20 +220,20 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
         forcesDict.add("patches", patches_);
         forcesDict.add("rhoInf", rhoInf_);
         forcesDict.add("rho", rhoName_);
-        forcesDict.add("CofR", motion_.centreOfRotation());
+        forcesDict.add("CofR", centreOfRotation());
 
         functionObjects::forces f("forces", t, forcesDict);
 
         f.calcForcesMoment();
 
-        motion_.update
+        update
         (
             firstIter,
-            ramp*(f.forceEff() + motion_.mass()*g.value()),
+            ramp*(f.forceEff() + mass()*g.value()),
             ramp
            *(
                f.momentEff()
-             + motion_.mass()*(motion_.momentArm() ^ g.value())
+             + mass()*(momentArm() ^ g.value())
             ),
             t.deltaTValue(),
             t.deltaT0Value()
@@ -249,13 +242,43 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
 
     // Update the displacements
     pointDisplacement_.primitiveFieldRef() =
-        motion_.transform(points0(), scale_) - points0();
+        transform(points0(), scale_) - points0();
 
     // Displacement has changed. Update boundary conditions
     pointConstraints::New
     (
         pointDisplacement_.mesh()
     ).constrainDisplacement(pointDisplacement_);
+}
+
+
+bool Foam::sixDoFRigidBodyMotionSolver::write() const
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            "sixDoFRigidBodyMotionState",
+            mesh().time().timeName(),
+            "uniform",
+            mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    state().write(dict);
+
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && displacementMotionSolver::write();
 }
 
 

@@ -78,7 +78,7 @@ class sixDoFRigidBodyState
     public fvMeshFunctionObject,
     public logFiles
 {
-    // Private data
+    // Private Data
 
         word angleFormat_;
 
@@ -86,12 +86,6 @@ class sixDoFRigidBodyState
     // Private Member Functions
 
         const sixDoFRigidBodyMotion& motion() const;
-
-        //- Disallow default bitwise copy construct
-        sixDoFRigidBodyState(const sixDoFRigidBodyState&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyState&);
 
 
 protected:
@@ -118,6 +112,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        sixDoFRigidBodyState(const sixDoFRigidBodyState&) = delete;
+
 
     //- Destructor
     virtual ~sixDoFRigidBodyState();
@@ -139,6 +136,12 @@ public:
 
         //- Write the sixDoFRigidBodyState
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sixDoFRigidBodyState&) = delete;
 };
 
 

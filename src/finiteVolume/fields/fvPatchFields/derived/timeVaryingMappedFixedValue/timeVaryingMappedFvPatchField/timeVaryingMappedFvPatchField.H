@@ -122,7 +122,7 @@ class timeVaryingMappedFvPatchField
 :
     public timeVaryingMapped
 {
-    // Private data
+    // Private Data
 
         //- Reference to the patch the data is mapped to
         const fvPatch& patch_;
@@ -199,14 +199,14 @@ public:
             const word& fieldName
         );
 
-        //- Construct as copy
+        //- Copy constructor
         timeVaryingMappedFvPatchField
         (
             const timeVaryingMappedFvPatchField<Type>&
         );
 
 
-    // Member functions
+    // Member Functions
 
         const Time& time() const
         {

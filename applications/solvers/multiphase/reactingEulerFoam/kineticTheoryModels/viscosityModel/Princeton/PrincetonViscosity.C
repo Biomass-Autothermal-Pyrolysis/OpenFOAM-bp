@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,10 +93,10 @@ Foam::kineticTheoryModels::viscosityModels::Princeton::nu
         label index2(kt_.phaseIndexes()[phasei]);
         const phaseModel& phase2 = kt_.fluid().phases()[index2];
         phasePairKey key(phase.name(), phase2.name(), false);
-        scalar eij(kt_.es()[key]);
+//         scalar eij(kt_.es()[key]);
         tmp<volScalarField> gs0ij(kt_.gs0(phase, phase2));
 
-        alphag0 += gs0ij*phase2*(1.0 + eij);
+        alphag0 += gs0ij*phase2;
     }
 
     volScalarField Beta
@@ -121,8 +121,8 @@ Foam::kineticTheoryModels::viscosityModels::Princeton::nu
         const phasePair& pair(phasePairIter());
         if
         (
-            pair.phase1().name() == phase.name()
-         || pair.phase2().name() == phase.name()
+            pair.contains(phase)
+         && !kt_.found(pair.otherPhase(phase).name())
         )
         {
             if
@@ -163,8 +163,8 @@ Foam::kineticTheoryModels::viscosityModels::Princeton::nu
             max
             (
                 alphag0*Theta
-              + (2.0*Beta*nu())/(5.0*rho1*max(phase, phase.residualAlpha())),
-                dimensionedScalar("small", dimensionSet(0, 2, -2, 0, 0), 1e-4)
+              + (2.0*Beta*nu())/(rho1*max(phase, phase.residualAlpha())),
+                dimensionedScalar("small", dimensionSet(0, 2, -2, 0, 0), 1e-6)
             )
         )
     );

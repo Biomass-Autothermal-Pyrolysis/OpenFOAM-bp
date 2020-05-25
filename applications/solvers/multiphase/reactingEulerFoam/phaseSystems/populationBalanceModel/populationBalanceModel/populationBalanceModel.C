@@ -37,6 +37,18 @@ License
 #include "fvcSup.H"
 #include "fvcDiv.H"
 #include "phaseCompressibleTurbulenceModel.H"
+#include "shapeModel.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace diameterModels
+{
+    defineTypeNameAndDebug(populationBalanceModel, 0);
+}
+}
+
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
@@ -212,6 +224,49 @@ void Foam::diameterModels::populationBalanceModel::createPhasePairs()
             }
         }
     }
+
+    forAll(nucleation_, model)
+    {
+        nucleation_[model].registerPair(speciesDmdt_);
+    }
+
+    forAllConstIter
+    (
+        speciesDmdtTable,
+        speciesDmdt_,
+        sDmdtIter
+    )
+    {
+        const phasePairKey& key = sDmdtIter.key();
+
+        if (!phasePairs_.found(key))
+        {
+            const phaseModel& phasei =
+                mesh_.lookupObject<phaseModel>
+                (
+                    IOobject::groupName("alpha", key.first())
+                );
+
+            const phaseModel& phasej =
+                mesh_.lookupObject<phaseModel>
+                (
+                    IOobject::groupName("alpha", key.second())
+                );
+
+            phasePairs_.insert
+            (
+                key,
+                autoPtr<phasePair>
+                (
+                    new phasePair
+                    (
+                        phasei,
+                        phasej
+                    )
+                )
+            );
+        }
+    }
 }
 
 
@@ -263,15 +318,15 @@ birthByCoalescence
     const sizeGroup& fj = sizeGroups_[j];
     const sizeGroup& fk = sizeGroups_[k];
 
-    dimensionedScalar Gamma;
+    dimensionedScalar Eta;
     dimensionedScalar v = fj.x() + fk.x();
 
     for (label i = j; i < sizeGroups_.size(); i++)
     {
         // Calculate fraction for intra-interval events
-        Gamma = gamma(i, v);
+        Eta = eta(i, v);
 
-        if (Gamma.value() == 0) continue;
+        if (Eta.value() == 0) continue;
 
         const sizeGroup& fi = sizeGroups_[i];
 
@@ -279,14 +334,14 @@ birthByCoalescence
         if (j == k)
         {
             Sui_ =
-                0.5*fi.x()*coalescenceRate_()*Gamma
+                0.5*fi.x()*coalescenceRate_()*Eta
                *fj*fj.phase()/fj.x()
                *fk*fk.phase()/fk.x();
         }
         else
         {
             Sui_ =
-                fi.x()*coalescenceRate_()*Gamma
+                fi.x()*coalescenceRate_()*Eta
                *fj*fj.phase()/fj.x()
                *fk*fk.phase()/fk.x();
         }
@@ -324,6 +379,8 @@ birthByCoalescence
 
             pDmdt_[pairik]->ref() += dmdtSign*fk.x()/v*Sui_*fi.phase().rho();
         }
+
+        sizeGroups_[i].shapeModelPtr()->addCoalescence(Sui_, fj, fk);
     }
 }
 
@@ -381,6 +438,8 @@ birthByBreakup
 
             pDmdt_[pair]->ref() += dmdtSign*Sui_*fi.phase().rho();
         }
+
+        sizeGroups_[i].shapeModelPtr()->addBreakup(Sui_, fk);
     }
 }
 
@@ -444,6 +503,8 @@ birthByBinaryBreakup
 
     Su_[i] += Sui_;
 
+    sizeGroups_[i].shapeModelPtr()->addBreakup(Sui_, fj);
+
     const phasePairKey pairij
     (
         fi.phase().name(),
@@ -460,22 +521,22 @@ birthByBinaryBreakup
         pDmdt_[pairij]->ref() += dmdtSign*Sui_*fi.phase().rho();
     }
 
-    dimensionedScalar Gamma;
+    dimensionedScalar Eta;
     dimensionedScalar v = fj.x() - fi.x();
 
     for (label k = 0; k <= j; k++)
     {
         // Calculate fraction for intra-interval events
-        Gamma = gamma(k, v);
+        Eta = eta(k, v);
 
-        if (Gamma.value() == 0) continue;
+        if (Eta.value() == 0) continue;
 
         const sizeGroup& fk = sizeGroups_[k];
 
         volScalarField& Suk = Sui_;
 
         Suk =
-            sizeGroups_[k].x()*binaryBreakupRate_()*delta_[i][j]*Gamma
+            sizeGroups_[k].x()*binaryBreakupRate_()*delta_[i][j]*Eta
            *fj*fj.phase()/fj.x();
 
         Su_[k] += Suk;
@@ -499,6 +560,8 @@ birthByBinaryBreakup
 
             pDmdt_[pairkj]->ref() += dmdtSign*Suk*fi.phase().rho();
         }
+
+        sizeGroups_[i].shapeModelPtr()->addBreakup(Suk, fj);
     }
 }
 
@@ -516,8 +579,14 @@ deathByBinaryBreakup
 }
 
 
-void Foam::diameterModels::populationBalanceModel::drift(const label i)
+void Foam::diameterModels::populationBalanceModel::drift
+(
+    const label i,
+    driftModel& model
+)
 {
+    model.addToDriftRate(driftRate_(), i);
+
     const sizeGroup& fp = sizeGroups_[i];
 
     if (i == 0)
@@ -607,6 +676,8 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
 
             pDmdt_[pairij]->ref() -= dmdtSign*Sue*fp.phase().rho();
         }
+
+        sizeGroups_[i+1].shapeModelPtr()->addDrift(Sue, fp, model);
     }
 
     if (i != 0)
@@ -636,13 +707,46 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
 
             pDmdt_[pairih]->ref() -= dmdtSign*Suw*fp.phase().rho();
         }
+
+        sizeGroups_[i-1].shapeModelPtr()->addDrift(Suw, fp, model);
     }
 }
 
 
-void Foam::diameterModels::populationBalanceModel::nucleation(const label i)
+void Foam::diameterModels::populationBalanceModel::
+nucleation
+(
+    const label i,
+    nucleationModel& model
+)
 {
-    Su_[i] += sizeGroups_[i].x()*nucleationRate_();
+    const sizeGroup& fi = sizeGroups_[i];
+
+    model.addToNucleationRate(nucleationRate_(), i);
+
+    Sui_ = sizeGroups_[i].x()*nucleationRate_();
+
+    Su_[i] += Sui_;
+
+    const phasePairKey pair
+    (
+        fi.phase().name(),
+        continuousPhase_.name()
+    );
+
+    if (pDmdt_.found(pair) && model.pDmDt())
+    {
+        const scalar dmdtSign
+        (
+            Pair<word>::compare(pDmdt_.find(pair).key(), pair)
+        );
+
+        pDmdt_[pair]->ref() += dmdtSign*Sui_*fi.phase().rho();
+
+        model.addToSpeciesDmDt(speciesDmdt_);
+    }
+
+    sizeGroups_[i].shapeModelPtr()->addNucleation(Sui_, fi, model);
 }
 
 
@@ -650,6 +754,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
 {
     forAll(sizeGroups_, i)
     {
+        sizeGroups_[i].shapeModelPtr()->reset();
         Su_[i] = Zero;
         SuSp_[i] = Zero;
     }
@@ -662,6 +767,19 @@ void Foam::diameterModels::populationBalanceModel::sources()
     )
     {
         pDmdt_(phasePairIter())->ref() = Zero;
+
+        if (speciesDmdt_.found(phasePairIter()))
+        {
+            forAllIter
+            (
+                HashPtrTable<volScalarField>,
+                *speciesDmdt_(phasePairIter()),
+                sDmdtIter
+            )
+            {
+                (sDmdtIter())->ref() = Zero;
+            }
+        }
     }
 
     // Since the calculation of the rates is computationally expensive,
@@ -669,16 +787,10 @@ void Foam::diameterModels::populationBalanceModel::sources()
     // terms as required
     forAll(sizeGroups_, i)
     {
-        const sizeGroup& fi = sizeGroups_[i];
-
         if (coalescence_.size() != 0)
         {
             for (label j = 0; j <= i; j++)
             {
-                const sizeGroup& fj = sizeGroups_[j];
-
-                if (fi.x() + fj.x() > sizeGroups_.last().x()) break;
-
                 coalescenceRate_() = Zero;
 
                 forAll(coalescence_, model)
@@ -737,26 +849,20 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
         if (drift_.size() != 0)
         {
-            driftRate_() = Zero;
-
             forAll(drift_, model)
             {
-                drift_[model].addToDriftRate(driftRate_(), i);
+                driftRate_() = Zero;
+                drift(i, drift_[model]);
             }
-
-            drift(i);
         }
 
         if (nucleation_.size() != 0)
         {
-            nucleationRate_() = Zero;
-
             forAll(nucleation_, model)
             {
-                nucleation_[model].addToNucleationRate(nucleationRate_(), i);
+                nucleationRate_() = Zero;
+                nucleation(i, nucleation_[model]);
             }
-
-            nucleation(i);
         }
     }
 }
@@ -1155,45 +1261,41 @@ bool Foam::diameterModels::populationBalanceModel::writeData(Ostream& os) const
 
 
 const Foam::dimensionedScalar
-Foam::diameterModels::populationBalanceModel::gamma
+Foam::diameterModels::populationBalanceModel::eta
 (
     const label i,
     const dimensionedScalar& v
 ) const
 {
-    dimensionedScalar lowerBoundary(v);
-    dimensionedScalar upperBoundary(v);
+    const dimensionedScalar& x0 = sizeGroups_[0].x();
     const dimensionedScalar& xi = sizeGroups_[i].x();
+    const dimensionedScalar& xm = sizeGroups_.last().x();
+    dimensionedScalar lowerBoundary(x0);
+    dimensionedScalar upperBoundary(xm);
 
-    if (i == 0)
-    {
-       lowerBoundary = xi;
-    }
-    else
-    {
-       lowerBoundary = sizeGroups_[i-1].x();
-    }
+    if (i != 0) lowerBoundary = sizeGroups_[i-1].x();
 
-    if (i == sizeGroups_.size() - 1)
-    {
-        upperBoundary = xi;
-    }
-    else
-    {
-        upperBoundary = sizeGroups_[i+1].x();
-    }
+    if (i != sizeGroups_.size() - 1) upperBoundary = sizeGroups_[i+1].x();
 
-    if (v < lowerBoundary || v > upperBoundary)
+    if ((i == 0 && v < x0) || (i == sizeGroups_.size() - 1 && v > xm))
+    {
+        return v/xi;
+    }
+    else if (v < lowerBoundary || v > upperBoundary)
     {
         return 0;
     }
-    else if (v.value() <= xi.value())
+    else if (v.value() == xi.value())
     {
-        return (v - lowerBoundary)/(xi - lowerBoundary);
+        return 1.0;
+    }
+    else if (v > xi)
+    {
+        return (upperBoundary - v)/(upperBoundary - xi);
     }
     else
     {
-        return (upperBoundary - v)/(upperBoundary - xi);
+        return (v - lowerBoundary)/(xi - lowerBoundary);
     }
 }
 
@@ -1280,10 +1382,10 @@ void Foam::diameterModels::populationBalanceModel::solve()
                         phase.alphaRhoPhi(),
                         fi
                     )
-                  - fvm::Sp
+                  + fvm::SuSp
                     (
-                        fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-                      - fi.VelocityGroup().dmdt(),
+                        fi.VelocityGroup().dmdt()
+                      - phase.continuityErrorFlow(),
                         fi
                     )
                   ==
@@ -1305,6 +1407,11 @@ void Foam::diameterModels::populationBalanceModel::solve()
 
         if (nCorr > 0)
         {
+            forAll(sizeGroups_, i)
+            {
+                sizeGroups_[i].correct();
+            }
+
             forAll(velocityGroups_, i)
             {
                 velocityGroups_[i].postSolve();

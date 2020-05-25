@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,63 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "StationaryPhaseModel.H"
-
-// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
-
-template<class BasePhaseModel>
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
-Foam::StationaryPhaseModel<BasePhaseModel>::zeroField
-(
-    const word& name,
-    const dimensionSet& dims,
-    const bool cache
-) const
-{
-    return tmp<GeometricField<Type, PatchField, GeoMesh>>
-    (
-        new GeometricField<Type, PatchField, GeoMesh>
-        (
-            IOobject
-            (
-                IOobject::groupName(name, this->name()),
-                this->mesh().time().timeName(),
-                this->mesh()
-            ),
-            this->mesh(),
-            dimensioned<Type>("zero", dims, pTraits<Type>::zero)
-        )
-    );
-}
-
-
-template<class BasePhaseModel>
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
-Foam::StationaryPhaseModel<BasePhaseModel>::zeroVolField
-(
-    const word& name,
-    const dimensionSet& dims,
-    const bool cache
-) const
-{
-    return zeroField<Type, fvPatchField, volMesh>(name, dims, cache);
-}
-
-
-template<class BasePhaseModel>
-template<class Type>
-Foam::tmp<Foam::GeometricField<Type, Foam::fvsPatchField, Foam::surfaceMesh>>
-Foam::StationaryPhaseModel<BasePhaseModel>::zeroSurfaceField
-(
-    const word& name,
-    const dimensionSet& dims,
-    const bool cache
-) const
-{
-    return zeroField<Type, fvsPatchField, surfaceMesh>(name, dims, cache);
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -140,7 +83,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volVectorField>
 Foam::StationaryPhaseModel<BasePhaseModel>::U() const
 {
-    return zeroVolField<vector>("U", dimVelocity, true);
+    return zeroVolField<vector>(*this, "U", dimVelocity);
 }
 
 
@@ -160,7 +103,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::phi() const
 {
-    return zeroSurfaceField<scalar>("phi", dimVolume/dimTime);
+    return zeroSurfaceField<scalar>(*this, "phi", dimVolume/dimTime);
 }
 
 
@@ -180,7 +123,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhi() const
 {
-    return zeroSurfaceField<scalar>("alphaPhi", dimVolume/dimTime);
+    return zeroSurfaceField<scalar>(*this, "alphaPhi", dimVolume/dimTime);
 }
 
 
@@ -200,7 +143,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhi() const
 {
-    return zeroSurfaceField<scalar>("alphaRhoPhi", dimMass/dimTime);
+    return zeroSurfaceField<scalar>(*this, "alphaRhoPhi", dimMass/dimTime);
 }
 
 
@@ -220,7 +163,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volVectorField>
 Foam::StationaryPhaseModel<BasePhaseModel>::DUDt() const
 {
-    return zeroVolField<vector>("DUDt", dimVelocity/dimTime);
+    return zeroVolField<vector>(*this, "DUDt", dimVelocity/dimTime);
 }
 
 
@@ -228,7 +171,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::DUDtf() const
 {
-    return zeroSurfaceField<scalar>("DUDtf", dimVelocity*dimArea/dimTime);
+    return zeroSurfaceField<scalar>(*this, "DUDtf", dimVolume/sqr(dimTime));
 }
 
 
@@ -236,7 +179,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::continuityError() const
 {
-    return zeroVolField<scalar>("continuityError", dimDensity/dimTime);
+    return zeroVolField<scalar>(*this, "contErr", dimDensity/dimTime);
 }
 
 
@@ -244,7 +187,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::continuityErrorFlow() const
 {
-    return zeroVolField<scalar>("continuityErrorFlow", dimDensity/dimTime);
+    return zeroVolField<scalar>(*this, "contErrFlow", dimDensity/dimTime);
 }
 
 
@@ -252,7 +195,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::continuityErrorSources() const
 {
-    return zeroVolField<scalar>("continuityErrorSources", dimDensity/dimTime);
+    return zeroVolField<scalar>(*this, "contErrSources", dimDensity/dimTime);
 }
 
 
@@ -260,7 +203,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::K() const
 {
-    return zeroVolField<scalar>("K", sqr(dimVelocity));
+    return zeroVolField<scalar>(*this, "K", sqr(dimVelocity));
 }
 
 
@@ -288,7 +231,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::mut() const
 {
-    return zeroVolField<scalar>("continuityError", dimDynamicViscosity);
+    return zeroVolField<scalar>(*this, "mut", dimDynamicViscosity);
 }
 
 
@@ -304,7 +247,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::nut() const
 {
-    return zeroVolField<scalar>("continuityError", dimViscosity);
+    return zeroVolField<scalar>(*this, "nut", dimViscosity);
 }
 
 
@@ -352,7 +295,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::k() const
 {
-    return zeroVolField<scalar>("k", sqr(dimVelocity));
+    return zeroVolField<scalar>(*this, "k", sqr(dimVelocity));
 }
 
 
@@ -360,7 +303,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::pPrime() const
 {
-    return zeroVolField<scalar>("pPrime", dimPressure);
+    return zeroVolField<scalar>(*this, "pPrime", dimPressure);
 }
 
 

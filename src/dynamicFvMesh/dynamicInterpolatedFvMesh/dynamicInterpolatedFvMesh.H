@@ -74,7 +74,7 @@ class dynamicInterpolatedFvMesh
 :
     public dynamicFvMesh
 {
-    // Private data
+    // Private Data
 
         dictionary dynamicMeshCoeffs_;
 
@@ -91,15 +91,6 @@ class dynamicInterpolatedFvMesh
         velocityMotionCorrection velocityMotionCorrection_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dynamicInterpolatedFvMesh(const dynamicInterpolatedFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicInterpolatedFvMesh&);
-
-
 public:
 
     //- Runtime type information
@@ -111,6 +102,9 @@ public:
         //- Construct from IOobject
         dynamicInterpolatedFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        dynamicInterpolatedFvMesh(const dynamicInterpolatedFvMesh&) = delete;
+
 
     //- Destructor
     ~dynamicInterpolatedFvMesh();
@@ -120,6 +114,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicInterpolatedFvMesh&) = delete;
 };
 
 

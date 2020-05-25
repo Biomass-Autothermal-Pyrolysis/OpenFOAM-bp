@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,11 +69,8 @@ Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
 {
     basicSpecieMixture& composition = this->thermo().composition();
 
-    // Store the species composition according to the species index
-    speciesTable speciesTab = composition.species();
-
     const HashTable<List<specieElement>>& specComp =
-        dynamicCast<const reactingMixture<ThermoType>&>(this->thermo())
+        dynamicCast<const multiComponentMixture<ThermoType>&>(this->thermo())
        .specieComposition();
 
     forAll(specieComp_, i)
@@ -149,9 +146,10 @@ Foam::TDACChemistryModel<ReactionThermo, ThermoType>::~TDACChemistryModel()
 template<class ReactionThermo, class ThermoType>
 void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
 (
-    const scalarField& c, // Contains all species even when mechRed is active
-    const scalar T,
     const scalar p,
+    const scalar T,
+    const scalarField& c, // Contains all species even when mechRed is active
+    const label li,
     scalarField& dcdt
 ) const
 {
@@ -170,7 +168,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
 
             scalar omegai = R.omega
             (
-                p, T, c, pf, cf, lRef, pr, cr, rRef
+                p, T, c, li, pf, cf, lRef, pr, cr, rRef
             );
 
             forAll(R.lhs(), s)
@@ -204,9 +202,10 @@ template<class ReactionThermo, class ThermoType>
 Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
 (
     const Reaction<ThermoType>& R,
-    const scalarField& c, // Contains all species even when mechRed is active
-    const scalar T,
     const scalar p,
+    const scalar T,
+    const scalarField& c, // Contains all species even when mechRed is active
+    const label li,
     scalar& pf,
     scalar& cf,
     label& lRef,
@@ -215,8 +214,8 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
     label& rRef
 ) const
 {
-    const scalar kf = R.kf(p, T, c);
-    const scalar kr = R.kr(kf, p, T, c);
+    const scalar kf = R.kf(p, T, c, li);
+    const scalar kr = R.kr(kf, p, T, c, li);
 
     const label Nl = R.lhs().size();
     const label Nr = R.rhs().size();
@@ -314,6 +313,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
 (
     const scalar time,
     const scalarField& c,
+    const label li,
     scalarField& dcdt
 ) const
 {
@@ -345,7 +345,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
         }
     }
 
-    omega(this->c_, T, p, dcdt);
+    omega(p, T, this->c_, li, dcdt);
 
     // Constant pressure
     // dT/dt = ...
@@ -359,7 +359,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
     scalar cp = 0;
     for (label i=0; i<this->c_.size(); i++)
     {
-        // cp function returns [J/(kmol K)]
+        // cp function returns [J/kmol/K]
         cp += this->c_[i]*this->specieThermo_[i].cp(p, T);
     }
     cp /= rho;
@@ -398,6 +398,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
 (
     const scalar t,
     const scalarField& c,
+    const label li,
     scalarField& dcdt,
     scalarSquareMatrix& J
 ) const
@@ -451,6 +452,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
                 p,
                 T,
                 this->c_,
+                li,
                 J,
                 dcdt,
                 omegaI,
@@ -464,6 +466,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
                 p,
                 T,
                 this->c_,
+                li,
                 omegaI,
                 kfwd,
                 kbwd,
@@ -481,7 +484,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
     scalar dcpdTMean = 0;
     forAll(this->c_, i)
     {
-        cpMean += this->c_[i]*cpi[i]; // J/(m3.K)
+        cpMean += this->c_[i]*cpi[i]; // J/(m^3 K)
         // Already multiplied by rho
         dcpdTMean += this->c_[i]*this->specieThermo_[i].dcpdT(p, T);
     }
@@ -494,12 +497,12 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
             const label si = completeToSimplifiedIndex_[i];
             if (si != -1)
             {
-                dTdt += hi[i]*dcdt[si]; // J/(m3.s)
+                dTdt += hi[i]*dcdt[si]; // J/(m^3 s)
             }
         }
         else
         {
-            dTdt += hi[i]*dcdt[i]; // J/(m3.s)
+            dTdt += hi[i]*dcdt[i]; // J/(m^3 s)
         }
     }
     dTdt /= -cpMean; // K/s
@@ -514,8 +517,8 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
             J(this->nSpecie_, i) += hi[sj]*J(j, i);
         }
         const label si = reduced ? simplifiedToCompleteIndex_[i] : i;
-        J(this->nSpecie_, i) += cpi[si]*dTdt; // J/(mol.s)
-        J(this->nSpecie_, i) /= -cpMean;    // K/s / (mol/m3)
+        J(this->nSpecie_, i) += cpi[si]*dTdt; // J/(mol s)
+        J(this->nSpecie_, i) /= -cpMean;    // K/s / (mol/m^3)
     }
 
     // ddT of dTdt
@@ -651,7 +654,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
             if (reduced)
             {
                 // Reduce mechanism change the number of species (only active)
-                mechRed_->reduceMechanism(c, Ti, pi);
+                mechRed_->reduceMechanism(pi, Ti, c, celli);
                 nActiveSpecies += mechRed_->NsSimp();
                 nAvg++;
                 scalar timeIncr = clockTime_.timeIncrement();
@@ -672,7 +675,12 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
                     // Solve the reduced set of ODE
                     this->solve
                     (
-                        simplifiedC_, Ti, pi, dt, this->deltaTChem_[celli]
+                        pi,
+                        Ti,
+                        simplifiedC_,
+                        celli,
+                        dt,
+                        this->deltaTChem_[celli]
                     );
 
                     for (label i=0; i<NsDAC_; i++)
@@ -682,7 +690,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
                 }
                 else
                 {
-                    this->solve(c, Ti, pi, dt, this->deltaTChem_[celli]);
+                    this->solve(pi, Ti, c, celli, dt, this->deltaTChem_[celli]);
                 }
                 timeLeft -= dt;
             }
@@ -713,7 +721,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
                     Rphiq[Rphiq.size()-1] = pi;
                 }
                 label growOrAdd =
-                    tabulation_->add(phiq, Rphiq, rhoi, deltaT[celli]);
+                    tabulation_->add(phiq, Rphiq, celli, rhoi, deltaT[celli]);
                 if (growOrAdd)
                 {
                     this->setTabulationResultsAdd(celli);

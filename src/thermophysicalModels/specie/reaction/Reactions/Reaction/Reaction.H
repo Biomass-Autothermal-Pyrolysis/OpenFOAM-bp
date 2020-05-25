@@ -59,6 +59,7 @@ class Reaction;
 template<class ReactionThermo>
 inline Ostream& operator<<(Ostream&, const Reaction<ReactionThermo>&);
 
+class objectRegistry;
 
 /*---------------------------------------------------------------------------*\
                            Class Reaction Declaration
@@ -82,7 +83,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Name of reaction
         const word name_;
@@ -104,9 +105,6 @@ private:
 
         //- Construct reaction thermo
         void setThermo(const HashPtrTable<ReactionThermo>& thermoDatabase);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Reaction<ReactionThermo>&);
 
         //- Return new reaction ID for un-named reactions
         label getNewReactionID();
@@ -131,6 +129,20 @@ public:
                 const dictionary& dict
             ),
             (species, thermoDatabase, dict)
+        );
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            Reaction,
+            objectRegistry,
+            (
+                const speciesTable& species,
+                const HashPtrTable<ReactionThermo>& thermoDatabase,
+                const objectRegistry& ob,
+                const dictionary& dict
+            ),
+            (species, thermoDatabase, ob, dict)
         );
 
 
@@ -168,11 +180,32 @@ public:
 
     // Selectors
 
-        //- Return a pointer to new patchField created on freestore from dict
+        //- Return a pointer to new patchField created on freestore
+        //  from dictionary
         static autoPtr<Reaction<ReactionThermo>> New
         (
             const speciesTable& species,
             const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const dictionary& dict
+        );
+
+        //- Return a pointer to new patchField created on freestore
+        //  from objectRegistry and dictionary
+        static autoPtr<Reaction<ReactionThermo>> New
+        (
+            const speciesTable& species,
+            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const objectRegistry& ob,
+            const dictionary& dict
+        );
+
+        //- Return a pointer to new patchField created on freestore from dict.
+        //  This is used to construct a single reaction given a speciesThermo
+        //  list from which a temporary thermoDatabase is created.
+        static autoPtr<Reaction<ReactionThermo>> New
+        (
+            const speciesTable& species,
+            const PtrList<ReactionThermo>& speciesThermo,
             const dictionary& dict
         );
 
@@ -213,6 +246,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& d
             ) const;
 
@@ -222,6 +256,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& f
             ) const;
 
@@ -231,6 +266,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt
             ) const;
 
@@ -240,6 +276,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalar& pf,
                 scalar& cf,
                 label& lRef,
@@ -255,7 +292,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
             //- Reverse rate constant from the given forward rate constant
@@ -264,7 +302,8 @@ public:
                 const scalar kfwd,
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
             //- Reverse rate constant
@@ -272,7 +311,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
 
@@ -285,6 +325,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarSquareMatrix& J,
                 scalarField& dcdt,
                 scalar& omegaI,
@@ -301,6 +342,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 const scalar omegaI,
                 const scalar kfwd,
                 const scalar kbwd,
@@ -315,7 +357,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
             //- Temperature derivative of reverse rate
@@ -324,6 +367,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 const scalar dkfdT,
                 const scalar kr
             ) const = 0;
@@ -339,6 +383,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& dcidc
             ) const = 0;
 
@@ -347,12 +392,19 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const = 0;
 
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Reaction<ReactionThermo>&) = delete;
 
 
     // Ostream Operator

@@ -114,9 +114,9 @@ class codeStream
 :
     public functionEntry
 {
+    //- Interpreter function type
+    typedef void (*streamingFunctionType)(Ostream&, const dictionary&);
 
-        //- Interpreter function type
-        typedef void (*streamingFunctionType)(Ostream&, const dictionary&);
 
     // Private Member Functions
 
@@ -137,17 +137,17 @@ class codeStream
             const dictionary& codeDict
         );
 
-
-        //- Disallow default bitwise copy construct
-        codeStream(const codeStream&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const codeStream&);
+        //- Compile and execute the code and return the resulting string
+        static string run
+        (
+            const dictionary& parentDict,
+            Istream& is
+        );
 
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;
@@ -160,6 +160,12 @@ public:
 
     //- Runtime type information
     ClassName("codeStream");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construction
+        codeStream(const codeStream&) = delete;
 
 
     // Member Functions
@@ -175,6 +181,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codeStream&) = delete;
 };
 
 

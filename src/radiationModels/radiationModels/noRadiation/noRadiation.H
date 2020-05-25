@@ -53,15 +53,6 @@ class noRadiation
 :
     public radiationModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        noRadiation(const noRadiation&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const noRadiation&);
-
-
 public:
 
     //- Runtime type information
@@ -76,12 +67,15 @@ public:
         //- Construct from components
         noRadiation(const dictionary& dict, const volScalarField& T);
 
+        //- Disallow default bitwise copy construction
+        noRadiation(const noRadiation&) = delete;
+
 
     //- Destructor
     virtual ~noRadiation();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -99,6 +93,12 @@ public:
 
             //- Source term component (constant)
             tmp<volScalarField::Internal> Ru() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noRadiation&) = delete;
 };
 
 

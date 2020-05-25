@@ -289,7 +289,7 @@ checkNonStandardCode() # scope, files...
     errorCount=$?
 
     reportEnd "$(cat << EOF
-The following is considerd non-standard code:
+The following is considered non-standard code:
 
     1. Spaced ending of multi-level template parameters. For example,
 
@@ -326,12 +326,12 @@ checkHeaderIfndefNames() # scope, fix, files...
             (*.H)
                 correctDefine=$(basename "$file" | sed 's/\./_/')
 
-                if git grep -q -e "#ifndef.*_H" --and --not -e "#ifndef.*[ _]$correctDefine" $scopeGrep"$file"
+                if git grep -q -e "#ifndef.*_H$" --and --not -e "#ifndef.*[ _]$correctDefine" $scopeGrep"$file"
                 then
                     ((++errorCount))
                     errorMessages+=("$file")
 
-                    currentDefine=$(grep "#ifndef.*_H" "$file" | sed 's/#ifndef\s*//')
+                    currentDefine=$(grep "#ifndef.*_H$" "$file" | sed 's/#ifndef\s*//')
 
                     if $fix
                     then
@@ -421,7 +421,7 @@ checkBanner() # scope, files...
         fi
     done
 
-    reportEnd "Correct the banner formating in the following files:" $errorCount "${errorMessages[@]}"
+    reportEnd "Correct the banner formatting in the following files:" $errorCount "${errorMessages[@]}"
     return $errorCount
 }
 

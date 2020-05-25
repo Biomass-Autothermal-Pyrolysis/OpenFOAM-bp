@@ -34,10 +34,11 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_isoSurface_H
-#define sampledSurfaces_isoSurface_H
+#ifndef sampledIsoSurface_H
+#define sampledIsoSurface_H
 
 #include "sampledSurface.H"
+#include "isoSurface.H"
 #include "MeshedSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,7 +57,7 @@ class isoSurface
     public sampledSurface,
     public MeshedSurface<face>
 {
-    // Private data
+    // Private Data
 
         //- Field to get isoSurface of
         const word isoField_;
@@ -65,7 +66,7 @@ class isoSurface
         const scalarField isoVals_;
 
         //- Whether to coarsen
-        const Switch regularise_;
+        const Foam::isoSurface::filterType filter_;
 
         //- If restricted to zones, name of this zone or a regular expression
         keyType zoneKey_;

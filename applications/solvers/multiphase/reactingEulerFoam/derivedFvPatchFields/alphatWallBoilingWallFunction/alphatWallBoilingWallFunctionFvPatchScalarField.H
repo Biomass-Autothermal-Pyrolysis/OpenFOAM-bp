@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,9 @@ Description
       - bubble departure diameter
 
     Implements a version of the well-known RPI wall boiling model
-    (Kurul & Podowski, 1991). The model implementation is similar to the model
-    described by Peltola & Pättikangas (2012) but has been extended with the
-    wall heat flux partitioning models.
+    (Kurul & Podowski, 1991). The model implementation is described in Peltola
+    et al. (2019) and is similar to the model described by Peltola &
+    Pättikangas (2012).
 
     References:
     \verbatim
@@ -44,6 +44,14 @@ Description
         ANS. Proc. National Heat Transfer Con. Minneapolis, Minnesota, USA,
         1991.
         ISBN: 0-89448-162-1, pp. 30-40.
+    \endverbatim
+
+    \verbatim
+        Peltola, J., Pättikangas, T., Bainbridge, W., Lehnigk, R., Schlegel, F.
+        (2019).
+        On Development and validation of subcooled nucleate boiling models for
+        OpenFOAM Foundation Release.
+        NURETH-18 Conference Proceedings, Portland, Oregon, United States, 2019.
     \endverbatim
 
     \verbatim
@@ -73,9 +81,9 @@ Usage
         if phaseType 'liquid':
 
         partitioningModel|                     | yes         |
-        nucleationSiteModel|                     | yes         |
-        departureDiamModel|                     | yes         |
-        departureFreqModel|                     | yes         |
+        nucleationSiteModel|                   | yes         |
+        departureDiamModel|                    | yes         |
+        departureFreqModel|                    | yes         |
     \endtable
 
     NOTE: Runtime selectabale submodels may require model specific entries
@@ -90,7 +98,7 @@ Usage
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
-        relax           0.001;
+        relax           0.1;
         dmdt            uniform 0;
         partitioningModel
         {
@@ -158,7 +166,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- name of the other phase (vapor/liquid phase)
         word otherPhaseName_;
@@ -235,7 +243,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&
@@ -250,7 +258,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&,
@@ -270,7 +278,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         using alphatPhaseChangeWallFunctionFvPatchScalarField::dmdt;
 
@@ -289,13 +297,13 @@ public:
             return dDep_;
         }
 
-        //- Return the quenching surface heat flux [W/m2]
+        //- Return the quenching surface heat flux [W/m^2]
         const scalarField& qq() const
         {
             return qq_;
         }
 
-        //- Return the evaporation surface heat flux [W/m2]
+        //- Return the evaporation surface heat flux [W/m^2]
         tmp<scalarField> qe() const
         {
             return mDotL_/AbyV_;

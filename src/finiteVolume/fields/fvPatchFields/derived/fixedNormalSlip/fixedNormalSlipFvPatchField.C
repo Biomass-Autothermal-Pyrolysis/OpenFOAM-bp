@@ -51,7 +51,7 @@ Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    fixedValue_(ptf.fixedValue_, mapper)
+    fixedValue_(mapper(ptf.fixedValue_))
 {}
 
 
@@ -102,7 +102,7 @@ void Foam::fixedNormalSlipFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    fixedValue_.autoMap(m);
+    m(fixedValue_, fixedValue_);
 }
 
 

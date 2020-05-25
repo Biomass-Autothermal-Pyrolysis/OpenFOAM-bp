@@ -66,7 +66,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
         ptf.emissivity_,
         mapper
     ),
-    Trad_(ptf.Trad_, mapper)
+    Trad_(mapper(ptf.Trad_))
 {}
 
 
@@ -138,7 +138,7 @@ void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::autoMap
 {
     mixedFvPatchScalarField::autoMap(m);
     radiationCoupledBase::autoMap(m);
-    Trad_.autoMap(m);
+    m(Trad_, Trad_);
 }
 
 

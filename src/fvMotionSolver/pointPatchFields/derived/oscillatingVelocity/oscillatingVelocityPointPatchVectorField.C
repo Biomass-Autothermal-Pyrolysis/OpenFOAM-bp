@@ -90,7 +90,7 @@ oscillatingVelocityPointPatchVectorField
     fixedValuePointPatchField<vector>(ptf, p, iF, mapper),
     amplitude_(ptf.amplitude_),
     omega_(ptf.omega_),
-    p0_(ptf.p0_, mapper)
+    p0_(mapper(ptf.p0_))
 {}
 
 
@@ -117,7 +117,7 @@ void oscillatingVelocityPointPatchVectorField::autoMap
 {
     fixedValuePointPatchField<vector>::autoMap(m);
 
-    p0_.autoMap(m);
+    m(p0_, p0_);
 }
 
 

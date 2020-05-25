@@ -47,3 +47,17 @@ setRefCell
     pRefValue
 );
 mesh.setFluxRequired(p_rgh.name());
+
+bool needP_rghRef(p_rgh.needReference());
+forAll(phases, phasei)
+{
+    if (!phases[phasei].thermo().incompressible())
+    {
+        needP_rghRef = false;
+    }
+}
+
+if (needP_rghRef)
+{
+    gh = dimensionedScalar(dimLength*dimAcceleration, 0.0);
+}

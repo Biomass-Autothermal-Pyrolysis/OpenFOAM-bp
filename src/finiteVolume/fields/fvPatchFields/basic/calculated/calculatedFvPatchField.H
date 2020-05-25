@@ -98,7 +98,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         calculatedFvPatchField
         (
             const calculatedFvPatchField<Type>&
@@ -113,7 +113,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         calculatedFvPatchField
         (
             const calculatedFvPatchField<Type>&,
@@ -133,7 +133,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,9 @@ class IOobject
 
 public:
 
+    //- Keyword for the FoamFile header sub-dictionary
+    static constexpr const char* foamFile = "FoamFile";
+
     // Public data types
 
         //- Enumeration defining the valid states of an IOobject
@@ -133,7 +136,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Name
         word name_;
@@ -161,9 +164,6 @@ private:
 
         //- Register object created from this IOobject with registry if true
         bool registerObject_;
-
-        //- Is object same for all processors
-        bool globalObject_;
 
         //- IOobject state
         objectState objState_;
@@ -237,8 +237,7 @@ public:
             const objectRegistry& registry,
             readOption r=NO_READ,
             writeOption w=NO_WRITE,
-            bool registerObject=true,
-            bool globalObject = false
+            bool registerObject=true
         );
 
         //- Construct from path, registry, io options
@@ -249,8 +248,7 @@ public:
             const objectRegistry& registry,
             readOption r=NO_READ,
             writeOption w=NO_WRITE,
-            bool registerObject=true,
-            bool globalObject = false
+            bool registerObject=true
         );
 
         //- Construct from copy resetting registry
@@ -266,6 +264,9 @@ public:
             const IOobject& io,
             const word& name
         );
+
+        //- Copy constructor
+        IOobject(const IOobject& io) = default;
 
         //- Clone
         autoPtr<IOobject> clone() const
@@ -342,18 +343,6 @@ public:
                 return registerObject_;
             }
 
-            //- Is object same for all processors
-            bool& globalObject()
-            {
-                return globalObject_;
-            }
-
-            //- Is object same for all processors
-            bool globalObject() const
-            {
-                return globalObject_;
-            }
-
 
         // Read/write options
 
@@ -385,6 +374,10 @@ public:
 
             //- Return member (name without the extension)
             word member() const;
+
+            //- Return the name of the object within this model
+            //  as <model>:<name>
+            inline word modelName(const char* name) const;
 
             const fileName& rootPath() const;
 
@@ -487,7 +480,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const IOobject&);
 };

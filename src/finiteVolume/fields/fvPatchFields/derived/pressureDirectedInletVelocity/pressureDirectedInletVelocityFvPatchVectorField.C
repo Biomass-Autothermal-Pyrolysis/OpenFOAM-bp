@@ -58,7 +58,7 @@ pressureDirectedInletVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
-    inletDir_(ptf.inletDir_, mapper)
+    inletDir_(mapper(ptf.inletDir_))
 {}
 
 
@@ -112,7 +112,7 @@ void Foam::pressureDirectedInletVelocityFvPatchVectorField::autoMap
 )
 {
     fixedValueFvPatchVectorField::autoMap(m);
-    inletDir_.autoMap(m);
+    m(inletDir_, inletDir_);
 }
 
 

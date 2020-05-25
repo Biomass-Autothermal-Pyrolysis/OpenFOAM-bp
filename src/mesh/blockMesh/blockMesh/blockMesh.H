@@ -63,7 +63,7 @@ class blockMesh
 :
     public blockList
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh dictionary
         const IOdictionary& meshDict_;
@@ -197,9 +197,15 @@ class blockMesh
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         ClassName("blockMesh");
+
+        //- Switch checking block face orientation
+        //  to ensure that all faces are outward-pointing.
+        //  This check may fail if the block is intentionally very twisted
+        //  for curved edges to be applied and can be switched off.
+        static Switch checkBlockFaceOrientation;
 
 
     // Constructors

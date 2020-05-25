@@ -73,13 +73,13 @@ class phaseSystem
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef HashPtrTable<fvVectorMatrix> momentumTransferTable;
 
         typedef HashPtrTable<fvScalarMatrix> heatTransferTable;
 
-        typedef HashPtrTable<fvScalarMatrix> massTransferTable;
+        typedef HashPtrTable<fvScalarMatrix> specieTransferTable;
 
         typedef PtrListDictionary<phaseModel> phaseModelList;
 
@@ -88,6 +88,20 @@ public:
         typedef
             HashTable<autoPtr<phasePair>, phasePairKey, phasePairKey::hash>
             phasePairTable;
+
+        typedef
+            HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
+            dmdtTable;
+
+        typedef
+            HashPtrTable
+            <
+                HashPtrTable<volScalarField>,
+                phasePairKey,
+                phasePairKey::hash
+            >
+            dmidtTable;
+
 
 
 protected:
@@ -209,7 +223,8 @@ protected:
                 autoPtr<modelType>,
                 phasePairKey,
                 phasePairKey::hash
-            >& models
+            >& models,
+            const bool correctFixedFluxBCs = true
         );
 
         //- Generate pairs and blended sub-model tables
@@ -239,50 +254,6 @@ protected:
             >& models,
             const bool correctFixedFluxBCs = true
         );
-
-        //- Add the field to a phase-indexed list, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            tmp<GeoField> field,
-            PtrList<GeoField>& fieldList
-        ) const;
-
-        //- Add the field to a phase-indexed list, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            const GeoField& field,
-            PtrList<GeoField>& fieldList
-        ) const;
-
-        //- Add the field to a phase-indexed table, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            tmp<GeoField> field,
-            HashPtrTable<GeoField>& fieldTable
-        ) const;
-
-        //- Add the field to a phase-indexed table, with the given name,
-        //  constructing if necessary
-        template<class GeoField>
-        void addField
-        (
-            const phaseModel& phase,
-            const word& fieldName,
-            const GeoField& field,
-            HashPtrTable<GeoField>& fieldTable
-        ) const;
 
 
 public:
@@ -445,11 +416,15 @@ public:
             //- Return the surface tension coefficient for a pair
             tmp<volScalarField> sigma(const phasePairKey& key) const;
 
-            //- Return the mass transfer rate for a pair
-            virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
+            //- Return the surface tension coefficient for a pair on a patch
+            tmp<scalarField> sigma
+            (
+                const phasePairKey& key,
+                label patchi
+            ) const;
 
             //- Return the mass transfer rates for each phase
-            virtual Xfer<PtrList<volScalarField>> dmdts() const;
+            virtual PtrList<volScalarField> dmdts() const;
 
 
         // Transfers
@@ -464,34 +439,34 @@ public:
 
             //- Return the implicit force coefficients for the face-based
             //  algorithm
-            virtual Xfer<PtrList<surfaceScalarField>> AFfs() const = 0;
+            virtual PtrList<surfaceScalarField> AFfs() const = 0;
 
             //- Return the force fluxes for the cell-based algorithm
-            virtual Xfer<PtrList<surfaceScalarField>> phiFs
+            virtual PtrList<surfaceScalarField> phiFs
             (
                 const PtrList<volScalarField>& rAUs
             ) = 0;
 
             //- Return the force fluxes for the face-based algorithm
-            virtual Xfer<PtrList<surfaceScalarField>> phiFfs
+            virtual PtrList<surfaceScalarField> phiFfs
             (
                 const PtrList<surfaceScalarField>& rAUfs
             ) = 0;
 
             //- Return the force fluxes for the cell-based algorithm
-            virtual Xfer<PtrList<surfaceScalarField>> phiKdPhis
+            virtual PtrList<surfaceScalarField> phiKdPhis
             (
                 const PtrList<volScalarField>& rAUs
             ) const = 0;
 
             //- Return the force fluxes for the face-based algorithm
-            virtual Xfer<PtrList<surfaceScalarField>> phiKdPhifs
+            virtual PtrList<surfaceScalarField> phiKdPhifs
             (
                 const PtrList<surfaceScalarField>& rAUfs
             ) const = 0;
 
             //- Return the explicit part of the drag force
-            virtual Xfer<PtrList<volVectorField>> KdUByAs
+            virtual PtrList<volVectorField> KdUByAs
             (
                 const PtrList<volScalarField>& rAUs
             ) const = 0;
@@ -509,7 +484,7 @@ public:
             ) = 0;
 
             //- Return the flux corrections for the cell-based algorithm
-            virtual Xfer<PtrList<surfaceScalarField>> ddtCorrByAs
+            virtual PtrList<surfaceScalarField> ddtCorrByAs
             (
                 const PtrList<volScalarField>& rAUs,
                 const bool includeVirtualMass = false
@@ -522,8 +497,8 @@ public:
             //- Return the heat transfer matrices
             virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
 
-            //- Return the mass transfer matrices
-            virtual autoPtr<massTransferTable> massTransfer() const = 0;
+            //- Return the specie transfer matrices
+            virtual autoPtr<specieTransferTable> specieTransfer() const = 0;
 
 
         // Evolution

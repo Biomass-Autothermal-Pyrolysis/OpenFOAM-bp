@@ -72,7 +72,7 @@ class wideBandDiffusiveRadiationMixedFvPatchScalarField
     public mixedFvPatchScalarField,
     public radiationCoupledBase
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field
         word TName_;
@@ -111,7 +111,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         wideBandDiffusiveRadiationMixedFvPatchScalarField
         (
             const wideBandDiffusiveRadiationMixedFvPatchScalarField&
@@ -126,7 +126,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         wideBandDiffusiveRadiationMixedFvPatchScalarField
         (
             const wideBandDiffusiveRadiationMixedFvPatchScalarField&,
@@ -146,7 +146,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -164,18 +164,15 @@ public:
             }
 
 
+        // Mapping functions
+
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchScalarField&, const labelList&);
 
 
         // Evaluation functions

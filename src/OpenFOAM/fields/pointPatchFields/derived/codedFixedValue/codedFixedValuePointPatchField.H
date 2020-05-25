@@ -111,7 +111,7 @@ class codedFixedValuePointPatchField
         static const wordList codeKeys_;
 
 
-    // Private data
+    // Private Data
 
         //- Dictionary contents for the boundary condition
         mutable dictionary dict_;
@@ -149,7 +149,7 @@ class codedFixedValuePointPatchField
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;
@@ -189,7 +189,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         codedFixedValuePointPatchField
         (
             const codedFixedValuePointPatchField<Type>&
@@ -204,7 +204,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         codedFixedValuePointPatchField
         (
             const codedFixedValuePointPatchField<Type>&,
@@ -228,7 +228,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Get reference to the underlying patch
         const pointPatchField<Type>& redirectPatchField() const;

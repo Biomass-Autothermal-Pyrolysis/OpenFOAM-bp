@@ -58,15 +58,6 @@ class packingLimitModel
         Switch constantDiameters_;
 
 
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        packingLimitModel(const packingLimitModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const packingLimitModel&);
-
-
 protected:
 
     // Protected data
@@ -123,6 +114,8 @@ public:
     virtual ~packingLimitModel();
 
 
+    //- Disallow default bitwise copy construct
+    packingLimitModel(const packingLimitModel&) = delete;
     // Member Functions
 
         //- Return the maximum packing limit
@@ -134,6 +127,12 @@ public:
             const label celli,
             const scalarList& ds
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const packingLimitModel&) = delete;
 };
 
 

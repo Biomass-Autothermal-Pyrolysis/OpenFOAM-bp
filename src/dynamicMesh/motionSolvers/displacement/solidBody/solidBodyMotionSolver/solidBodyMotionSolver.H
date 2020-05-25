@@ -52,7 +52,7 @@ class solidBodyMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
@@ -62,15 +62,6 @@ class solidBodyMotionSolver
 
         //- Flag to indicate whether all cells should move
         bool moveAllCells_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        solidBodyMotionSolver(const solidBodyMotionSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionSolver&);
 
 
 public:
@@ -88,6 +79,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        solidBodyMotionSolver(const solidBodyMotionSolver&) = delete;
+
 
     //- Destructor
     ~solidBodyMotionSolver();
@@ -101,6 +95,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidBodyMotionSolver&) = delete;
 };
 
 

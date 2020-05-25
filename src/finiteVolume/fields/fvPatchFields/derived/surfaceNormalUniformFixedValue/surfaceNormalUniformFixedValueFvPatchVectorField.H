@@ -76,7 +76,7 @@ class surfaceNormalUniformFixedValueFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<scalar>> uniformValue_;
 
@@ -115,7 +115,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceNormalUniformFixedValueFvPatchVectorField
         (
             const surfaceNormalUniformFixedValueFvPatchVectorField&
@@ -130,7 +130,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         surfaceNormalUniformFixedValueFvPatchVectorField
         (
             const surfaceNormalUniformFixedValueFvPatchVectorField&,
@@ -154,7 +154,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

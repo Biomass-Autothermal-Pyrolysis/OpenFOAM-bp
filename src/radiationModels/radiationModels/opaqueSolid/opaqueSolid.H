@@ -54,15 +54,6 @@ class opaqueSolid
 :
     public radiationModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        opaqueSolid(const opaqueSolid&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const opaqueSolid&);
-
-
 public:
 
     //- Runtime type information
@@ -77,12 +68,15 @@ public:
         //- Construct from components
         opaqueSolid(const dictionary& dict, const volScalarField& T);
 
+        //- Disallow default bitwise copy construction
+        opaqueSolid(const opaqueSolid&) = delete;
+
 
     //- Destructor
     virtual ~opaqueSolid();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -97,6 +91,12 @@ public:
 
             //- Source term component (constant)
             tmp<volScalarField::Internal> Ru() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const opaqueSolid&) = delete;
 };
 
 

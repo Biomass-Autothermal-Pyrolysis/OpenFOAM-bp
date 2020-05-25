@@ -61,7 +61,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
         ptf.emissivity_,
         mapper
     ),
-    qro_(ptf.qro_, mapper)
+    qro_(mapper(ptf.qro_))
 {}
 
 
@@ -136,7 +136,7 @@ void Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::autoMap
 {
     fixedValueFvPatchScalarField::autoMap(m);
     radiationCoupledBase::autoMap(m);
-    qro_.autoMap(m);
+    m(qro_, qro_);
 }
 
 

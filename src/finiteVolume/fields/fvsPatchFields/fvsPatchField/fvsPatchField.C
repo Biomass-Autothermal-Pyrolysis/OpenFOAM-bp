@@ -66,7 +66,7 @@ Foam::fvsPatchField<Type>::fvsPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    Field<Type>(ptf, mapper),
+    Field<Type>(mapper(ptf)),
     patch_(p),
     internalField_(iF)
 {}
@@ -154,7 +154,7 @@ void Foam::fvsPatchField<Type>::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
+    m(*this, *this);
 }
 
 

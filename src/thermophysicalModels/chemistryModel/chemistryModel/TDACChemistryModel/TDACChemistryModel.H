@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,12 +131,6 @@ class TDACChemistryModel
 
     // Private Member Functions
 
-        //- Disallow copy constructor
-        TDACChemistryModel(const TDACChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const TDACChemistryModel&);
-
         //- Solve the reaction system for the given time step
         //  of given type and return the characteristic time
         //  Variable number of species added
@@ -154,6 +148,9 @@ public:
 
         //- Construct from thermo
         TDACChemistryModel(ReactionThermo& thermo);
+
+        //- Disallow default bitwise copy construction
+        TDACChemistryModel(const TDACChemistryModel&);
 
 
     //- Destructor
@@ -176,9 +173,10 @@ public:
         //- dc/dt = omega, rate of change in concentration, for each species
         virtual void omega
         (
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             scalarField& dcdt
         ) const;
 
@@ -187,9 +185,10 @@ public:
         virtual scalar omega
         (
             const Reaction<ThermoType>& r,
-            const scalarField& c,
-            const scalar T,
             const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
             scalar& pf,
             scalar& cf,
             label& lRef,
@@ -218,6 +217,7 @@ public:
             (
                 const scalar t,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt
             ) const;
 
@@ -225,15 +225,17 @@ public:
             (
                 const scalar t,
                 const scalarField& c,
+                const label li,
                 scalarField& dcdt,
                 scalarSquareMatrix& J
             ) const;
 
             virtual void solve
             (
-                scalarField& c,
-                scalar& T,
                 scalar& p,
+                scalar& T,
+                scalarField& c,
+                const label li,
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;
@@ -279,6 +281,12 @@ public:
             void setTabulationResultsRetrieve(const label celli);
 
             inline void resetTabulationResults();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TDACChemistryModel&) = delete;
 };
 
 

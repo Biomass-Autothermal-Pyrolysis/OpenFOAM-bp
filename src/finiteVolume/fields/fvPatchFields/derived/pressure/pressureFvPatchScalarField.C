@@ -75,7 +75,7 @@ Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    p_(ptf.p_, mapper)
+    p_(mapper(ptf.p_))
 {}
 
 
@@ -108,7 +108,7 @@ void Foam::pressureFvPatchScalarField::autoMap
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
-    p_.autoMap(m);
+    m(p_, p_);
 }
 
 

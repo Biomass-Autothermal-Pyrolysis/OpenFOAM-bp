@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class phaseModel
 :
     public volScalarField
 {
-    // Private data
+    // Private Data
 
         //- Reference to the phaseSystem to which this phase belongs
         const phaseSystem& fluid_;
@@ -205,10 +205,13 @@ public:
         virtual bool read();
 
 
-        // Compressibility (variable density)
+        // Density variation and compressibility
 
-            //- Return true if the phase is compressible otherwise false
-            virtual bool compressible() const = 0;
+            //- Return true if the phase is incompressible otherwise false
+            virtual bool incompressible() const = 0;
+
+            //- Return true if the phase is constant density otherwise false
+            virtual bool isochoric() const = 0;
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual tmp<volScalarField> divU() const = 0;
@@ -333,11 +336,11 @@ public:
             //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
             virtual tmp<scalarField> alpha(const label patchi) const = 0;
 
-            //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+            //- Thermal diffusivity for temperature of mixture [W/m/K]
             virtual tmp<volScalarField> kappa() const = 0;
 
             //- Thermal diffusivity for temperature of mixture
-            //  for patch [J/m/s/K]
+            //  for patch [W/m/K]
             virtual tmp<scalarField> kappa(const label patchi) const = 0;
 
             //- Thermal diffusivity for energy of mixture [kg/m/s]
@@ -347,14 +350,14 @@ public:
             virtual tmp<scalarField> alphahe(const label patchi) const = 0;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [J/m/s/K]
+            //  of mixture [W/m/K]
             virtual tmp<volScalarField> kappaEff
             (
                 const volScalarField& alphat
             ) const = 0;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff
             (
                 const scalarField& alphat,
@@ -391,11 +394,11 @@ public:
             virtual tmp<volScalarField> nuEff() const = 0;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [J/m/s/K]
+            //  of mixture [W/m/K]
             virtual tmp<volScalarField> kappaEff() const = 0;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
 
             //- Effective thermal turbulent diffusivity of mixture [kg/m/s]

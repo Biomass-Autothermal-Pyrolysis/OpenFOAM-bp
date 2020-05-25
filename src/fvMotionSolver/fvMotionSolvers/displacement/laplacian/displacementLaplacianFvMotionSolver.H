@@ -56,7 +56,7 @@ class displacementLaplacianFvMotionSolver
     public displacementMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volVectorField cellDisplacement_;
@@ -73,18 +73,6 @@ class displacementLaplacianFvMotionSolver
         label frozenPointsZone_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        displacementLaplacianFvMotionSolver
-        (
-            const displacementLaplacianFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLaplacianFvMotionSolver&);
-
-
 public:
 
     //- Runtime type information
@@ -98,6 +86,12 @@ public:
         (
             const polyMesh&,
             const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementLaplacianFvMotionSolver
+        (
+            const displacementLaplacianFvMotionSolver&
         );
 
 
@@ -130,6 +124,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLaplacianFvMotionSolver&) = delete;
 };
 
 

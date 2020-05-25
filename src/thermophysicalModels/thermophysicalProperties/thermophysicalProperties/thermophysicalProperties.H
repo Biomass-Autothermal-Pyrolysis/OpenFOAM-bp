@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 
 class thermophysicalProperties
 {
-    // Private data
+    // Private Data
 
         //- Molecular weight [kg/kmol]
         scalar W_;
@@ -124,7 +124,7 @@ public:
             //- Liquid density [kg/m^3]
             virtual scalar rho(scalar p, scalar T) const = 0;
 
-            //- Liquid compressibility rho/p [s^2/m^2]
+            //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             virtual scalar psi(scalar p, scalar T) const = 0;
 
@@ -136,7 +136,7 @@ public:
 
         // Fundamental thermodynamic properties
 
-            //- Heat capacity at constant pressure [J/(kg K)]
+            //- Heat capacity at constant pressure [J/kg/K]
             virtual scalar Cp(const scalar p, const scalar T) const = 0;
 
             //- Sensible enthalpy [J/kg]
@@ -145,10 +145,10 @@ public:
             //- Chemical enthalpy [J/kg]
             virtual scalar Hc() const = 0;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             virtual scalar Ha(const scalar p, const scalar T) const = 0;
 
-            // Entropy [J/(kg K)]
+            // Entropy [J/kg/K]
             virtual scalar S(const scalar p, const scalar T) const = 0;
 
 
@@ -157,10 +157,10 @@ public:
             //- Liquid viscosity [Pa s]
             virtual scalar mu(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal conductivity  [W/(m K)]
+            //- Liquid thermal conductivity  [W/m/K]
             virtual scalar kappa(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal diffusivity of enthalpy [kg/ms]
+            //- Liquid thermal diffusivity of enthalpy [kg/m/s]
             virtual scalar alphah(const scalar p, const scalar T) const = 0;
 
 

@@ -63,7 +63,7 @@ inletOutletTotalTemperatureFvPatchScalarField
     UName_(ptf.UName_),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_),
-    T0_(ptf.T0_, mapper)
+    T0_(mapper(ptf.T0_))
 {}
 
 
@@ -138,7 +138,7 @@ void Foam::inletOutletTotalTemperatureFvPatchScalarField::autoMap
 )
 {
     inletOutletFvPatchScalarField::autoMap(m);
-    T0_.autoMap(m);
+    m(T0_, T0_);
 }
 
 

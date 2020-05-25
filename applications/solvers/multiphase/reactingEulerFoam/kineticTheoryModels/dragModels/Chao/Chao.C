@@ -93,11 +93,13 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Chao::K() const
     {
         if (phase1.name() == Thetas_[phasei]().group())
         {
-            tmpTheta1 = Thetas_[phasei];
+            tmpTheta1 =
+                tmp<volScalarField>(new volScalarField(Thetas_[phasei]));
         }
         if (phase2.name() == Thetas_[phasei]().group())
         {
-            tmpTheta2 = Thetas_[phasei];
+            tmpTheta2 =
+                tmp<volScalarField>(new volScalarField(Thetas_[phasei]));
         }
     }
     const volScalarField& Theta1 = tmpTheta1();

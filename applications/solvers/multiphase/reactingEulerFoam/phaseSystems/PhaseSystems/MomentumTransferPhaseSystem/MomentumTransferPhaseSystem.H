@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,9 @@ class MomentumTransferPhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
+private:
 
-    // Protected typedefs
+    // Private typedefs
 
         typedef HashPtrTable
         <
@@ -134,9 +134,7 @@ protected:
         > turbulentDispersionModelTable;
 
 
-private:
-
-    // Private data
+    // Private Data
 
         //- Drag coefficients
         KdTable Kds_;
@@ -171,7 +169,7 @@ private:
             turbulentDispersionModelTable turbulentDispersionModels_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the drag coefficient for the phase pair
         virtual tmp<volScalarField> Kd(const phasePairKey& key) const;
@@ -187,6 +185,19 @@ private:
         (
             phaseSystem::momentumTransferTable& eqns
         ) const;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Add momentum transfer terms which result from bulk mass transfers
+        void addDmdtU
+        (
+            const phaseSystem::dmdtTable& dmdts,
+            phaseSystem::momentumTransferTable& eqns
+        );
+
 
 public:
 
@@ -212,19 +223,19 @@ public:
 
         //- Return implicit force coefficients on the faces, for the face-based
         //  algorithm.
-        virtual Xfer<PtrList<surfaceScalarField>> AFfs() const;
+        virtual PtrList<surfaceScalarField> AFfs() const;
 
         //- Return the explicit force fluxes for the cell-based algorithm, that
         //  do not depend on phase mass/volume fluxes, and can therefore be
         //  evaluated outside the corrector loop. This includes things like
         //  lift, turbulent dispersion, and wall lubrication.
-        virtual Xfer<PtrList<surfaceScalarField>> phiFs
+        virtual PtrList<surfaceScalarField> phiFs
         (
             const PtrList<volScalarField>& rAUs
         );
 
         //- As phiFs, but for the face-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> phiFfs
+        virtual PtrList<surfaceScalarField> phiFfs
         (
             const PtrList<surfaceScalarField>& rAUfs
         );
@@ -232,13 +243,13 @@ public:
         //- Return the explicit drag force fluxes for the cell-based algorithm.
         //  These depend on phase mass/volume fluxes, and must therefore be
         //  evaluated inside the corrector loop.
-        virtual Xfer<PtrList<surfaceScalarField>> phiKdPhis
+        virtual PtrList<surfaceScalarField> phiKdPhis
         (
             const PtrList<volScalarField>& rAUs
         ) const;
 
         //- As phiKdPhis, but for the face-based algorithm
-        virtual Xfer<PtrList<surfaceScalarField>> phiKdPhifs
+        virtual PtrList<surfaceScalarField> phiKdPhifs
         (
             const PtrList<surfaceScalarField>& rAUfs
         ) const;
@@ -247,7 +258,7 @@ public:
         //  algorithm. This is the cell-equivalent of phiKdPhis. These depend on
         //  phase velocities, and must therefore be evaluated inside the
         //  corrector loop.
-        virtual Xfer<PtrList<volVectorField>> KdUByAs
+        virtual PtrList<volVectorField> KdUByAs
         (
             const PtrList<volScalarField>& rAUs
         ) const;
@@ -268,7 +279,7 @@ public:
         //- Return the flux corrections for the cell-based algorithm. These
         //  depend on phase mass/volume fluxes, and must therefore be evaluated
         //  inside the corrector loop.
-        virtual Xfer<PtrList<surfaceScalarField>> ddtCorrByAs
+        virtual PtrList<surfaceScalarField> ddtCorrByAs
         (
             const PtrList<volScalarField>& rAUs,
             const bool includeVirtualMass = false

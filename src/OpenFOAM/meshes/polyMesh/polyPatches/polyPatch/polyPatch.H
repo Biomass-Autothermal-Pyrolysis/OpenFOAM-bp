@@ -69,7 +69,7 @@ class polyPatch
     public patchIdentifier,
     public primitivePatch
 {
-    // Private data
+    // Private Data
 
         //- Start label of this patch in the polyMesh face list
         label start_;
@@ -189,7 +189,7 @@ public:
             const word& patchType
         );
 
-        //- Construct as copy, resetting the boundary mesh
+        //- Copy constructor, resetting the boundary mesh
         polyPatch(const polyPatch&, const polyBoundaryMesh&);
 
         //- Construct given the original patch and resetting the
@@ -213,7 +213,7 @@ public:
             const label newStart
         );
 
-        //- Construct as copy
+        //- Copy constructor
         polyPatch(const polyPatch&);
 
         // To avoid irritating warnings from clang
@@ -402,7 +402,7 @@ public:
         ) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment
         void operator=(const polyPatch&);

@@ -91,7 +91,7 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
     rhoName_(ptf.rhoName_),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_),
-    p0_(ptf.p0_, mapper)
+    p0_(mapper(ptf.p0_))
 {}
 
 
@@ -134,7 +134,7 @@ void Foam::totalPressureFvPatchScalarField::autoMap
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
-    p0_.autoMap(m);
+    m(p0_, p0_);
 }
 
 

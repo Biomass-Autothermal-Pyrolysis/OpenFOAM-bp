@@ -53,7 +53,7 @@ maxDeltaT       1;
 
 functions
 {
-    #includeFunc Qdot
+    #includeFunc Qdot(phase = gas)
 }
 
 

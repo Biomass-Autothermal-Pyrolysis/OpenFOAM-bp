@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,23 +57,9 @@ class ReversibleReaction
 :
     public ReactionType<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         ReactionRate k_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=
-        (
-            const ReversibleReaction
-            <
-                ReactionType,
-                ReactionThermo,
-                ReactionRate
-            >&
-        );
 
 
 public:
@@ -108,6 +94,15 @@ public:
         (
             const speciesTable& species,
             const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const dictionary& dict
+        );
+
+        //- Construct from objectRegistry and dictionary
+        ReversibleReaction
+        (
+            const speciesTable& species,
+            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const objectRegistry& ob,
             const dictionary& dict
         );
 
@@ -157,7 +152,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
             //- Reverse rate constant from the given formard rate constant
@@ -166,7 +162,8 @@ public:
                 const scalar kfwd,
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
             //- Reverse rate constant.
@@ -176,7 +173,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
 
@@ -187,7 +185,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
             //- Temperature derivative of backward rate
@@ -196,6 +195,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 const scalar dkfdT,
                 const scalar kr
             ) const;
@@ -212,6 +212,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& dcidc
             ) const;
 
@@ -221,12 +222,27 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const ReversibleReaction
+            <
+                ReactionType,
+                ReactionThermo,
+                ReactionRate
+            >&
+        ) = delete;
 };
 
 

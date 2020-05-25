@@ -55,8 +55,8 @@ tractionDisplacementFvPatchVectorField
 )
 :
     fixedGradientFvPatchVectorField(tdpvf, p, iF, mapper),
-    traction_(tdpvf.traction_, mapper),
-    pressure_(tdpvf.pressure_, mapper)
+    traction_(mapper(tdpvf.traction_)),
+    pressure_(mapper(tdpvf.pressure_))
 {}
 
 
@@ -110,8 +110,8 @@ void Foam::tractionDisplacementFvPatchVectorField::autoMap
 )
 {
     fixedGradientFvPatchVectorField::autoMap(m);
-    traction_.autoMap(m);
-    pressure_.autoMap(m);
+    m(traction_, traction_);
+    m(pressure_, pressure_);
 }
 
 
