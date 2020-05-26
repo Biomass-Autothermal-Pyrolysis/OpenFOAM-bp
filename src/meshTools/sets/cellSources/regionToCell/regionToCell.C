@@ -86,12 +86,8 @@ void Foam::regionToCell::markRegionFaces
         {
             label facei = pp.start()+i;
             label bFacei = facei-mesh_.nInternalFaces();
-            if
-            (
-                selectedCell[faceCells[i]]
-             != selectedCell[nbrSelected[bFacei]]
-            )
-            {
+            if (selectedCell[faceCells[i]] != nbrSelected[bFacei])
+	    {
                 regionFace[facei] = true;
             }
         }
