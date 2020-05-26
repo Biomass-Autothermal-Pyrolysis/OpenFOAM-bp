@@ -74,7 +74,7 @@ scalarList W(const rhoReactionThermo& thermo)
     {
         return W<constFluidHThermoPhysics>(thermo);
     }
-    else if (isA<reactingMixture<constHThermoPhysics>>(thermo))
+    else if (isA<multiComponentMixture<constHThermoPhysics>>(thermo))
     {
         return W<constHThermoPhysics>(thermo);
     }
@@ -106,7 +106,7 @@ scalar h0
     {
         return h0<constFluidHThermoPhysics>(thermo, Y, p, T);
     }
-    else if (isA<reactingMixture<constHThermoPhysics>>(thermo))
+    else if (isA<multiComponentMixture<constHThermoPhysics>>(thermo))
     {
         return h0<constHThermoPhysics>(thermo, Y, p, T);
     }
