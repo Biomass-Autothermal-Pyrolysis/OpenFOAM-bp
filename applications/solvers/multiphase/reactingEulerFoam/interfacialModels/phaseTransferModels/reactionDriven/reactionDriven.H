@@ -2,94 +2,84 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
-
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
     for more details.
-
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
-
 Class
-    Foam::phaseTransferModel
-
+    Foam::phaseTransferModels::reactionDriven
 Description
-
+    Phase transfer model representing change from one phase to another due
+    to reactions. Intended for irreversible reactions.
 SourceFiles
-    phaseTransferModel.C
-
+    reactionDriven.C
 \*---------------------------------------------------------------------------*/
 
-#ifndef phaseTransferModel_H
-#define phaseTransferModel_H
+#ifndef reactionDriven_H
+#define reactionDriven_H
+
+#include "phaseTransferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "volFields.H"
-#include "dictionary.H"
-#include "runTimeSelectionTables.H"
 
 namespace Foam
 {
 
 class phasePair;
+class phaseModel;
+
+namespace phaseTransferModels
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class phaseTransferModel Declaration
+                       Class reactionDriven Declaration
 \*---------------------------------------------------------------------------*/
 
-class phaseTransferModel
+class reactionDriven
+:
+    public phaseTransferModel
 {
-protected:
+private:
 
-    // Protected data
+    // Private Data
 
-        //- Phase pair
-        const phasePair& pair_;
+        //- The name of the phase where the reactions occur
+        const word reactingName_;
+
+        //- Const reference to the reacting phase
+        const phaseModel& reactingPhase_;
+
+        //- Const reference to the other phase
+        const phaseModel& otherPhase_;
+
+        //- Sign used to multiply the source terms
+        const scalar sign_;
+
+        //- List of species changing phase
+        wordList species_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("phaseTransferModel");
-
-
-    // Declare runtime construction
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            phaseTransferModel,
-            dictionary,
-            (
-                const dictionary& dict,
-                const phasePair& pair
-            ),
-            (dict, pair)
-        );
-
-
-    // Static Data Members
-
-        //- Mass transfer rate dimensions
-        static const dimensionSet dimDmdt;
+    TypeName("reactionDriven");
 
 
     // Constructors
 
-        //- Construct from a dictionary and a phase pair
-        phaseTransferModel
+        //- Construct from components
+        reactionDriven
         (
             const dictionary& dict,
             const phasePair& pair
@@ -97,48 +87,31 @@ public:
 
 
     //- Destructor
-    virtual ~phaseTransferModel();
-
-
-    // Selectors
-
-        static autoPtr<phaseTransferModel> New
-        (
-            const dictionary& dict,
-            const phasePair& pair
-        );
+    virtual ~reactionDriven();
 
 
     // Member Functions
 
-        //- Return the active species for the current pair,
-        //  by default returns empty list
+        //- Return the active species for the current pair
         virtual const wordList activeSpecies() const
         {
-            return wordList();
+            return species_;
         };
 
-        //- Do possible corrections before dmdt calculations
-        virtual void correct() {};
-
         //- The mass transfer rate
-        virtual tmp<volScalarField> dmdt() const = 0;
+        virtual tmp<volScalarField> dmdt() const;
 
-	//- The mass transfer rate for the given species, this needs to be
-        //  implemented only if the model uses non uniform species transfer
+        //- The mass transfer rate for the given species
         virtual tmp<volScalarField> speciesDmdt
         (
             const word speciesName
-        ) const
-        {
-            NotImplemented;
-            return dmdt();
-        };
+        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace phaseTransferModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
