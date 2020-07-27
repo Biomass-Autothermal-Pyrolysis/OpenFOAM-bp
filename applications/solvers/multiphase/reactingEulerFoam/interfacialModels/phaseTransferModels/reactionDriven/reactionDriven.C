@@ -107,7 +107,7 @@ Foam::phaseTransferModels::reactionDriven::speciesDmdt
     volScalarField& Y =
         const_cast<volScalarField&>(reactingPhase_.Y(speciesName));
 
-    return sign_*reactingPhase_*reactingPhase_.R(Y) & Y;
+    return reactingPhase_*reactingPhase_.R(Y) & Y; //remove sign
 };
 
 
