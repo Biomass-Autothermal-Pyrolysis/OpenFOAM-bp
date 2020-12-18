@@ -1,0 +1,248 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermo.particles2;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+species
+(
+    lignin  
+    activeLignin 
+    cellulose  
+    activeCellulose  
+    hemicellulose  
+    activeHemicellulose 
+    tar  
+    gas  
+    char  
+);
+
+
+cellulose
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       162.0;
+    }
+    equationOfState
+    {
+        rho             700; 
+    }
+    thermodynamics
+    {
+        Cp              2000;
+        Hf              -6368.536e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.5;//0.7;
+        kappa           0.2;
+    }
+}
+
+activeCellulose
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       162.0;
+    }
+    equationOfState
+    {
+        rho             700; 
+    }
+    thermodynamics
+    {
+        Cp              2000;
+        Hf              -5920.87e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;//0.7;
+        kappa           0.2;
+    }
+}
+
+hemicellulose
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       132.0;
+    }
+    equationOfState
+    {
+        rho             700;
+    }
+    thermodynamics
+    {
+        Cp              2000;
+        Hf              -5362.29e3;
+    }
+    transport
+    {
+         mu              0;
+         Pr              0.7;
+        kappa           0.2;
+    }
+}
+
+activeHemicellulose
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       132.0;
+    }
+    equationOfState
+    {
+        rho             700;
+    }
+    thermodynamics
+    {
+        Cp              2000;
+        Hf              -5289.94e3;
+    }
+    transport
+    {
+         mu              0;
+         Pr              0.7;
+        kappa           0.2;
+    }
+}
+
+lignin
+{
+    specie
+    {
+        //nmoles          1;
+        molWeight       258;
+    }
+    equationOfState
+    {
+        rho             700;
+    }
+    thermodynamics
+    {
+        Cp              2000;
+        Hf              -3892.61e3;
+    }
+    transport
+    {
+         mu              0;
+         Pr              0.7;
+        kappa           0.2;
+    }
+}
+
+activeLignin
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       258;
+    }
+    equationOfState
+    {
+        rho             700;
+    }
+    thermodynamics
+    {
+        Cp              2000;
+        Hf              -2904.47e3;
+    }
+    transport
+    {
+         mu              0;
+         Pr              0.7;
+        kappa           0.2;
+    }
+}
+
+tar
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       90;
+    }
+    equationOfState
+    {
+        rho             400;
+    }
+    thermodynamics
+    {
+        Cp              1600;
+        Hf              -5e5;
+    }
+    transport
+    {
+         mu              5.63e-3;
+         Pr              0.7;
+        kappa           0.1;
+    }
+}
+
+char
+{
+    specie
+    {
+        //nMoles          10;
+        molWeight       12;
+    }
+    equationOfState
+    {
+        rho             220;
+    }
+    thermodynamics
+    {
+        Cp              1000;
+        Hf              -40.67e3;
+    }
+    transport
+    {
+         mu              0;
+         Pr              0.7;
+        kappa           0.085;
+    }
+}
+
+gas
+{   
+    specie
+    {
+        //nMoles          1;
+        molWeight       28.97;
+    }
+    equationOfState
+    {
+        rho             1.4;
+    }
+    thermodynamics
+    {
+        Cp              1100;
+        Hf              -2.95e6;
+    }
+    transport
+    {
+         mu              3e-5;
+         Pr              0.7;
+        kappa           0.1;
+    }
+}
+
+// ************************************************************************* //

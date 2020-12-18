@@ -1,0 +1,118 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermo.compressibleGas;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+species
+(
+    N2
+    O2
+    gas
+    tar
+);
+
+N2
+{
+    specie
+    {
+        molWeight   28.9;
+    }
+    equationOfState
+    {
+        rho             0.5044; 
+    }
+    thermodynamics
+    {
+        Cp          1113.5;
+        Hf          0;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+O2
+{
+    specie
+    {
+        molWeight       31.9988;
+    }
+    equationOfState
+    {
+        rho             0.5044; 
+    }
+    thermodynamics
+    {
+        Cp              1046.629; 
+        Hf              0;
+    }
+    transport
+    {
+        mu              4.1e-5;
+        Pr              0.74;
+    }
+}
+
+tar
+{
+    specie
+    {
+        //nMoles          1;
+        molWeight       90;
+    }
+    equationOfState
+    {
+        rho             400;
+    }
+    thermodynamics
+    {
+        Cp              1600;
+        Hf              -5e5;
+    }
+    transport
+    {
+        mu              5.63e-3;
+        Pr              0.7;
+        kappa           0.1;
+    }
+}
+
+gas
+{   
+    specie
+    {
+        //nMoles          1;
+        molWeight       28.97;
+    }
+    equationOfState
+    {
+        rho             1.4;
+    }
+    thermodynamics
+    {
+        Cp              1100;
+        Hf              -2.95e6;
+    }
+    transport
+    {
+        mu              3e-5;
+        Pr              0.7;
+        kappa           0.1;
+    }
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,122 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.01;
+
+H   30;//42.70;
+h1  6.175;
+h2  7.445;
+W   3.81;
+depth 1;
+
+cellSize  0.2;
+nW  #calc "round($W/$cellSize)";
+nh1 #calc "round(($h1)/$cellSize)";
+nh2 #calc "round(($h2-$h1)/$cellSize)";
+nh3 #calc "round(($H-$h2)/$cellSize)";
+
+vertices
+(
+    (0      0       0)
+    ($W     0       0)
+    ($W     $h1     0)
+    ($W     $h2     0)
+    ($W     $H      0)
+    (0      $H      0)
+    (0      $h2     0)
+    (0      $h1     0)
+
+    (0      0       $depth)
+    ($W     0       $depth)
+    ($W     $h1     $depth)
+    ($W     $h2     $depth)
+    ($W     $H      $depth)
+    (0      $H      $depth)
+    (0      $h2     $depth)
+    (0      $h1     $depth)
+);
+
+blocks
+(
+    hex (0 1 2 7 8 9 10 15) ($nW $nh1 1)
+    simpleGrading
+    (
+        (
+            (0.1 0.15 2)    // 20% y-dir, 30% cells, expansion = 4
+            (0.8 0.7 1)    // 60% y-dir, 40% cells, expansion = 1
+            (0.1 0.15 0.5)  // 20% y-dir, 30% cells, expansion = 0.25 (1/4)
+        )
+        1                   // y-direction expansion ratio
+        1                  // z-direction expansion ratio
+    )
+    hex (7 2 3 6 15 10 11 14) ($nW $nh2 1)
+    simpleGrading
+    (
+        (
+            (0.1 0.15 2)    // 20% y-dir, 30% cells, expansion = 4
+            (0.8 0.7 1)    // 60% y-dir, 40% cells, expansion = 1
+            (0.1 0.15 0.5)  // 20% y-dir, 30% cells, expansion = 0.25 (1/4)
+        )
+        1                  // y-direction expansion ratio
+        1                  // z-direction expansion ratio
+    )
+    hex (6 3 4 5 14 11 12 13) ($nW $nh3 1)
+    simpleGrading
+    (
+        (
+            (0.1 0.15 2)    // 20% y-dir, 30% cells, expansion = 4
+            (0.8 0.7 1)    // 60% y-dir, 40% cells, expansion = 1
+            (0.1 0.15 0.5)  // 20% y-dir, 30% cells, expansion = 0.25 (1/4)
+        )
+        1                  // y-direction expansion ratio
+        1                  // z-direction expansion ratio
+    )
+);
+
+
+edges
+(
+);
+
+patches
+(
+    patch gasInlet
+    (
+        (0 1 9 8)
+    )
+    patch biomassInlet
+    (
+        (6 7 15 14)
+    )
+    patch outlet
+    (
+        (5 4 12 13)
+    )
+    wall walls
+    (
+        (1 2 10 9)
+        (2 3 11 10)
+        (3 4 12 11)
+        (0 7 15 8)
+        (6 5 13 14)
+    )
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

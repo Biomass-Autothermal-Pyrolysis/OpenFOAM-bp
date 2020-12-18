@@ -1,0 +1,93 @@
+reactions
+{
+    cToAc
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "cellulose = activeCellulose";
+        A        2.8e19;
+        beta     0;
+        Ta       2.916e4;
+        Tcrit       200;
+    }
+    AcToTar
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "activeCellulose = 1.8tar";
+        A        3.28e14;
+        beta     0;
+        Ta       2.363e4;
+        Tcrit       200;
+    }
+    AcDevolitization
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "activeCellulose =  4.725char + 3.7607gas";//0.35char + 0.65gas";
+        A        1.3e10;
+        beta     0;
+        Ta       1.810e4;
+        Tcrit       200;
+    }
+    hcToAhc
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "hemicellulose = activeHemicellulose";
+        A        2.1e16;
+        beta     0;
+        Ta       2.256e4;
+        Tcrit       200;
+    }
+    AhcToTar
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "activeHemicellulose = 1.4667tar";
+        A        8.75e15;
+        beta     0;
+        Ta       2.434e4;
+        Tcrit       200;
+    }
+    AhcDevolitization
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "activeHemicellulose = 6.6char + 1.8857gas";//0.6char + 0.4gas";
+        A        2.6e11;
+        beta     0;
+        Ta       1.752e4;
+        Tcrit       200;
+    }
+    lToAl
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "lignin = activeLignin";
+        A        9.6e8;
+        beta     0;
+        Ta       1.294e4;
+        Tcrit       200;
+    }
+    AlToTar
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "activeLignin = 2.8667tar";
+        A        1.5e9;
+        beta     0;
+        Ta       1.7296e4;
+        Tcrit       200;
+    }
+    AlDevolitization
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "activeLignin = 16.125char + 2.3035gas";//0.75char + 0.25gas";
+        A        7.7e6;
+        beta     0;
+        Ta       1.3399e4;
+        Tcrit       200;
+    }
+    tarToGas
+    {
+        type     irreversibleArrheniusReaction;
+        reaction "tar = 3.2143gas";
+        A        4.28e6;
+        beta     0;
+        Ta       1.299e4;
+        Tcrit       200;
+    }
+}
