@@ -22,7 +22,7 @@ h2  7.445;
 W   3.81;
 depth 1;
 
-cellSize  0.2;
+cellSize  0.4;
 nW  #calc "round($W/$cellSize)";
 nh1 #calc "round(($h1)/$cellSize)";
 nh2 #calc "round(($h2-$h1)/$cellSize)";

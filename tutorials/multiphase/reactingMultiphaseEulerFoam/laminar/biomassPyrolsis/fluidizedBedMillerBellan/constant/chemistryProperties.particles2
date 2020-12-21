@@ -20,7 +20,7 @@ chemistryType
     chemistrySolver   ode;
 }
 
-chemistry           off;
+chemistry           on;
 
 initialChemicalTimeStep 1e-4;
 

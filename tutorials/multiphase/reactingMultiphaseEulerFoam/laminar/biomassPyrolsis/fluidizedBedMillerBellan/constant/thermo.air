@@ -75,7 +75,7 @@ tar
     }
     equationOfState
     {
-        rho             400;
+        rho             4;
     }
     thermodynamics
     {
