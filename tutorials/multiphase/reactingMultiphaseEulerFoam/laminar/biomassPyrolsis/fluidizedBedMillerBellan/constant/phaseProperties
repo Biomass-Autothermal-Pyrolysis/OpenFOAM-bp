@@ -226,7 +226,7 @@ kineticTheory
     PrincetonCoeffs
     {
 	alphaMinFrictionByAlphap 0.97;
-	alphaMinFriction	0.55;
+	alphaMinFriction	0.6;
 	Fr			0.05;
 	eta			2;
 	p			5;
