@@ -38,9 +38,11 @@ const char* const Foam::Tuple2<Foam::word, Foam::scalar>::typeName
 namespace Foam
 {
     makeIRReactions(gasHThermoPhysics, LangmuirHinshelwoodReactionRate)
+    makeIRReactions(constGasHThermoPhysics, LangmuirHinshelwoodReactionRate)
     makeIRReactions(icoPoly8HThermoPhysics, LangmuirHinshelwoodReactionRate)
 
     makeIRReactions(gasEThermoPhysics, LangmuirHinshelwoodReactionRate)
+    makeIRReactions(constGasEThermoPhysics, LangmuirHinshelwoodReactionRate)
     makeIRReactions(icoPoly8EThermoPhysics, LangmuirHinshelwoodReactionRate)
 }
 

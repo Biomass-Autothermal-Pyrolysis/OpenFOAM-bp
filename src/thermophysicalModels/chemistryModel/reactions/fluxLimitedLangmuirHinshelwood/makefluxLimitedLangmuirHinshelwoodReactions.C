@@ -40,7 +40,21 @@ namespace Foam
 
     makeGeneralReaction
     (
+        constGasHThermoPhysics,
+        IrreversibleReaction,
+        fluxLimitedLangmuirHinshelwoodReactionRate
+    )
+
+    makeGeneralReaction
+    (
         gasEThermoPhysics,
+        IrreversibleReaction,
+        fluxLimitedLangmuirHinshelwoodReactionRate
+    )
+
+    makeGeneralReaction
+    (
+        constGasEThermoPhysics,
         IrreversibleReaction,
         fluxLimitedLangmuirHinshelwoodReactionRate
     )
