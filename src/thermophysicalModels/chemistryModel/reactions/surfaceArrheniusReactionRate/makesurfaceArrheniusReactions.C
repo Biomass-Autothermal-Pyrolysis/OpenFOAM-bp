@@ -82,6 +82,34 @@ namespace Foam
         ReversibleReaction,
         surfaceArrheniusReactionRate
     )
+
+    makeGeneralReaction
+    (
+        constHThermoPhysics,
+        IrreversibleReaction,
+        surfaceArrheniusReactionRate
+    )
+
+    makeGeneralReaction
+    (
+        constHThermoPhysics,
+        ReversibleReaction,
+        surfaceArrheniusReactionRate
+    )
+
+    makeGeneralReaction
+    (
+        constEThermoPhysics,
+        IrreversibleReaction,
+        surfaceArrheniusReactionRate
+    )
+
+    makeGeneralReaction
+    (
+        constEThermoPhysics,
+        ReversibleReaction,
+        surfaceArrheniusReactionRate
+    )
 }
 
 // ************************************************************************* //
