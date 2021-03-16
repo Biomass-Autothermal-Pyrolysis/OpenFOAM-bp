@@ -39,10 +39,12 @@ namespace Foam
 {
     makeIRReactions(gasHThermoPhysics, LangmuirHinshelwoodReactionRate)
     makeIRReactions(constGasHThermoPhysics, LangmuirHinshelwoodReactionRate)
+    makeIRReactions(constHThermoPhysics, LangmuirHinshelwoodReactionRate)
     makeIRReactions(icoPoly8HThermoPhysics, LangmuirHinshelwoodReactionRate)
 
     makeIRReactions(gasEThermoPhysics, LangmuirHinshelwoodReactionRate)
     makeIRReactions(constGasEThermoPhysics, LangmuirHinshelwoodReactionRate)
+    makeIRReactions(constEThermoPhysics, LangmuirHinshelwoodReactionRate)
     makeIRReactions(icoPoly8EThermoPhysics, LangmuirHinshelwoodReactionRate)
 }
 
