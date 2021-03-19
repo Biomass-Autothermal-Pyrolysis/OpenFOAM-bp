@@ -40,13 +40,9 @@ phaseSurfaceArrheniusReactionRate
     ArrheniusReactionRate(species, dict),
     phaseName_(dict.lookup("phase")),
     ob_(ob),
+    phase_(ob_.lookupObject<phaseModel>(IOobject::groupName("alpha", phaseName_))),
     tA_(nullptr)
-{
-    const phaseModel& phase =
-        ob_.lookupObject<phaseModel>(IOobject::groupName("alpha", phaseName_));
-
-    tA_ = Foam::constant::mathematical::pi*sqr(phase.dPtr()->d()); 
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -59,6 +55,7 @@ inline Foam::scalar Foam::phaseSurfaceArrheniusReactionRate::operator()
     const label li
 ) const
 {
+    tA_ = Foam::constant::mathematical::pi*sqr(phase_.dPtr()->d());
     return ArrheniusReactionRate::operator()(p, T, c, li)*tA_()[li];
 }
 
@@ -71,6 +68,7 @@ inline Foam::scalar Foam::phaseSurfaceArrheniusReactionRate::ddT
     const label li
 ) const
 {
+    tA_ = Foam::constant::mathematical::pi*sqr(phase_.dPtr()->d());
     return ArrheniusReactionRate::ddT(p, T, c, li)*tA_()[li];
 }
 

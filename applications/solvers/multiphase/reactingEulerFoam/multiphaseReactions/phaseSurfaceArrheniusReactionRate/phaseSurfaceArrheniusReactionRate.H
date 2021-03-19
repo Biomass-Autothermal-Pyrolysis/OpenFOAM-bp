@@ -42,6 +42,7 @@ SourceFiles
 
 #include "ArrheniusReactionRate.H"
 #include "speciesTable.H"
+#include "phaseSystem.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -70,6 +71,9 @@ class phaseSurfaceArrheniusReactionRate
 
         //- Reference to the object registry
         const objectRegistry& ob_;
+
+        //- Reference to the phase
+        const phaseModel& phase_;
 
         //- Surface area per unit volume field
         mutable tmp<volScalarField> tA_;
