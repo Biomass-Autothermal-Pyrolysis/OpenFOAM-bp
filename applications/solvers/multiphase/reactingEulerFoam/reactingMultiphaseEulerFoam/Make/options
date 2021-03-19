@@ -18,6 +18,7 @@ EXE_LIBS = \
     -lreactingMultiphaseSystem \
     -lreactingEulerianInterfacialModels \
     -lreactingEulerianInterfacialCompositionModels \
+    -lmultiphaseReactions \
     -lmultiphaseReactingTurbulenceModels \
     -lfiniteVolume \
     -lfvOptions \
