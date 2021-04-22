@@ -11,6 +11,7 @@ wmake $targetType interfacialModels
 wmake $targetType interfacialCompositionModels
 wmake $targetType derivedFvPatchFields
 wmake $targetType kineticTheoryModels
+wmake $targetType multiphaseReactions
 reactingTwoPhaseEulerFoam/Allwmake $targetType $*
 reactingMultiphaseEulerFoam/Allwmake $targetType $*
 wmake $targetType functionObjects
