@@ -72,14 +72,8 @@ class phaseSolidArrheniusReactionRate
         //- Reference to the object registry
         const objectRegistry& ob_;
 
-        //- Reference to the phase
-        const phaseModel& phase_;
-
         //- Reactant name
         const word reactantName_;
-
-        //- Reactant index
-        const label r_;
 
         //- concentration of speice
         mutable tmp<volScalarField> tA_;
