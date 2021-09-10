@@ -16,4 +16,3 @@ LIB_LIBS = \
     -lchemistryModel \
     -lfiniteVolume \
     -lreactingPhaseSystem
-    

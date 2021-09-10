@@ -12,6 +12,7 @@ dragModels/SyamlalOBrien/SyamlalOBrien.C
 dragModels/TomiyamaCorrelated/TomiyamaCorrelated.C
 dragModels/TomiyamaAnalytic/TomiyamaAnalytic.C
 dragModels/Tenneti/Tenneti.C
+dragModels/Mehrabadi/Mehrabadi.C
 dragModels/TomiyamaKataokaZunSakaguchi/TomiyamaKataokaZunSakaguchi.C
 dragModels/WenYu/WenYu.C
 dragModels/IshiiZuber/IshiiZuber.C

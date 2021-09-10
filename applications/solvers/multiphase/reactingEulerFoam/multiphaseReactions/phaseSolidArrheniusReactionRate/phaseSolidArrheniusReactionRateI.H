@@ -40,13 +40,9 @@ phaseSolidArrheniusReactionRate
     ArrheniusReactionRate(species, dict),
     phaseName_(dict.lookup("phase")),
     ob_(ob),
-    phase_(ob_.lookupObject<phaseModel>(IOobject::groupName("alpha", phaseName_))),
     reactantName_(dict.lookup("reactant")),
-    r_(1),
-    tA_(nullptr) // maybe define this as a scalar?
-{
-    
-    Info << endl << phase_.Y()[r_] << endl;}
+    tA_(ob_.lookupObject<volScalarField>(reactantName_)) // maybe define this as a scalar?
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -61,7 +57,8 @@ inline Foam::scalar Foam::phaseSolidArrheniusReactionRate::operator()
 {
     //tA_ = phase_.Y()[r_][li];
     //Info << endl << phase_.Y()[r_][li] << endl;
-    return ArrheniusReactionRate::operator()(p, T, c, li)*phase_.Y()[r_][li];//*tA_()[li];
+    Info << endl << tA_()[li] << endl;
+    return ArrheniusReactionRate::operator()(p, T, c, li)*tA_()[li];//phase_.Y()[r_][li];//*tA_()[li];
 }
 
 
@@ -74,7 +71,7 @@ inline Foam::scalar Foam::phaseSolidArrheniusReactionRate::ddT
 ) const
 {
     //tA_ = phase_.Y()[r_];
-    return ArrheniusReactionRate::ddT(p, T, c, li)*phase_.Y()[r_][li];//*tA_()[li];
+    return ArrheniusReactionRate::ddT(p, T, c, li)*tA_()[li];//phase_.Y()[r_][li];//*tA_()[li];
 }
 
 
