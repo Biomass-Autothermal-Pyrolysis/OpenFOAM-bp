@@ -1,0 +1,37 @@
+/*species
+(
+    HAA
+    Glyoxal
+    CH3CHO 
+    //C3H6O
+    HMFU
+    CO2
+    CO
+    CH4
+    H2O
+    LVG
+    H2
+    CH2O
+    CH3OH
+    C2H5OH
+    XYLOSE
+    pCoumaryl
+    Phenol 
+    C3H4O2
+    C2H4
+    C11H12O4
+    O2
+    N2
+    ADL3
+    HCOOH
+    C3H6O2
+    FURF
+    ACAC 
+    ACROL
+    Anisole
+    //FFA
+);
+*/
+reactions
+{
+}
