@@ -55,10 +55,7 @@ inline Foam::scalar Foam::phaseSolidArrheniusReactionRate::operator()
     const label li
 ) const
 {
-    //tA_ = phase_.Y()[r_][li];
-    //Info << endl << phase_.Y()[r_][li] << endl;
-    Info << endl << tA_()[li] << endl;
-    return ArrheniusReactionRate::operator()(p, T, c, li)*tA_()[li];//phase_.Y()[r_][li];//*tA_()[li];
+    return ArrheniusReactionRate::operator()(p, T, c, li)*tA_()[li];
 }
 
 
@@ -70,8 +67,7 @@ inline Foam::scalar Foam::phaseSolidArrheniusReactionRate::ddT
     const label li
 ) const
 {
-    //tA_ = phase_.Y()[r_];
-    return ArrheniusReactionRate::ddT(p, T, c, li)*tA_()[li];//phase_.Y()[r_][li];//*tA_()[li];
+    return ArrheniusReactionRate::ddT(p, T, c, li)*tA_()[li];
 }
 
 

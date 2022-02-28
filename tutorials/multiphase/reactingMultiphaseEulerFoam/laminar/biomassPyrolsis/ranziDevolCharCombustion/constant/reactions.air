@@ -1,0 +1,46 @@
+/*species
+(
+    HAA
+    Glyoxal
+    CH3CHO 
+    //C3H6O
+    HMFU
+    CO2
+    CO
+    CH4
+    H2O
+    LVG
+    H2
+    CH2O
+    CH3OH
+    C2H5OH
+    XYLOSE
+    pCoumaryl
+    Phenol 
+    C3H4O2
+    C2H4
+    C11H12O4
+    O2
+    N2
+    ADL3
+    HCOOH
+    C3H6O2
+    FURF
+    ACAC 
+    ACROL
+    Anisole
+    //FFA
+);
+*/
+reactions
+{
+    charCombustionGas
+    {
+        type            irreversibleArrheniusReaction;
+        reaction        "GCO + 0.5O2 = CO";
+        A               1e+12;//1.86e+6;
+        beta            0;
+        Ta              0;//13711.811;
+        //Tcrit       200;
+    }
+}

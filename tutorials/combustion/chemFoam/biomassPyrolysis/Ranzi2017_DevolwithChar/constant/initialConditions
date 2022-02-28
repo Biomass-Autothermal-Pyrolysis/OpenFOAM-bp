@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      initialConditions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+constantProperty temperature;
+
+fractionBasis   mass;
+
+fractions
+{
+    CELL            0.442;
+    GMSW            0;
+    XYHW            0.347;
+    LIGC            0.036;
+    LIGH            0.108;
+    LIGO            0.067;
+    TANN            0;//0.032;
+    TGL             0;//0.037;
+    //ACQUA           0.032;
+    O2              0.1;
+}
+
+p               101325;//1.36789e+05;
+
+T              773;
+
+
+// ************************************************************************* //

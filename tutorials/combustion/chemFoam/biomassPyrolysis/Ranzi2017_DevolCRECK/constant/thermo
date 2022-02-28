@@ -1,0 +1,3496 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermo.incompressiblePoly;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+species
+151
+(
+CELL  //7
+CELLA
+CHAR
+GMSW  //10
+XYHW
+HCE1
+HCE2
+LIGC
+LIGCC  //15
+LIGH
+LIGOH
+LIGO
+LIG
+HMWL  //20
+HE
+AR
+N2
+O2
+H2  //25
+H2O
+H2O2
+CO
+CO2
+CH2O  //30
+HCOOH
+HCO3H
+CH4
+CH3OH
+CH3OOH  //35
+C2H2
+CH2CO
+C2H2O2
+C2H4
+C2H4O //40
+CH3CHO
+CH3COOH
+C2H4O2
+C2-OQOOH
+CH3CO3H
+C2H6
+C2H5OH
+GLIET
+C2H5OOH
+C3H2
+AC3H4
+PC3H4
+C2H3CHO
+C3H4O2
+C3H4O3
+C3H6
+C2H5CHO
+CH3COCH3
+C3H6O
+C3H6O2
+C3H5OOH
+ACETOL
+C3-OQOOH
+C3H8
+IC3H7OH
+NC3H7OH
+C3H7OOH
+GLYCEROL
+C4H2
+C4H4
+CH2CCHCHO
+C4H4O
+C4H6
+IC3H5CHO
+C4H6O2
+IC4H8
+NC4H8
+CYC5H4O
+C5H4O2
+CYC5H6
+MEFU2
+C5H8
+C5H8O4
+C6H6
+C6H5OH
+C6H6O3
+MCPTD
+DMF
+C6H8O4
+C6H10O5
+C6H5CHO
+C7H8
+C6H5OCH3
+CRESOL
+C8H10O3
+C9H10O2
+C10H8
+C11H12O4
+O
+H
+OH
+HO2
+C
+CH
+HCO
+HCO3
+CH2S
+CH2
+CH3
+CH2OH
+CH3O
+CH3OO
+C2H
+HCCO
+C2H3
+CH3CO
+CH2CHO
+CH3CO3
+C2H5
+C2H4OH
+CH3CHOH
+C2H5OO
+C2-QOOH
+C2-OOQOOH
+C3H3
+CH2CCH3
+CHCHCH3
+CH2CHCH2
+RALD3B
+RALD3G
+CH3COCH2
+C3H5OO
+NC3H7
+IC3H7
+NC3H7O
+IC3H7OO
+IC3-QOOH
+NC3H7OO
+NC3-QOOH
+IC3-OOQOOH
+NC3-OOQOOH
+C4H3
+C4H3O
+C4H5
+IC4H7
+CH2C3H5
+SC4H7
+CYC5H5
+C5H5O
+C5H7
+C6H5
+C6H5O
+DMF-3YL
+C6H4CH3
+C7H7
+RCRESOLC
+RCRESOLO
+)
+;
+
+CELL
+{
+    specie
+    {
+        molWeight       162.1436;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp             2000 ;//710;
+        Hf              -6368.56e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+CELLA
+{
+    specie
+    {
+        molWeight       162.1436;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf             -5920.87e3 ;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+CHAR
+{
+    specie
+    {
+        molWeight       12.01115;
+    }
+    equationOfState
+    {
+        rho             220;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              -40.67e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+GMSW
+{
+    specie
+    {
+        molWeight       132.11711;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              -5748.166e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+XYHW
+{
+    specie
+    {
+        molWeight       132.11711;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              -6020.476e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+HCE1
+{
+    specie
+    {
+        molWeight       132.11711;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              -5509.186e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+HCE2
+{
+    specie
+    {
+        molWeight       132.11711;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf             -6295.786e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+LIGC
+{
+    specie
+    {
+        molWeight       258.27643;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf             -4206.566e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+LIGCC
+{
+    specie
+    {
+        molWeight       258.27643;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp             2000;//1 100;//710;
+        Hf              -3137.028e3;//0;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+LIGH
+{
+    specie
+    {
+        molWeight       436.46306;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp             2000;// 100;//710;
+        Hf             -4142.89e3;// 0;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+LIGOH
+{
+    specie
+    {
+        molWeight       378.38239;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//100;//710;
+        Hf              -3653.14e3;//0;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+LIGO
+{
+    specie
+    {
+        molWeight       422.39234;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              -4715.21e3;//0;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+LIG
+{
+    specie
+    {
+        molWeight       208.21589;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              -2911.38e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+HMWL
+{
+    specie
+    {
+        molWeight       380.48836;
+    }
+    equationOfState
+    {
+        rho             700;//
+    }
+    thermodynamics
+    {
+        Cp              2000;//710;
+        Hf              438.91e3;
+    }
+    transport
+    {
+        mu              0;
+        Pr              0.7;
+    }
+}
+
+HE
+{
+    specie
+    {
+        molWeight   4.0026;
+    }
+    equationOfState
+    {
+        rho             0.0631;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          5192.875;
+        Hf          0;
+    }
+    transport
+    {
+        mu          3.7e-05;
+        Pr          0.72;
+    }
+}
+
+AR
+{
+    specie
+    {
+        molWeight   39.948;
+    }
+    equationOfState
+    {
+        rho             0.6298;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          520.3014;
+        Hf          0;
+    }
+    transport
+    {
+        mu          3.5e-05;
+        Pr          0.7;
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight   28.9;
+    }
+    equationOfState
+    {
+        rho             0.5044;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1113.5;
+        Hf          0;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+O2
+{
+    specie
+    {
+        molWeight       31.9988;
+    }
+    equationOfState
+    {
+        rho             0.5044;//1.4;
+    }
+    thermodynamics
+    {
+        Cp              1046.629;//100;
+        Hf              0;
+    }
+    transport
+    {
+        mu              4.1e-5;
+        Pr              0.74;
+    }
+}
+
+H2
+{
+    specie
+    {
+        molWeight       2.01594;
+    }
+    equationOfState
+    {
+        rho             0.0317;//700;//
+    }
+    thermodynamics
+    {
+        Cp              14676.629;//710;
+        Hf              0;
+    }
+    transport
+    {
+        mu              1.5e-5;
+        Pr              0.67;
+    }
+}
+
+H2O
+{
+    specie
+    {
+        molWeight       18.01534;
+    }
+    equationOfState
+    {
+        rho             0.2856;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2125.5;//710;
+        Hf             -13433.33e3 ;
+    }
+    transport
+    {
+        mu              2.4e-5;
+        Pr              1;
+    }
+}
+
+H2O2
+{
+    specie
+    {
+        molWeight   34.0147;
+    }
+    equationOfState
+    {
+        rho             0.5362;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1740.685;
+        Hf          -4001.484e3;
+    }
+    transport
+    {
+        mu          3.2e-05;
+        Pr          0.7;
+    }
+}
+
+CO
+{
+    specie
+    {
+        molWeight       28.01055;
+    }
+    equationOfState
+    {
+        rho            0.442;// 700;//
+    }
+    thermodynamics
+    {
+        Cp              1131.685;//710;
+        Hf              -3946.43e3;
+    }
+    transport
+    {
+        mu              3.2e-5;
+        Pr              0.7;
+    }
+}
+
+CO2
+{
+    specie
+    {
+        molWeight       44.00995;
+    }
+    equationOfState
+    {
+        rho             0.689;//700;//
+    }
+    thermodynamics
+    {
+        Cp              1159.855;//710;
+        Hf              -8943.18e3;
+    }
+    transport
+    {
+        mu              3.5e-5;
+        Pr              0.72;
+    }
+}
+
+CH2O
+{
+    specie
+    {
+        molWeight       30.02649;
+    }
+    equationOfState
+    {
+        rho             0.4733;//700;//
+    }
+    thermodynamics
+    {
+        Cp              1829.05;//710;
+        Hf              -3863.33e3;
+    }
+    transport
+    {
+        mu              2.5e-5;
+        Pr              0.7;
+    }
+}
+
+HCOOH
+{
+    specie
+    {
+        molWeight       46.02589;
+    }
+    equationOfState
+    {
+        rho             0.7256;//
+    }
+    thermodynamics
+    {
+        Cp              1645.058;//710;
+        Hf              -9255.217e3;
+    }
+    transport
+    {
+        mu              4.5e-5;
+        Pr              0.7;
+    }
+}
+
+HCO3H
+{
+    specie
+    {
+        molWeight   62.0253;
+    }
+    equationOfState
+    {
+        rho             0.9779;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1594.123;
+        Hf          -4546.961e3;
+    }
+    transport
+    {
+        mu          3.1e-05;
+        Pr          0.71;
+    }
+}
+
+CH4
+{
+    specie
+    {
+        molWeight       16.04303;
+    }
+    equationOfState
+    {
+        rho             0.253;//700;//
+    }
+    thermodynamics
+    {
+        Cp              3829.175;//710;
+        Hf              -4658.31e3;
+    }
+    transport
+    {
+        mu              2.2e-5;
+        Pr              0.72;
+    }
+}
+CH3OH
+{
+    specie
+    {
+        molWeight       32.04243;
+    }
+    equationOfState
+    {
+        rho             0.505;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2434.91;//710;
+        Hf              -6289.08e3;
+    }
+    transport
+    {
+        mu              2.6e-5;
+        Pr              0.7;
+    }
+}
+
+CH3OOH
+{
+    specie
+    {
+        molWeight   48.04183;
+    }
+    equationOfState
+    {
+        rho             0.7574;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2124.483;
+        Hf          -2756.598e3;
+    }
+    transport
+    {
+        mu          2.7e-05;
+        Pr          0.68;
+    }
+}
+
+C2H2
+{
+    specie
+    {
+        molWeight   26.0824;
+    }
+    equationOfState
+    {
+        rho             0.410524;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2428.955;
+        Hf          8708.322e3;
+    }
+    transport
+    {
+        mu          1.8e-05;
+        Pr          0.67;
+    }
+}
+
+CH2CO
+{
+    specie
+    {
+        molWeight   42.0376;
+    }
+    equationOfState
+    {
+        rho             0.66277;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1850.352;
+        Hf          -1233.892e3;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+C2H2O2
+{
+    specie
+    {
+        molWeight       58.03704;
+    }
+    equationOfState
+    {
+        rho              0.903;//700;//
+    }
+    thermodynamics
+    {
+        Cp              1200;//710;
+        Hf             -3650.18e3;
+    }
+    transport
+    {
+        mu              5e-5;
+        Pr              0.7;
+    }
+}
+
+C2H4
+{
+    specie
+    {
+        molWeight       28.05418;
+    }
+    equationOfState
+    {
+        rho              0.437;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2933.208;//710;
+        Hf              1867.501e3;
+    }
+    transport
+    {
+        mu              2.3e-5;
+        Pr              0.7;
+    }
+}
+
+C2H4O
+{
+    specie
+    {
+        molWeight   44.05358;
+    }
+    equationOfState
+    {
+        rho             0.694558;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2292.44;
+        Hf          -1200.010e3;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+CH3CHO
+{
+    specie
+    {
+        molWeight       44.05358;
+    }
+    equationOfState
+    {
+        rho            0.6863;// 700;//
+    }
+    thermodynamics
+    {
+        Cp              2250.125;//710;
+        Hf              -3756.09e3;
+    }
+    transport
+    {
+        mu              3.4e-5;
+        Pr              0.72;
+    }
+}
+
+CH3COOH
+{
+    specie
+    {
+        molWeight       60.05298;
+    }
+    equationOfState
+    {
+        rho             0.9467;//700;//
+    }
+    thermodynamics
+    {
+        Cp              1996.039;//710;
+        Hf              -8075.033e3;
+    }
+    transport
+    {
+        mu              4.8e-5;
+        Pr              0.7;
+    }
+}
+
+C2H4O2
+{
+    specie
+    {
+        molWeight       60.05298;
+    }
+    equationOfState
+    {
+        rho             0.946;//
+    }
+    thermodynamics
+    {
+        Cp              1450;//710;
+        Hf              -5125.4e3;
+    }
+    transport
+    {
+       mu              5e-5;
+       Pr              0.7;
+    }
+}
+
+C2-OQOOH
+{
+    specie
+    {
+        molWeight   76.05238;
+    }
+    equationOfState
+    {
+        rho             1.1991;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1877.364;
+        Hf          -3251.947e3;
+    }
+    transport
+    {
+        mu          3.9e-05;
+        Pr          0.72;
+    }
+}
+
+CH3CO3H
+{
+    specie
+    {
+        molWeight   76.05238;
+    }
+    equationOfState
+    {
+        rho             1.1991;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1801.271;
+        Hf          -4439.066e3;
+    }
+    transport
+    {
+        mu          3.6e-05;
+        Pr          0.73;
+    }
+}
+
+C2H6
+{
+    specie
+    {
+        molWeight   30.07012;
+    }
+    equationOfState
+    {
+        rho             0.47409;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3511.03;
+        Hf          -2795.030e3;
+    }
+    transport
+    {
+        mu          2.8e-05;
+        Pr          0.705;
+    }
+}
+
+C2H5OH
+{
+    specie
+    {
+        molWeight       46.06952;
+    }
+    equationOfState
+    {
+        rho             0.725;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2600;//710;
+        Hf              -5120.85e3;
+    }
+    transport
+    {
+        mu              3.2e-5;
+        Pr              0.7;
+    }
+}
+
+GLIET
+{
+    specie
+    {
+        molWeight   62.0682;
+    }
+    equationOfState
+    {
+        rho             0.9786;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2271.327;
+        Hf          -6201.772e3;
+    }
+    transport
+    {
+        mu          3.6e-05;
+        Pr          0.71;
+    }
+}
+
+C2H5OOH
+{
+    specie
+    {
+        molWeight   62.06892;
+    }
+    equationOfState
+    {
+        rho             0.97859;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2351.452;
+        Hf          -2640.296e2;
+    }
+    transport
+    {
+        mu          3.3e-05;
+        Pr          0.69;
+    }
+}
+
+C3H2
+{
+    specie
+    {
+        molWeight   38.04939;
+    }
+    equationOfState
+    {
+        rho             0.59989;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2044.503;
+        Hf          14251.126e3;
+    }
+    transport
+    {
+        mu          2.9e-05;
+        Pr          0.67;
+    }
+}
+
+AC3H4
+{
+    specie
+    {
+        molWeight   40.06533;
+    }
+    equationOfState
+    {
+        rho             0.631678;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2609.577;
+        Hf          4970.908e3;
+    }
+    transport
+    {
+        mu          2.4e-05;
+        Pr          0.7;
+    }
+}
+
+PC3H4
+{
+    specie
+    {
+        molWeight   40.06533;
+    }
+    equationOfState
+    {
+        rho             0.63167;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2592.366;
+        Hf          4626.939e3;
+    }
+    transport
+    {
+        mu          2.4e-05;
+        Pr          0.7;
+    }
+}
+
+C2H3CHO
+{
+    specie
+    {
+        molWeight       56.06473;
+    }
+    equationOfState
+    {
+        rho             0.8839;//;//
+    }
+    thermodynamics
+    {
+        Cp              2249.853;//710;
+        Hf              -1516.503;
+    }
+    transport
+    {
+        mu              5e-5;
+        Pr              0.7;
+    }
+}
+
+C3H4O2
+{
+    specie
+    {
+        molWeight   72.06413;
+    }
+    equationOfState
+    {
+        rho             1.136175;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2044.993;
+        Hf          -3626.308e3;
+    }
+    transport
+    {
+        mu          4.1e-05;
+        Pr          0.72;
+    }
+}
+
+C3H4O3
+{
+    specie
+    {
+        molWeight   88.06353;
+    }
+    equationOfState
+    {
+        rho             1.388427;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1806.781;
+        Hf          -4883.089e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.7;
+    }
+}
+
+C3H6
+{
+    specie
+    {
+        molWeight   42.08127;
+    }
+    equationOfState
+    {
+        rho             0.66346;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2998.715;
+        Hf          482.353e3;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+C2H5CHO
+{
+    specie
+    {
+        molWeight       58.08067;
+    }
+    equationOfState
+    {
+        rho             0.903;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2602.847;//710;
+        Hf              -3249.023e3;
+    }
+    transport
+    {
+        mu              5e-5;
+        Pr              0.7;
+    }
+}
+
+CH3COCH3
+{
+    specie
+    {
+        molWeight   58.08067;
+    }
+    equationOfState
+    {
+        rho             0.91512;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2464.856;
+        Hf          -3715.306e3;
+    }
+    transport
+    {
+        mu          3.6e-05;
+        Pr          0.707;
+    }
+}
+
+C3H6O
+{
+    specie
+    {
+        molWeight   58.08067;
+    }
+    equationOfState
+    {
+        rho             0.9157;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2530.587;
+        Hf          -1601.234e3;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+C3H6O2
+{
+    specie
+    {
+        molWeight       74.08007;
+    }
+    equationOfState
+    {
+        rho            1.1679;// 700;//
+    }
+    thermodynamics
+    {
+        Cp              2187.472;//710;
+        Hf              -4535.959e3;
+    }
+    transport
+    {
+        mu              3.5e-5;
+        Pr              0.7;
+    }
+}
+
+C3H5OOH
+{
+    specie
+    {
+        molWeight   74.08007;
+    }
+    equationOfState
+    {
+        rho             1.16796;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2308.225;
+        Hf          -760.807e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.7;
+    }
+}
+
+ACETOL
+{
+    specie
+    {
+        molWeight   74.08007;
+    }
+    equationOfState
+    {
+        rho             1.16786;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2163.48;
+        Hf          -4937.328e3;
+    }
+    transport
+    {
+        mu          4.6e-05;
+        Pr          0.71;
+    }
+}
+
+C3-OQOOH
+{
+    specie
+    {
+        molWeight   90.07947;
+    }
+    equationOfState
+    {
+        rho             1.4202;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2156.618;
+        Hf          -3141.372e3;
+    }
+    transport
+    {
+        mu          4.1e-05;
+        Pr          0.71;
+    }
+}
+
+C3H8
+{
+    specie
+    {
+        molWeight   44.09721;
+    }
+    equationOfState
+    {
+        rho             0.69524;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3437.565;
+        Hf          -2359.170e3;
+    }
+    transport
+    {
+        mu          3.3e-05;
+        Pr          0.68;
+    }
+}
+
+IC3H7OH
+{
+    specie
+    {
+        molWeight   60.09661;
+    }
+    equationOfState
+    {
+        rho             0.94795;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2862.855;
+        Hf          -4560.969e3;
+    }
+    transport
+    {
+        mu          4.1e-05;
+        Pr          0.72;
+    }
+}
+
+NC3H7OH
+{
+    specie
+    {
+        molWeight   60.09661;
+    }
+    equationOfState
+    {
+        rho             0.947495;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2717.366;
+        Hf          -4242.549e3;
+    }
+    transport
+    {
+        mu          3.7e-05;
+        Pr          0.7;
+    }
+}
+
+C3H7OOH
+{
+    specie
+    {
+        molWeight   76.09601;
+    }
+    equationOfState
+    {
+        rho             1.199745;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2586.676;
+        Hf          -2505.003e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.72;
+    }
+}
+
+GLYCEROL
+{
+    specie
+    {
+        molWeight   92.09541;
+    }
+    equationOfState
+    {
+        rho             1.451995;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2247.171;
+        Hf          -6229.150e3;
+    }
+    transport
+    {
+        mu          4.8e-05;
+        Pr          0.71;
+    }
+}
+
+C4H2
+{
+    specie
+    {
+        molWeight   50.06054;
+    }
+    equationOfState
+    {
+        rho             0.789265;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2083.134;
+        Hf          9336.308e3;
+    }
+    transport
+    {
+        mu          3.6e-05;
+        Pr          0.69;
+    }
+}
+
+C4H4
+{
+    specie
+    {
+        molWeight   52.07648;
+    }
+    equationOfState
+    {
+        rho             0.821048;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2448.437;
+        Hf          5463.515e3;
+    }
+    transport
+    {
+        mu          3.5e-05;
+        Pr          0.7;
+    }
+}
+
+CH2CCHCHO
+{
+    specie
+    {
+        molWeight   68.07588;
+    }
+    equationOfState
+    {
+        rho             1.073298;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2131.5050;
+        Hf          961.073e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.715;
+    }
+}
+
+C4H4O
+{
+    specie
+    {
+        molWeight   68.07588;
+    }
+    equationOfState
+    {
+        rho             1.073298;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2230.234;
+        Hf          -624.512e3;
+    }
+    transport
+    {
+        mu          3.2e-05;
+        Pr          0.71;
+    }
+}
+
+C4H6
+{
+    specie
+    {
+        molWeight   54.09242;
+    }
+    equationOfState
+    {
+        rho             0.852832;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2766.898;
+        Hf          2035.111e3;
+    }
+    transport
+    {
+        mu          3.1e-05;
+        Pr          0.67;
+    }
+}
+
+IC3H5CHO
+{
+    specie
+    {
+        molWeight   70.09182;
+    }
+    equationOfState
+    {
+        rho             1.10582;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2452.567;
+        Hf          -1632.008e3;
+    }
+    transport
+    {
+        mu          4.2e-05;
+        Pr          0.712;
+    }
+}
+
+C4H6O2
+{
+    specie
+    {
+        molWeight   86.09122;
+    }
+    equationOfState
+    {
+        rho             1.3573;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2106.807;
+        Hf          -3810.213e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.72;
+    }
+}
+
+IC4H8
+{
+    specie
+    {
+        molWeight   56.10836;
+    }
+    equationOfState
+    {
+        rho             0.884616;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3066.491;
+        Hf          -284.537e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.7;
+    }
+}
+
+NC4H8
+{
+    specie
+    {
+        molWeight   56.10836;
+    }
+    equationOfState
+    {
+        rho             0.884616;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3055.536;
+        Hf          -10.718e3;
+    }
+    transport
+    {
+        mu          3.7e-05;
+        Pr          0.71;
+    }
+}
+
+CYC5H4O
+{
+    specie
+    {
+        molWeight   80.8703;
+    }
+    equationOfState
+    {
+        rho             1.262668;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2081.796;
+        Hf          697.775e3;
+    }
+    transport
+    {
+        mu          4.5e-05;
+        Pr          0.72;
+    }
+}
+
+C5H4O2
+{
+    specie
+    {
+        molWeight       96.08643;
+    }
+    equationOfState
+    {
+        rho             1.5147;//700;//
+    }
+    thermodynamics
+    {
+        Cp              1885.771;//710;
+        Hf              -1572.0483e3;
+    }
+    transport
+    {
+        mu              4.6e-5;
+        Pr              0.71;
+    }
+}
+
+CYC5H6
+{
+    specie
+    {
+        molWeight   66.10357;
+    }
+    equationOfState
+    {
+        rho             1.042202;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2575;
+        Hf          2030.953e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.7;
+    }
+}
+
+MEFU2
+{
+    specie
+    {
+        molWeight   82.10297;
+    }
+    equationOfState
+    {
+        rho             1.294452;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2240.409;
+        Hf          -986.353e3;
+    }
+    transport
+    {
+        mu          4.8e-05;
+        Pr          0.72;
+    }
+}
+
+C5H8
+{
+    specie
+    {
+        molWeight   68.11951;
+    }
+    equationOfState
+    {
+        rho             1.073986;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2851.787;
+        Hf          1108.388e3;
+    }
+    transport
+    {
+        mu          3.9e-05;
+        Pr          0.71;
+    }
+}
+
+C5H8O4
+{
+    specie
+    {
+        molWeight       132.11711;
+    }
+    equationOfState
+    {
+        rho             2.083;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2060.739;//710;
+        Hf              -4805.26e3;
+    }
+    transport
+    {
+        mu              5.1e-5;
+        Pr              0.71;
+    }
+}
+
+C6H6
+{
+    specie
+    {
+        molWeight   78.1147;
+    }
+    equationOfState
+    {
+        rho             1.23157;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2410.727;
+        Hf          1059.142e3;
+    }
+    transport
+    {
+        mu          4.1e-05;
+        Pr          0.7;
+    }
+}
+
+C6H5OH
+{
+    specie
+    {
+        molWeight       94.11412;
+    }
+    equationOfState
+    {
+        rho            1.484;// 700;//
+    }
+    thermodynamics
+    {
+        Cp              2222.267;//710;
+        Hf              -1023.74e3;
+    }
+    transport
+    {
+        mu              4.6e-5;
+        Pr              0.71;
+    }
+}
+
+C6H6O3
+{
+    specie
+    {
+        molWeight       126.11292;
+    }
+    equationOfState
+    {
+        rho             1.956;//700;//
+    }
+    thermodynamics
+    {
+        Cp              18870.805;//710;
+        Hf             -2649.87e3;
+    }
+    transport
+    {
+        mu              4.3e-5;
+        Pr              0.7;
+    }
+}
+
+MCPTD
+{
+    specie
+    {
+        molWeight   80.13066;
+    }
+    equationOfState
+    {
+        rho             1.26335;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2642.276;
+        Hf          1309.828e3;
+    }
+    transport
+    {
+        mu          3.6e-05;
+        Pr          0.7;
+    }
+}
+
+DMF
+{
+    specie
+    {
+        molWeight   96.13006;
+    }
+    equationOfState
+    {
+        rho             1.515606;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2363.386;
+        Hf          -1305.122e3;
+    }
+    transport
+    {
+        mu          4.15e-05;
+        Pr          0.71;
+    }
+}
+
+C6H8O4
+{
+    specie
+    {
+        molWeight   144.1283;
+    }
+    equationOfState
+    {
+        rho             2.272355;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2053.448;
+        Hf          -4049.372e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.72;
+    }
+}
+
+C6H10O5
+{
+    specie
+    {
+        molWeight       162.1436;
+    }
+    equationOfState
+    {
+        rho            2.553;// 700;//
+    }
+    thermodynamics
+    {
+        Cp              2114.466;//710;
+        Hf              -5188.68e3 ;
+    }
+    transport
+    {
+        mu              4.8e-5;
+        Pr              0.689;
+    }
+}
+
+C6H5CHO
+{
+    specie
+    {
+        molWeight   106.1253;
+    }
+    equationOfState
+    {
+        rho             1.673192;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2193.418;
+        Hf          -357.390e3;
+    }
+    transport
+    {
+        mu          3.75e-05;
+        Pr          0.7;
+    }
+}
+
+C7H8
+{
+    specie
+    {
+        molWeight   92.1418;
+    }
+    equationOfState
+    {
+        rho             1.4527;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2490.83;
+        Hf          541.111e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.72;
+    }
+}
+
+C6H5OCH3
+{
+    specie
+    {
+        molWeight       108.14121;
+    }
+    equationOfState
+    {
+        rho             1.7048;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2361.421;//710;
+        Hf              -661.605e3;
+    }
+    transport
+    {
+        mu              4.6e-5;
+        Pr              0.7;
+    }
+}
+
+
+CRESOL
+{
+    specie
+    {
+        molWeight   108.1412;
+    }
+    equationOfState
+    {
+        rho             1.7049;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2340.911;
+        Hf          -1191.203e3;
+    }
+    transport
+    {
+        mu          4.1e-05;
+        Pr          0.698;
+    }
+}
+
+C8H10O3
+{
+    specie
+    {
+        molWeight   154.1671;
+    }
+    equationOfState
+    {
+        rho             2.43063;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2969.024;
+        Hf          -3081.054e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.7;
+    }
+}
+
+C9H10O2
+{
+    specie
+    {
+        molWeight       150.17885;
+    }
+    equationOfState
+    {
+        rho             2.3423;//700;//
+    }
+    thermodynamics
+    {
+        Cp             2264.889;// 100;//710;
+        Hf              -1372.35e3;
+    }
+    transport
+    {
+        mu              4.5e-5;
+        Pr              0.71;
+    }
+}
+
+C10H8
+{
+    specie
+    {
+        molWeight   128.1753;
+    }
+    equationOfState
+    {
+        rho             2.02083;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2297.489;
+        Hf          1174.947e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.7;
+    }
+}
+
+C11H12O4
+{
+    specie
+    {
+        molWeight       208.21589;
+    }
+    equationOfState
+    {
+        rho              3.276;//700;//
+    }
+    thermodynamics
+    {
+        Cp              2198.323;//710;
+        Hf              -2333.38e3;//0;
+    }
+    transport
+    {
+        mu              4.8e-5;
+        Pr              0.7;
+    }
+}
+
+O
+{
+    specie
+    {
+        molWeight   15.9994;
+    }
+    equationOfState
+    {
+        rho             0.25225;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1312.14;
+        Hf          15574.449e3;
+    }
+    transport
+    {
+        mu          2.4e-05;
+        Pr          0.67;
+    }
+}
+
+H
+{
+    specie
+    {
+        molWeight   1.00787;
+    }
+    equationOfState
+    {
+        rho             0.015892;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          20620.65;
+        Hf          216241.533e3;
+    }
+    transport
+    {
+        mu          2.8e-05;
+        Pr          0.71;
+    }
+}
+
+OH
+{
+    specie
+    {
+        molWeight   17.00737;
+    }
+    equationOfState
+    {
+        rho             0.268142;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1765.945;
+        Hf          2192.063e3;
+    }
+    transport
+    {
+        mu          3.1e-05;
+        Pr          0.7;
+    }
+}
+
+HO2
+{
+    specie
+    {
+        molWeight   33.00677;
+    }
+    equationOfState
+    {
+        rho             0.520391;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1352.05;
+        Hf          379.609e3;
+    }
+    transport
+    {
+        mu          3.2e-05;
+        Pr          0.7;
+    }
+}
+
+C
+{
+    specie
+    {
+        molWeight   12.01115;
+    }
+    equationOfState
+    {
+        rho             0.18937;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1731.331;
+        Hf          59663.983e3;
+    }
+    transport
+    {
+        mu          2.7e-05;
+        Pr          0.69;
+    }
+}
+
+CH
+{
+    specie
+    {
+        molWeight   13.01912;
+    }
+    equationOfState
+    {
+        rho             0.205262;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2362.341;
+        Hf          45640.253e3;
+    }
+    transport
+    {
+        mu          2.8e-05;
+        Pr          0.7;
+    }
+}
+
+HCO
+{
+    specie
+    {
+        molWeight   29.01852;
+    }
+    equationOfState
+    {
+        rho             0.457512;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1531.075;
+        Hf          1499.367e3;
+    }
+    transport
+    {
+        mu          3.05e-05;
+        Pr          0.71;
+    }
+}
+
+HCO3
+{
+    specie
+    {
+        molWeight   61.01732;
+    }
+    equationOfState
+    {
+        rho             0.962011;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1291.225;
+        Hf          -2147.055e3;
+    }
+    transport
+    {
+        mu          3.5e-05;
+        Pr          0.7;
+    }
+}
+
+CH2S
+{
+    specie
+    {
+        molWeight   14.02709;
+    }
+    equationOfState
+    {
+        rho             0.221154;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2902.98;
+        Hf          30276.961e3;
+    }
+    transport
+    {
+        mu          1.8e-05;
+        Pr          0.71;
+    }
+}
+
+CH2
+{
+    specie
+    {
+        molWeight   14.02709;
+    }
+    equationOfState
+    {
+        rho             0.221154;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2935.287;
+        Hf          27587.119e3;
+    }
+    transport
+    {
+        mu          1.9e-05;
+        Pr          0.7;
+    }
+}
+
+CH3
+{
+    specie
+    {
+        molWeight   15.03506;
+    }
+    equationOfState
+    {
+        rho             0.237046;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3540.32;
+        Hf          9691.284e3;
+    }
+    transport
+    {
+        mu          2.5e-05;
+        Pr          0.688;
+    }
+}
+
+CH2OH
+{
+    specie
+    {
+        molWeight   31.03446;
+    }
+    equationOfState
+    {
+        rho             0.489296;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2329.336;
+        Hf          -555.860e3;
+    }
+    transport
+    {
+        mu          3.1e-05;
+        Pr          0.71;
+    }
+}
+
+CH3O
+{
+    specie
+    {
+        molWeight   31.03446;
+    }
+    equationOfState
+    {
+        rho             0.4893;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2191.554;
+        Hf          524.061e3;
+    }
+    transport
+    {
+        mu          2.9e-05;
+        Pr          0.7;
+    }
+}
+
+CH3OO
+{
+    specie
+    {
+        molWeight   47.03386;
+    }
+    equationOfState
+    {
+        rho             0.741545;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1812.35;
+        Hf          382.488e3;
+    }
+    transport
+    {
+        mu          3.2e-05;
+        Pr          0.7;
+    }
+}
+
+C2H
+{
+    specie
+    {
+        molWeight   25.03027;
+    }
+    equationOfState
+    {
+        rho             0.394632;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1982.344;
+        Hf          22620.761e3;
+    }
+    transport
+    {
+        mu          3.25e-05;
+        Pr          0.7;
+    }
+}
+
+HCCO
+{
+    specie
+    {
+        molWeight   41.02967;
+    }
+    equationOfState
+    {
+        rho             0.646882;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1622.093;
+        Hf          4326.309e3;
+    }
+    transport
+    {
+        mu          3.45e-05;
+        Pr          0.7;
+    }
+}
+
+C2H3
+{
+    specie
+    {
+        molWeight   27.04621;
+    }
+    equationOfState
+    {
+        rho             0.426416;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2556.625;
+        Hf          10580.736e3;
+    }
+    transport
+    {
+        mu          3.31e-05;
+        Pr          0.678;
+    }
+}
+
+CH3CO
+{
+    specie
+    {
+        molWeight   43.04561;
+    }
+    equationOfState
+    {
+        rho             0.67866;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1998.012;
+        Hf          -538.389e3;
+    }
+    transport
+    {
+        mu          3.55e-05;
+        Pr          0.69;
+    }
+}
+
+CH2CHO
+{
+    specie
+    {
+        molWeight   43.04561;
+    }
+    equationOfState
+    {
+        rho             0.67866;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2173.369;
+        Hf          341.174e3;
+    }
+    transport
+    {
+        mu          3.32e-05;
+        Pr          0.705;
+    }
+}
+
+CH3CO3
+{
+    specie
+    {
+        molWeight   75.04441;
+    }
+    equationOfState
+    {
+        rho             1.183156;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1714.085;
+        Hf          -2379.663e3;
+    }
+    transport
+    {
+        mu          3.7e-05;
+        Pr          0.715;
+    }
+}
+
+C2H5
+{
+    specie
+    {
+        molWeight   29.06215;
+    }
+    equationOfState
+    {
+        rho             0.4582;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3155.079;
+        Hf          4029.688e3;
+    }
+    transport
+    {
+        mu          3.15e-05;
+        Pr          0.7;
+    }
+}
+
+C2H4OH
+{
+    specie
+    {
+        molWeight   45.06155;
+    }
+    equationOfState
+    {
+        rho             0.71045;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2465.413;
+        Hf          -669.023e3;
+    }
+    transport
+    {
+        mu          3.35e-05;
+        Pr          0.71;
+    }
+}
+
+CH3CHOH
+{
+    specie
+    {
+        molWeight   45.06155;
+    }
+    equationOfState
+    {
+        rho             0.71045;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2387.918;
+        Hf          -915.721e3;
+    }
+    transport
+    {
+        mu          3.24e-05;
+        Pr          0.698;
+    }
+}
+
+C2H5OO
+{
+    specie
+    {
+        molWeight   61.06095;
+    }
+    equationOfState
+    {
+        rho             0.9627;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2164.687;
+        Hf          -310.547e3;
+    }
+    transport
+    {
+        mu          3.26e-05;
+        Pr          0.7;
+    }
+}
+
+C2-QOOH
+{
+    specie
+    {
+        molWeight   61.06095;
+    }
+    equationOfState
+    {
+        rho             0.9627;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2282.217;
+        Hf          573.342e3;
+    }
+    transport
+    {
+        mu          3.22e-05;
+        Pr          0.71;
+    }
+}
+
+C2-OOQOOH
+{
+    specie
+    {
+        molWeight   93.05975;
+    }
+    equationOfState
+    {
+        rho             1.4672;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          1857.937;
+        Hf          -1200.099e3;
+    }
+    transport
+    {
+        mu          4.6e-05;
+        Pr          0.7;
+    }
+}
+
+C3H3
+{
+    specie
+    {
+        molWeight   39.05736;
+    }
+    equationOfState
+    {
+        rho             0.615786;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2473.342;
+        Hf          8892.418e3;
+    }
+    transport
+    {
+        mu          3.1e-05;
+        Pr          0.7;
+    }
+}
+
+CH2CCH3
+{
+    specie
+    {
+        molWeight   41.0733;
+    }
+    equationOfState
+    {
+        rho             0.64757;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2850.569;
+        Hf          6587.130e3;
+    }
+    transport
+    {
+        mu          3.5e-05;
+        Pr          0.7;
+    }
+}
+
+CHCHCH3
+{
+    specie
+    {
+        molWeight   41.0733;
+    }
+    equationOfState
+    {
+        rho             0.64757;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2850.567;
+        Hf          6587.130e3;
+    }
+    transport
+    {
+        mu          3.5e-05;
+        Pr          0.7;
+    }
+}
+
+CH2CHCH2
+{
+    specie
+    {
+        molWeight   41.0733;
+    }
+    equationOfState
+    {
+        rho             0.64757;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2992.106;
+        Hf          4011.785e3;
+    }
+    transport
+    {
+        mu          3.45e-05;
+        Pr          0.7;
+    }
+}
+
+RALD3B
+{
+    specie
+    {
+        molWeight   57.0727;
+    }
+    equationOfState
+    {
+        rho             0.89982;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2453.45;
+        Hf          -406.989e3;
+    }
+    transport
+    {
+        mu          3.6e-05;
+        Pr          0.72;
+    }
+}
+
+RALD3G
+{
+    specie
+    {
+        molWeight   57.0727;
+    }
+    equationOfState
+    {
+        rho             0.89982;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2408.815;
+        Hf          273.354e3;
+    }
+    transport
+    {
+        mu          3.56e-05;
+        Pr          0.71;
+    }
+}
+
+CH3COCH2
+{
+    specie
+    {
+        molWeight   57.0727;
+    }
+    equationOfState
+    {
+        rho             0.89982;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2357.238;
+        Hf          -532.688e3;
+    }
+    transport
+    {
+        mu          3.46e-05;
+        Pr          0.71;
+    }
+}
+
+C3H5OO
+{
+    specie
+    {
+        molWeight   73.0721;
+    }
+    equationOfState
+    {
+        rho             1.15207;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2076.112;
+        Hf          1140.845e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.72;
+    }
+}
+
+NC3H7
+{
+    specie
+    {
+        molWeight   43.08924;
+    }
+    equationOfState
+    {
+        rho             0.679354;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3278.706;
+        Hf          2192.638e3;
+    }
+    transport
+    {
+        mu          3.41e-05;
+        Pr          0.7;
+    }
+}
+
+IC3H7
+{
+    specie
+    {
+        molWeight   43.08924;
+    }
+    equationOfState
+    {
+        rho             0.67934;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3289.753;
+        Hf          1861.854e3;
+    }
+    transport
+    {
+        mu          3.36e-05;
+        Pr          0.71;
+    }
+}
+
+NC3H7O
+{
+    specie
+    {
+        molWeight   59.08864;
+    }
+    equationOfState
+    {
+        rho             0.9316;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2674.25;
+        Hf          -649.8108e3;
+    }
+    transport
+    {
+        mu          3.8e-05;
+        Pr          0.7;
+    }
+}
+
+IC3H7OO
+{
+    specie
+    {
+        molWeight   75.08804;
+    }
+    equationOfState
+    {
+        rho             1.18385;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2404.305;
+        Hf          -770.845e3;
+    }
+    transport
+    {
+        mu          3.9e-05;
+        Pr          0.72;
+    }
+}
+
+IC3-QOOH
+{
+    specie
+    {
+        molWeight   75.08804;
+    }
+    equationOfState
+    {
+        rho             1.18385;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2505.661;
+        Hf          -52.0719e3;
+    }
+    transport
+    {
+        mu          3.84e-05;
+        Pr          0.71;
+    }
+}
+
+NC3H7OO
+{
+    specie
+    {
+        molWeight   75.08804;
+    }
+    equationOfState
+    {
+        rho             1.18385;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2368.408;
+        Hf          -526.916e3;
+    }
+    transport
+    {
+        mu          3.87e-05;
+        Pr          0.71;
+    }
+}
+
+NC3-QOOH
+{
+    specie
+    {
+        molWeight   75.08804;
+    }
+    equationOfState
+    {
+        rho             1.18385;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2406.848;
+        Hf          42.9965e3;
+    }
+    transport
+    {
+        mu          3.74e-05;
+        Pr          0.71;
+    }
+}
+
+IC3-OOQOOH
+{
+    specie
+    {
+        molWeight   107.0868;
+    }
+    equationOfState
+    {
+        rho             1.6884;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2102.756;
+        Hf          -1331.093e3;
+    }
+    transport
+    {
+        mu          4.2e-05;
+        Pr          0.72;
+    }
+}
+
+NC3-OOQOOH
+{
+    specie
+    {
+        molWeight   107.0868;
+    }
+    equationOfState
+    {
+        rho             1.6884;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2075.559;
+        Hf          -1160.230e3;
+    }
+    transport
+    {
+        mu          4.2e-05;
+        Pr          0.71;
+    }
+}
+
+C4H3
+{
+    specie
+    {
+        molWeight   51.06851;
+    }
+    equationOfState
+    {
+        rho             0.805156;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2304.525;
+        Hf          10638.432e3;
+    }
+    transport
+    {
+        mu          3.2e-05;
+        Pr          0.68;
+    }
+}
+
+C4H3O
+{
+    specie
+    {
+        molWeight   67.06791;
+    }
+    equationOfState
+    {
+        rho             1.057406;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2060.895;
+        Hf          2916.023e3;
+    }
+    transport
+    {
+        mu          3.9e-05;
+        Pr          0.71;
+    }
+}
+
+C4H5
+{
+    specie
+    {
+        molWeight   53.08445;
+    }
+    equationOfState
+    {
+        rho             0.83694;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2758.766;
+        Hf          6778.553e3;
+    }
+    transport
+    {
+        mu          3.64e-05;
+        Pr          0.7;
+    }
+}
+
+IC4H7
+{
+    specie
+    {
+        molWeight   55.10039;
+    }
+    equationOfState
+    {
+        rho             0.868724;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          3117.241;
+        Hf          2253.397e3;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.7;
+    }
+}
+
+CH2C3H5
+{
+    specie
+    {
+        molWeight   55.10039;
+    }
+    equationOfState
+    {
+        rho             0.868724;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2948.904;
+        Hf          3642.330e3;
+    }
+    transport
+    {
+        mu          3.4e-05;
+        Pr          0.71;
+    }
+}
+
+SC4H7
+{
+    specie
+    {
+        molWeight   55.10039;
+    }
+    equationOfState
+    {
+        rho             0.8687;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2974.304;
+        Hf          2427.622e3;
+    }
+    transport
+    {
+        mu          3.44e-05;
+        Pr          0.7;
+    }
+}
+
+CYC5H5
+{
+    specie
+    {
+        molWeight   65.0956;
+    }
+    equationOfState
+    {
+        rho             1.02631;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2351.757;
+        Hf          4016.984e3;
+    }
+    transport
+    {
+        mu          3.85e-05;
+        Pr          0.72;
+    }
+}
+
+C5H5O
+{
+    specie
+    {
+        molWeight   81.095;
+    }
+    equationOfState
+    {
+        rho             1.27856;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2204.22;
+        Hf          2215.787e3;
+    }
+    transport
+    {
+        mu          4.5e-05;
+        Pr          0.71;
+    }
+}
+
+
+C5H7
+{
+    specie
+    {
+        molWeight   67.11154;
+    }
+    equationOfState
+    {
+        rho             1.05809;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2770.034;
+        Hf          3358.489e3;
+    }
+    transport
+    {
+        mu          4.05e-05;
+        Pr          0.7;
+    }
+}
+
+C6H5
+{
+    specie
+    {
+        molWeight   77.10675;
+    }
+    equationOfState
+    {
+        rho             1.21568;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2329.321;
+        Hf          4304.586e3;
+    }
+    transport
+    {
+        mu          4.2e-05;
+        Pr          0.712;
+    }
+}
+
+C6H5O
+{
+    specie
+    {
+        molWeight   93.10615;
+    }
+    equationOfState
+    {
+        rho             1.46793;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2080.399;
+        Hf          579.988e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.705;
+    }
+}
+
+DMF-3YL
+{
+    specie
+    {
+        molWeight   95.12209;
+    }
+    equationOfState
+    {
+        rho             1.4997;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2256.872;
+        Hf          1649.754e3;
+    }
+    transport
+    {
+        mu          4.6e-05;
+        Pr          0.71;
+    }
+}
+
+C6H4CH3
+{
+    specie
+    {
+        molWeight   91.13384;
+    }
+    equationOfState
+    {
+        rho             1.43684;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2368.397e3;
+        Hf          3274.532e3;
+    }
+    transport
+    {
+        mu          4.4e-05;
+        Pr          0.7;
+    }
+}
+
+C7H7
+{
+    specie
+    {
+        molWeight   91.13384;
+    }
+    equationOfState
+    {
+        rho             1.43684;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2460.572;
+        Hf          2190.517e3;
+    }
+    transport
+    {
+        mu          4.2e-05;
+        Pr          0.71;
+    }
+}
+
+RCRESOLC
+{
+    specie
+    {
+        molWeight   107.1332;
+    }
+    equationOfState
+    {
+        rho             1.6891;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2255.919;
+        Hf          202.556e3;
+    }
+    transport
+    {
+        mu          4.5e-05;
+        Pr          0.71;
+    }
+}
+
+RCRESOLO
+{
+    specie
+    {
+        molWeight   107.1332;
+    }
+    equationOfState
+    {
+        rho             1.6891;//1.4;
+    }
+    thermodynamics
+    {
+        Cp          2198.575;
+        Hf          144.047e3;
+    }
+    transport
+    {
+        mu          4.46e-05;
+        Pr          0.706;
+    }
+}
