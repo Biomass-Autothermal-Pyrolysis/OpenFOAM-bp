@@ -7,6 +7,43 @@
 #+OPTIONS: author:nil ^:{}
 # Copyright (c) 2015-2018 OpenFOAM Foundation.
 
+* Note
+  This is a fork of OpenFOAM with specific developments for the simulation of
+  biomass pyrolysis. Refer to the commit history for details on the changes.
+
+  Such changes were part of the work performed for the project 
+
+    "An Open-Source Framework for the Computational Analysis and Design of 
+    Autothermal Chemical Processes"
+
+  The following Acknowledgment and Disclaimer apply to such changes:
+
+  Acknowledgment
+  --------------
+
+  This material is based upon work supported by the U.S. Department of Energy’s 
+  Office of Energy Efficiency and Renewable Energy (EERE) under the Advanced 
+  Manufacturing Office (AMO), Emerging Research Initiative Award Number 
+  DE-EE0008326.
+
+  Disclaimer
+  ----------
+
+  This software was prepared as an account of work sponsored by an agency of the 
+  United States Government. Neither the United States Government nor any agency 
+  thereof, nor any of its employees, makes any warranty, express or implied, or 
+  assumes any legal liability or responsibility for the accuracy, completeness, 
+  or usefulness of any information, apparatus, product, or process disclosed, 
+  or represents that its use would not infringe privately owned rights. 
+  Reference herein to any specific commercial product, process, or service by 
+  trade name, trademark, manufacturer, or otherwise does not necessarily 
+  constitute or imply its endorsement, recommendation, or favoring by the 
+  United States Government or any agency thereof.  The views and opinions of 
+  authors expressed herein do not necessarily state or reflect those of the 
+  United States Government or any agency thereof.
+
+--- End of Note ---
+
 * About OpenFOAM
   OpenFOAM is a free, open source computational fluid dynamics (CFD) software
   package released by the OpenFOAM Foundation. It has a large user base across
